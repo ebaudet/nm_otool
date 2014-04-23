@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/23 16:08:32 by ebaudet          ###   ########.fr       */
+/*   Updated: 2014/04/23 18:13:00 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int main(int argc, char *argv[]) {
     struct mach_header_64 *mh;
     struct load_command *lc;
     struct segment_command_64 *sc;
+   	struct section_64 *section;
 
     // Open the file and get its size
     fd = open(argv[1], O_RDONLY);
@@ -88,6 +89,32 @@ int main(int argc, char *argv[]) {
                 sc->filesize,
                 sc->nsects,
                 sc->flags);
+			section = (struct section_64 *)addr;
+			printf("\nSECTION_64:\nsectname %s\n\t"
+				"segname %s\n\t"
+				"addr 0x%llu\n\t"
+				"size 0x%llu\n\t"
+				"offset 0x%u\n\t"
+				"align 0x%u\n\t"
+				"reloff 0x%u\n\t"
+				"nreloc 0x%u\n\t"
+				"flags 0x%u\n\t"
+				"reserved1 0x%u\n\t"
+				"reserved2 0x%u\n\t"
+				"reserved3 0x%u\n\t",
+				section->sectname,
+				section->segname,
+				section->addr,
+				section->size,
+				section->offset,
+				section->align,
+				section->reloff,
+				section->nreloc,
+				section->flags,
+				section->reserved1,
+				section->reserved2,
+				section->reserved3
+			);
         }
         else
         {
@@ -107,6 +134,32 @@ int main(int argc, char *argv[]) {
                 sc->filesize,
                 sc->nsects,
                 sc->flags);
+        	section = (struct section_64 *)addr;
+			printf("\nSECTION_64:\nsectname %s\n\t"
+				"segname %s\n\t"
+				"addr 0x%llu\n\t"
+				"size 0x%llu\n\t"
+				"offset 0x%u\n\t"
+				"align 0x%u\n\t"
+				"reloff 0x%u\n\t"
+				"nreloc 0x%u\n\t"
+				"flags 0x%u\n\t"
+				"reserved1 0x%u\n\t"
+				"reserved2 0x%u\n\t"
+				"reserved3 0x%u\n\t",
+				section->sectname,
+				section->segname,
+				section->addr,
+				section->size,
+				section->offset,
+				section->align,
+				section->reloff,
+				section->nreloc,
+				section->flags,
+				section->reserved1,
+				section->reserved2,
+				section->reserved3
+			);
         }
 
         // Advance to the next load command    
