@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/24 19:53:52 by ebaudet          ###   ########.fr       */
+/*   Updated: 2014/04/25 12:18:57 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,27 @@
 #include <sys/stat.h>
 #include "math.h"
 
+void	print_section(char *av, struct section_64 *section, char *copy)
+{
+	unsigned int		j;
 
+	ft_putstr(av);
+	ft_putstr(":\n(__TEXT,__text) section");
+	j = 0;
+	while (j < section->size)
+	{
+		if (!(j % 16))
+		{
+			ft_putchar('\n');
+			ft_puthex(section->addr + j, 16);
+			
+		}
+		ft_putchar(' ');
+		ft_puthex(copy[section->offset + j] & 0xFF, 2);
+		j++;
+	}
+	ft_putchar('\n');
+}
 
 void	ft_otool(char *av)
 {
@@ -77,32 +97,13 @@ void	ft_otool(char *av)
 				{
 					section = (struct section_64 *)addr;
 					addr += sizeof(struct section_64);
-					///section += section->offset;
 					if (ft_strcmp(section->sectname, "__text") == 0)
-					{
-						unsigned int		j;
-
-						j = 0;
-						while (j < section->size)
-						{
-							if (!(j % 16))
-							{
-								ft_putchar('\n');
-								ft_puthex(section->addr + j, 16);
-							}
-							ft_putchar(' ');
-							ft_puthex(copy[section->offset + j] & 0xFF, 2);
-								//printf("\n%x ", (unsigned int)section->addr + j);
-							// printf("| %p (%u)- ", copy, section->offset);
-							/*printf("%02x ", copy[section->offset + j] & 0xFF);*/
-							j++;
-						}
-					}
+						print_section(av, section, copy);
 					k++;
 				}
 			}
 		}
-		addr += lc->cmdsize;
+		addr = (char *)lc + lc->cmdsize;
 		i++;
 	}
 	munmap(addr, size);
