@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/25 12:18:57 by ebaudet          ###   ########.fr       */
+/*   Updated: 2014/04/25 23:38:22 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,17 +110,44 @@ void	ft_otool(char *av)
 	close(fd);
 }
 
+int		return_error(char *message, char *file)
+{
+	ft_putstr_fd(2, message);
+	ft_putstr_fd(2, file);
+	ft_putstr_fd(2, ".\n");
+	return (EXIT_FAILURE);
+}
+
+int		treatment_file(char *file)
+{
+	int				fd;
+	char			*ptr;
+	struct stat		buf;
+
+	if ((fd = open(file, O_RDONLY)) < 0)
+		return (return_error("Erreur d'ouverture du fichier ", file));
+	if (fstat(fd, &buf) < 0)
+		return (return_error("Erreur fstat du fichier ", file));
+	if ((ptr = mmap(0, size, PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
+		return (return_error("Erreur mmap du fichier ", file));
+	ft_otool(ptr);
+	if (munmap(ptr, buf.size) < 0)
+		return (return_error("Erreur munmap du fichier ", file));
+}
+
 int		main(int ac, char **av)
 {
-	int		i;
+	int				i;
 
 	i = 0;
 	if (ac == 1)
-		ft_otool("a.out");
+		treatment_file("a.out");
 	else
 	{
 		while (av[++i])
-			ft_otool(av[i]);
+		{
+			treatment_file(av[i]);
+		}
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
