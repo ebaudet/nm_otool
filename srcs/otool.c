@@ -6,19 +6,143 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/23 13:05:31 by ebaudet          ###   ########.fr       */
+/*   Updated: 2014/04/26 21:32:22 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <mach-o/loader.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+
 #include "libft.h"
+#include "math.h"
 
-int		main(int argc, char **argv)
+
+unsigned int	endian_swap(unsigned int x)
 {
-	int		i;
+	return (x>>24) | ((x>>8) & 0x0000ff00) | ((x<<8) & 0x00ff0000) | (x<<24);
+}
 
-	ft_putendl("otool");
-	i = -1;
-	while (++i < argc)
-		ft_putendl(argv[i]);
+void	print_section(char *av, struct section_64 *section, char *copy)
+{
+	unsigned int		j;
+
+	ft_putstr(av);
+	ft_putstr(":\n(__TEXT,__text) section");
+	j = 0;
+	while (j < section->size)
+	{
+		if (!(j % 16))
+		{
+			ft_putchar('\n');
+			ft_puthex(section->addr + j, 16);
+			
+		}
+		ft_putchar(' ');
+		ft_puthex(copy[section->offset + j] & 0xFF, 2);
+		j++;
+	}
+	ft_putchar('\n');
+}
+
+void	loop_lc_segment_64(char *file, char *addr, char *copy)
+{
+	struct segment_command_64	*sc;
+	struct section_64			*section;
+	unsigned int				k;
+
+	sc = (struct segment_command_64 *)addr;
+	if (ft_strcmp(sc->segname, "__TEXT") == 0)
+	{
+		k = 0;
+		addr += sizeof(struct segment_command_64);
+		section = (struct section_64 *)addr;
+		while (k < sc->nsects)
+		{
+			section = (struct section_64 *)addr;
+			addr += sizeof(struct section_64);
+			if (ft_strcmp(section->sectname, "__text") == 0)
+				print_section(file, section, copy);
+			k++;
+		}
+	}
+}
+
+int		ft_otool(char *file, char *addr)
+{
+	struct mach_header_64		*mh;
+	struct load_command			*lc;
+	unsigned int				i;
+	char						*copy;
+
+	copy = addr;
+	mh = (struct mach_header_64 *)addr;
+	addr += sizeof(struct mach_header_64);
+	i = 0;
+	if (mh->magic != MH_MAGIC_64)
+		return (-1);
+	while (i < mh->ncmds)
+	{
+		lc = (struct load_command *)addr;
+		if (lc->cmdsize == 0)
+		{
+			i++;
+			continue;
+		}
+		if (lc->cmd == LC_SEGMENT_64)
+			loop_lc_segment_64(file, addr, copy);
+		addr = (char *)lc + lc->cmdsize;
+		i++;
+	}
 	return (0);
+}
+
+int		return_error(char *message, char *file)
+{
+	ft_putstr_fd(message, 2);
+	ft_putstr_fd(file, 2);
+	ft_putstr_fd(".\n", 2);
+	return (EXIT_FAILURE);
+}
+
+int		treatment_file(char *file)
+{
+	int				fd;
+	char			*ptr;
+	struct stat		buf;
+
+	if ((fd = open(file, O_RDONLY)) < 0)
+		return (return_error("Erreur d'ouverture du fichier ", file));
+	if (fstat(fd, &buf) < 0)
+		return (return_error("Erreur fstat du fichier ", file));
+	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
+		return (return_error("Erreur mmap du fichier ", file));
+	if (ft_otool(file, ptr) == -1)
+	{
+		ft_putstr_fd("not a mac header 64\n", 2);
+	}
+	if (munmap(ptr, buf.st_size) < 0)
+		return (return_error("Erreur munmap du fichier ", file));
+	return (EXIT_SUCCESS);
+}
+
+int		main(int ac, char **av)
+{
+	int				i;
+
+	i = 0;
+	if (ac == 1)
+		treatment_file("a.out");
+	else
+	{
+		while (av[++i])
+		{
+			treatment_file(av[i]);
+		}
+	}
+	return (EXIT_SUCCESS);
 }
