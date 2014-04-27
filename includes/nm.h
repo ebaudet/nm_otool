@@ -6,11 +6,14 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/23 13:02:06 by ebaudet          ###   ########.fr       */
+/*   Updated: 2014/04/27 21:11:14 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NM_H
 # define NM_H
+
+int		print_error(char *message);
+int		file_error(char *message, char *file);
 
 #endif

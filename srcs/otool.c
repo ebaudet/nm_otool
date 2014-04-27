@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/27 20:55:30 by ebaudet          ###   ########.fr       */
+/*   Updated: 2014/04/27 21:17:57 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,18 +102,19 @@ int		treatment_file(char *file)
 	struct stat		buf;
 
 	if ((fd = open(file, O_RDONLY)) < 0)
-		return (return_error("Erreur d'ouverture du fichier ", file));
+		return (file_error("Erreur d'ouverture du fichier ", file));
 	if (fstat(fd, &buf) < 0)
-		return (return_error("Erreur fstat du fichier ", file));
+		return (file_error("Erreur fstat du fichier ", file));
 	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
 		== MAP_FAILED)
-		return (return_error("Erreur mmap du fichier ", file));
+		return (file_error("Erreur mmap du fichier ", file));
 	if (ft_otool(file, ptr) == -1)
 	{
 		ft_putstr_fd("not a mac header 64\n", 2);
 	}
 	if (munmap(ptr, buf.st_size) < 0)
-		return (return_error("Erreur munmap du fichier ", file));
+		return (file_error("Erreur munmap du fichier ", file));
+	close(fd);
 	return (EXIT_SUCCESS);
 }
 
