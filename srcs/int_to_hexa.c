@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 15:17:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/23 15:31:12 by ebaudet          ###   ########.fr       */
+/*   Updated: 2014/04/27 20:50:33 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	eb_puthexa(int nbr)
 {
 	char	*result;
 
-	
 	if (n >= 0 && n <= 9)
 		ft_putchar('0' + n);
 	else if (n > 9)
