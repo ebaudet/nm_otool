@@ -6,13 +6,13 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:23 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/27 20:55:00 by ebaudet          ###   ########.fr       */
+/*   Updated: 2014/04/27 21:11:18 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef OTOOL_H
 # define OTOOL_H
 
-int		return_error(char *message, char *file);
+int		file_error(char *message, char *file);
 
 #endif

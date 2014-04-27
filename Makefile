@@ -6,14 +6,14 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/04/23 12:31:26 by ebaudet           #+#    #+#              #
-#    Updated: 2014/04/27 20:56:30 by ebaudet          ###   ########.fr        #
+#    Updated: 2014/04/27 21:08:58 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= nm_otool
 
 NM			= ft_nm
-F_NM		= nm.c
+F_NM		= nm.c ft_error.c
 SRC_NM		= $(addprefix srcs/, $(F_NM))
 OBJ_NM		= $(SRC_NM:srcs/%.c=.obj/%.o)
 
