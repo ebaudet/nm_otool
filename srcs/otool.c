@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/26 21:32:22 by ebaudet          ###   ########.fr       */
+/*   Updated: 2014/04/27 20:55:30 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,7 @@
 
 #include "libft.h"
 #include "math.h"
-
-
-unsigned int	endian_swap(unsigned int x)
-{
-	return (x>>24) | ((x>>8) & 0x0000ff00) | ((x<<8) & 0x00ff0000) | (x<<24);
-}
+#include "otool.h"
 
 void	print_section(char *av, struct section_64 *section, char *copy)
 {
@@ -40,7 +35,6 @@ void	print_section(char *av, struct section_64 *section, char *copy)
 		{
 			ft_putchar('\n');
 			ft_puthex(section->addr + j, 16);
-			
 		}
 		ft_putchar(' ');
 		ft_puthex(copy[section->offset + j] & 0xFF, 2);
@@ -101,14 +95,6 @@ int		ft_otool(char *file, char *addr)
 	return (0);
 }
 
-int		return_error(char *message, char *file)
-{
-	ft_putstr_fd(message, 2);
-	ft_putstr_fd(file, 2);
-	ft_putstr_fd(".\n", 2);
-	return (EXIT_FAILURE);
-}
-
 int		treatment_file(char *file)
 {
 	int				fd;
@@ -119,7 +105,8 @@ int		treatment_file(char *file)
 		return (return_error("Erreur d'ouverture du fichier ", file));
 	if (fstat(fd, &buf) < 0)
 		return (return_error("Erreur fstat du fichier ", file));
-	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
+	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
+		== MAP_FAILED)
 		return (return_error("Erreur mmap du fichier ", file));
 	if (ft_otool(file, ptr) == -1)
 	{
