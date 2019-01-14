@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:53:20 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/01/04 18:45:50 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/01/14 16:09:41 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static char		**create_string(char **strnew, char const *s, char c)
 		if (s[i])
 			i++;
 	}
-	strnew[j] = '\0';
+	strnew[j] = NULL;
 	return (strnew);
 }
 

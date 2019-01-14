@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:50:35 by ebaudet           #+#    #+#             */
-/*   Updated: 2013/12/04 18:01:36 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/01/14 16:04:51 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	if (!s1 || !s2)
 		return (NULL);
 	res = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(*res));
+	if (res == NULL)
+		return (NULL);
 	i = 0;
 	while (s1[i])
 	{

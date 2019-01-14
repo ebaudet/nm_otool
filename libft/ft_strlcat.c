@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:50:48 by ebaudet           #+#    #+#             */
-/*   Updated: 2013/11/19 16:50:49 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/01/14 16:05:23 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 
 	re = ft_strlen(src);
 	i = 0;
-	while (dst[i] && i < size)
+	while (dst && dst[i] && i < size)
 		i++;
 	re += (i < size) ? i : size;
 	if ((int)(size - ft_strlen(dst) - 1) > 0)

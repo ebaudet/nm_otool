@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:49:47 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/01/04 18:42:35 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/01/14 16:04:18 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ char	*ft_strdup(const char *s1)
 	char	*scopy;
 
 	i = -1;
-	scopy = (char *)malloc((ft_strlen(s1) + 1) * sizeof(char));
+	if ((scopy = (char *)malloc((ft_strlen(s1) + 1) * sizeof(char))) == NULL)
+		return (NULL);
 	while (s1[++i])
 		scopy[i] = s1[i];
 	scopy[i] = s1[i];

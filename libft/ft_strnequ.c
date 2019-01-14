@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:52:22 by ebaudet           #+#    #+#             */
-/*   Updated: 2013/12/04 17:59:46 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/01/14 16:14:38 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int		ft_strnequ(char const *s1, char const *s2, size_t n)
 {
 	size_t		i;
 
-	if (!s1 && !s2)
+	if ((!s1 && !s2) || n == 0)
 		return (1);
 	else if (!s1 || !s2)
 		return (0);

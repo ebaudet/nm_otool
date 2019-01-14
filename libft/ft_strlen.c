@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:50:59 by ebaudet           #+#    #+#             */
-/*   Updated: 2013/12/04 17:54:37 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/01/14 16:06:42 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	cpt;
 
-	if (!s)
-		return (0);
 	cpt = 0;
 	while (s[cpt] != 0)
 		cpt++;

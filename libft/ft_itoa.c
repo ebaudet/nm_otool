@@ -6,14 +6,14 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:41:30 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/01/04 18:57:29 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/01/14 15:48:26 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
 
-static int		ft_nbchar(int n)
+static int	ft_nbchar(int n)
 {
 	int		i;
 
@@ -28,45 +28,27 @@ static int		ft_nbchar(int n)
 	return (i + 1);
 }
 
-static char		*ft_invnb(int n)
+char		*ft_itoa(int n)
 {
 	char	*str;
-	int		i;
+	int		size;
 
-	i = 0;
-	str = (char *)malloc(12 * sizeof(char));
-	if (n == 0)
-		str[i++] = '0';
-	while (n)
-	{
-		str[i++] = (n % 10) + '0';
-		n = n / 10;
-	}
-	str[i] = 0;
-	return (str);
-}
-
-char			*ft_itoa(int n)
-{
-	char	*str;
-	char	*strinv;
-	int		i;
-	int		j;
-
+	size = ft_nbchar(n);
 	if (n == -2147483648)
 		return (ft_strdup("-2147483648"));
-	i = 0;
-	str = (char *)malloc(ft_nbchar(n) * sizeof(char));
+	if ((str = (char *)malloc((size + 1) * sizeof(char))) == NULL)
+		return (NULL);
 	if (n < 0)
 	{
-		str[i++] = '-';
+		str[0] = '-';
 		n = (-1) * n;
 	}
-	strinv = ft_invnb(n);
-	j = ft_strlen(strinv);
-	while (j > 0)
-		str[i++] = strinv[--j];
-	str[i] = 0;
-	free(strinv);
+	str[size] = '\0';
+	while (n > 9)
+	{
+		str[--size] = (n % 10) + '0';
+		n = n / 10;
+	}
+	str[size - 1] = n + '0';
 	return (str);
 }
