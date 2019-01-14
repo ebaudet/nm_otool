@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:45:45 by ebaudet           #+#    #+#             */
-/*   Updated: 2013/11/19 16:45:46 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/01/14 16:03:06 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ void	ft_putnbr_fd(int n, int fd)
 	{
 		ft_putnbr_fd(n / 10, fd);
 		ft_putnbr_fd(n % 10, fd);
+	}
+	else if (n == -2147483648)
+	{
+		ft_putstr_fd("-2147483648", fd);
 	}
 	else if (n < 0)
 	{
