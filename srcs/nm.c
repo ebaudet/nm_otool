@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/27 22:16:16 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/01/15 21:23:10 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,92 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "nm.h"
+#include "math.h"
 #include "libft.h"
 
-void	print_output(int nsyms, int symoff, int stroff, char *ptr)
+static char	get_section_letter(char *section)
+{
+	char	c;
+
+	c = '?';
+	if (ft_strcmp(section, SECT_TEXT) == 0)
+		c = 'T';
+	else if (ft_strcmp(section, SECT_DATA) == 0)
+		c = 'D';
+	else if (ft_strcmp(section, SECT_BSS) == 0)
+		c = 'B';
+	else
+		c = 'S';
+	return (c);
+}
+
+static char	undef(int type, int addr, char c)
+{
+	if ((type & N_TYPE) == N_UNDF)
+	{
+		if (addr)
+			c = 'C';
+		else
+			c = 'U';
+	}
+	return (c);
+}
+
+char		type(char *section, int type, int addr, int sect)
+{
+	char	c;
+
+	c = '?';
+	if (!section)
+		return ('U');
+	c = undef(type, addr, c);
+	if (c != '?')
+		return (c);
+	else if ((type & N_TYPE) == N_ABS)
+		c = 'A';
+	else if ((type & N_TYPE) == N_PBUD)
+		c = 'U';
+	else if ((type & N_TYPE) == N_SECT)
+		c = get_section_letter(section);
+	else if ((type & N_TYPE) == N_INDR)
+		c = 'I';
+	else if (sect == 0xb)
+		c = 'S';
+	else if ((type & N_STAB) != 0)
+		c = 'T';
+	if (!(type & N_EXT) && c != '?')
+		c += 32;
+	return (c);
+}
+
+void	print_output(struct symtab_command *sym, int nsyms, char *ptr)
 {
 	int					i;
 	char				*stringtable;
 	struct nlist_64		*array;
 
-	array = (void *)ptr + symoff;
-	stringtable = (void *)ptr + stroff;
+	array = (void *)ptr + sym->symoff;
+	stringtable = (void *)ptr + sym->stroff;
 	i = 0;
 	while (i < nsyms)
 	{
-		ft_putendl(stringtable + array[i].n_un.n_strx);
+		if (!array[i].n_value) {
+			ft_putstr("                ");
+		} else {
+			ft_puthex((long long int)array[i].n_value, 16);
+		}
+		ft_putstr("|");
+		ft_putchar(type("", array[i].n_type, array[i].n_value, array[i].n_sect));
+		ft_putstr("|");
+		ft_puthex((unsigned int)array[i].n_sect, 3);
+		ft_putstr("|");
+		ft_puthex((unsigned int)array[i].n_type, 3);
+		ft_putstr("|");
+		ft_puthex((unsigned int)array[i].n_desc, 3);
+		ft_putstr("|");
+		ft_putstr(stringtable+array[i].n_un.n_strx);
+		ft_putendl("");
+		// ft_putendl(stringtable + array[i].n_un.n_strx);
 		i++;
 	}
 }
@@ -54,7 +126,7 @@ void	handle_64(char *ptr)
 		if (lc->cmd == LC_SYMTAB)
 		{
 			sym = (struct symtab_command *)lc;
-			print_output(sym->nsyms, sym->symoff, sym->stroff, ptr);
+			print_output(sym, sym->nsyms, ptr);
 			break ;
 		}
 		lc = (void *)lc + lc->cmdsize;
@@ -71,6 +143,7 @@ void	nm(char *ptr)
 	{
 		handle_64(ptr);
 	}
+	// @TODO: gérer ici les fat binaries
 }
 
 int		main(int ac, char **av)
