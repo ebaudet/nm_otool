@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/27 21:17:57 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/01/14 22:04:42 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	print_section(char *av, struct section_64 *section, char *copy)
 	unsigned int		j;
 
 	ft_putstr(av);
-	ft_putstr(":\n(__TEXT,__text) section");
+	ft_putstr(":\nContents of (__TEXT,__text) section");
 	j = 0;
 	while (j < section->size)
 	{
@@ -35,9 +35,10 @@ void	print_section(char *av, struct section_64 *section, char *copy)
 		{
 			ft_putchar('\n');
 			ft_puthex(section->addr + j, 16);
+			ft_putchar('\t');
 		}
-		ft_putchar(' ');
 		ft_puthex(copy[section->offset + j] & 0xFF, 2);
+		ft_putchar(' ');
 		j++;
 	}
 	ft_putchar('\n');
