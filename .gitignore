@@ -1,0 +1,6 @@
+.DS_Strore
+.obj/*
+ft_nm
+ft_otool
+libft/.obj/*
+libft/libft.a
