@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/01/15 21:23:10 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/01/22 22:38:17 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,28 +79,30 @@ char		type(char *section, int type, int addr, int sect)
 
 void	print_output(struct symtab_command *sym, int nsyms, char *ptr)
 {
-	int					i;
-	char				*stringtable;
-	struct nlist_64		*array;
+	int							i;
+	char						*stringtable;
+	struct nlist_64				*array;
+	struct segment_command_64	*segment;
 
 	array = (void *)ptr + sym->symoff;
 	stringtable = (void *)ptr + sym->stroff;
+	segment = (void *)ptr + sizeof(struct mach_header_64);
 	i = 0;
 	while (i < nsyms)
 	{
 		if (!array[i].n_value) {
 			ft_putstr("                ");
 		} else {
-			ft_puthex((long long int)array[i].n_value, 16);
+			ft_puthex((unsigned long)array[i].n_value, 16);
 		}
 		ft_putstr("|");
-		ft_putchar(type("", array[i].n_type, array[i].n_value, array[i].n_sect));
+		ft_putchar(type(segment[i].segname, array[i].n_type, array[i].n_value, array[i].n_sect));
 		ft_putstr("|");
-		ft_puthex((unsigned int)array[i].n_sect, 3);
+		ft_puthex((unsigned long)array[i].n_sect, 3);
 		ft_putstr("|");
-		ft_puthex((unsigned int)array[i].n_type, 3);
+		ft_puthex((unsigned long)array[i].n_type, 3);
 		ft_putstr("|");
-		ft_puthex((unsigned int)array[i].n_desc, 3);
+		ft_puthex((unsigned long)array[i].n_desc, 3);
 		ft_putstr("|");
 		ft_putstr(stringtable+array[i].n_un.n_strx);
 		ft_putendl("");
