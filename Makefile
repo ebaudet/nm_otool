@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/04/23 12:31:26 by ebaudet           #+#    #+#              #
-#    Updated: 2019/01/15 17:55:36 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/01/22 18:44:24 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,9 +50,11 @@ make_libft:
 
 clean:
 	rm -rf .obj
+	make -C libft clean
 
 fclean: clean
 	rm -f $(OTOOL) $(NM)
+	make -C libft fclean
 
 re: fclean all
 
