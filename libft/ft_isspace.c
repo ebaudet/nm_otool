@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/19 16:51:50 by ebaudet           #+#    #+#             */
-/*   Updated: 2013/11/19 16:51:50 by ebaudet          ###   ########.fr       */
+/*   Created: 2013/11/19 16:39:09 by ebaudet           #+#    #+#             */
+/*   Updated: 2019/02/01 18:37:26 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <math.h>
 
-int		ft_strncmp(const char *s1, const char *s2, size_t n)
+/*
+** The isspace() function tests for the white-space characters.
+** For any locale, this includes the following standard characters:
+** \t \n \v \f \r space
+*/
+
+int		ft_isspace(int c)
 {
-	size_t	i;
+	static char	search[7] = " \t\n\v\f\r\0";
 
-	if (n == 0)
+	if (ft_strchr(search, c) == NULL)
 		return (0);
-	i = 0;
-	while (s1[i] == s2[i] && s1[i] && s2[i] && ((i + 1) < n))
-		i++;
-	return (s1[i] - s2[i]);
+	return (1);
 }

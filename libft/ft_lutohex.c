@@ -1,25 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   ft_lutohex.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/19 16:51:50 by ebaudet           #+#    #+#             */
-/*   Updated: 2013/11/19 16:51:50 by ebaudet          ###   ########.fr       */
+/*   Created: 2018/10/19 20:45:55 by ebaudet           #+#    #+#             */
+/*   Updated: 2019/02/04 14:50:35 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_strncmp(const char *s1, const char *s2, size_t n)
+char		*ft_lutohex(uintmax_t lu)
 {
-	size_t	i;
+	char		hexadecimal_number[100];
+	uintmax_t	temp;
+	int			i;
 
-	if (n == 0)
-		return (0);
+	ft_memset(hexadecimal_number, 0, 100);
 	i = 0;
-	while (s1[i] == s2[i] && s1[i] && s2[i] && ((i + 1) < n))
-		i++;
-	return (s1[i] - s2[i]);
+	if (lu == 0)
+		hexadecimal_number[i++] = 0 + '0';
+	while (lu != 0)
+	{
+		temp = lu % 16;
+		if (temp < 10)
+			temp = temp + '0';
+		else
+			temp = temp + 'a' - 10;
+		hexadecimal_number[i++] = temp;
+		lu = lu / 16;
+	}
+	ft_strreverse(hexadecimal_number);
+	return (ft_strdup(hexadecimal_number));
 }

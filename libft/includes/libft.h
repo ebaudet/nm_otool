@@ -6,25 +6,25 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/21 11:44:10 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/02/08 20:15:36 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/13 20:31:53 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
-
-# include <string.h>
-
 # define BUFF_SIZE 32
+# include <string.h>
+# include <stdarg.h>
+# include <inttypes.h>
 
 /*
 ** functions part 1
 */
 void	*ft_memset(void *b, int c, size_t len);
 void	ft_bzero(void *s, size_t n);
-void	*ft_memcpy(void *s1, void const *s2, size_t n);
-void	*ft_memccpy(void *s1, void const *s2, int c, size_t n);
-void	*ft_memmove(void *s1, const void *s2, size_t n);
+void	*ft_memcpy(void *dst, void const *src, size_t n);
+void	*ft_memccpy(void *dst, void const *src, int c, size_t n);
+void	*ft_memmove(void *dst, const void *src, size_t len);
 void	*ft_memchr(const void *s, int c, size_t n);
 int		ft_memcmp(const void *s1, const void *s2, size_t n);
 size_t	ft_strlen(const char *s);
@@ -67,7 +67,7 @@ char	*ft_strsub(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strtrim(char const *s);
 char	**ft_strsplit(char const *s, char c);
-char	*ft_itoa(int n);
+char	*ft_itoa(intmax_t n);
 void	ft_putchar(char c);
 void	ft_putstr(char const *s);
 void	ft_putendl(char const *s);
@@ -81,5 +81,25 @@ void	ft_putnbr_fd(int n, int fd);
 ** function bonus
 */
 int		get_next_line(int const fd, char **line);
+char	*ft_concat2(const char *s1, const char *s2);
+char	*ft_concat2endl(const char *s1, const char *s2);
+char	*ft_concat2c(const char *s1, const char *s2, char c);
+char	*ft_concat(int nb_elem, ...);
+char	*ft_concatc(int nb_elem, ...);
+void	ft_strreverse(char *str);
+char	*ft_lutohex(uintmax_t lu);
+char	*ft_lutooct(uintmax_t lu);
+char	*ft_lutobin(uintmax_t lu);
+int		ft_isspace(int c);
+double	ft_atof(const char *str);
+int		ft_abs(int i);
+double	ft_fabs(double i);
+char	*ft_dtoa(double d, unsigned int precision);
+char	*ft_ldtoa(long double d, unsigned int precision);
+int		ft_max(int a, int b);
+int		ft_min(int a, int b);
 
-#endif /* LIBFT_H */
+/*
+** LIBFT_H
+*/
+#endif

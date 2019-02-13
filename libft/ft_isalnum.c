@@ -6,11 +6,20 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:39:49 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/01/04 18:35:41 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/01 18:31:16 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+/*
+** The isalnum() function tests for any character <c> for which isalpha(3)
+** or isdigit(3) is true.  The value of the argument must be representable
+** as an unsigned char or the value of EOF.
+**
+** RETURN : The isalnum() function returns zero if the character tests
+** false and returns non-zero if the character tests true.
+*/
 
 int		ft_isalnum(int c)
 {

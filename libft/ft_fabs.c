@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   ft_fabs.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/19 16:51:50 by ebaudet           #+#    #+#             */
-/*   Updated: 2013/11/19 16:51:50 by ebaudet          ###   ########.fr       */
+/*   Created: 2013/11/19 16:39:09 by ebaudet           #+#    #+#             */
+/*   Updated: 2019/02/01 18:29:08 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+/*
+** The fabs() functions compute the absolute value of a floating-point
+** number <i>.
+*/
 
-int		ft_strncmp(const char *s1, const char *s2, size_t n)
+double		ft_fabs(double i)
 {
-	size_t	i;
-
-	if (n == 0)
-		return (0);
-	i = 0;
-	while (s1[i] == s2[i] && s1[i] && s2[i] && ((i + 1) < n))
-		i++;
-	return (s1[i] - s2[i]);
+	if (i < 0)
+		return (-i);
+	return (i);
 }

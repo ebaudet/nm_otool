@@ -1,4 +1,4 @@
-#******************************************************************************#
+# **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
@@ -6,9 +6,9 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/21 12:00:46 by ebaudet           #+#    #+#              #
-#    Updated: 2014/02/08 20:18:24 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/02/13 22:15:09 by ebaudet          ###   ########.fr        #
 #                                                                              #
-#******************************************************************************#
+# **************************************************************************** #
 
 NAME 	= libft.a
 SRCS 	= ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c \
@@ -22,34 +22,40 @@ SRCS 	= ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c \
 		ft_strjoin.c ft_strtrim.c ft_strsplit.c ft_itoa.c \
 		ft_putchar.c ft_putstr.c ft_putendl.c ft_putnbr.c \
 		ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c \
-		get_next_line.c
-DIRSRC	= $(addprefix ./ ,$(SRCS))
+		get_next_line.c ft_concat.c ft_strreverse.c ft_lutohex.c \
+		ft_atod.c ft_isspace.c ft_abs.c ft_fabs.c ft_dtoa.c ft_lutooct.c \
+		ft_max.c ft_min.c ft_lutobin.c ft_ldtoa.c \
+		ft_printf/ft_printf.c ft_printf/pf_put.c ft_printf/pf_handler.c \
+		ft_printf/pf_functions.c ft_printf/pf_get_dec_lenght.c ft_printf/pf_params.c \
+		ft_printf/pf_buffer.c
 OBJS	= ${SRCS:%.c=.obj/%.o}
-INC		= ./includes/
+INC		= -I ./includes/ -I ./ft_printf/
 FLAGS	= -Wall -Wextra -Werror -fno-builtin -fno-stack-protector -pedantic -ansi
-DEBUGFLG = -v -da -Q
+FLAGS	= -Wall -Wextra -Werror
+DEBUGFLG = -fsanitize=address -g3
+DEBUGFLG =
 CC		= gcc
 AR		= ar rc
 RANLIB	= ranlib
 
 all: $(NAME)
-	
+
 $(NAME): $(OBJS)
-	@echo ""
 	@$(AR) $(NAME) $(OBJS)
 	@$(RANLIB) $(NAME)
-	@echo "création de $(NAME)"
+	@echo "\n\n > Compilation \033[36mlibft\033[m [\033[32mDONE\033[m]"
 
 .obj/%.o: %.c
 	@mkdir -p .obj
-	@$(CC) -c $< -o $@ $(FLAGS) -I $(INC)
-	@printf .
+	@mkdir -p .obj/ft_printf
+	@$(CC) -c $< -o $@ $(FLAGS) $(INC) $(DEBUGFLG)
+	@echo -n .
 
 clean:
-	rm -rf .obj
+	@rm -rf .obj
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all
 

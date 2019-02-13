@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   ft_strreverse.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/19 16:51:50 by ebaudet           #+#    #+#             */
-/*   Updated: 2013/11/19 16:51:50 by ebaudet          ###   ########.fr       */
+/*   Created: 2018/10/19 20:45:55 by ebaudet           #+#    #+#             */
+/*   Updated: 2018/10/19 20:45:55 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_strncmp(const char *s1, const char *s2, size_t n)
+void	ft_strreverse(char *str)
 {
-	size_t	i;
+	char	tmp;
+	int		j;
+	int		i;
 
-	if (n == 0)
-		return (0);
-	i = 0;
-	while (s1[i] == s2[i] && s1[i] && s2[i] && ((i + 1) < n))
-		i++;
-	return (s1[i] - s2[i]);
+	j = ft_strlen(str);
+	i = -1;
+	while (++i < --j)
+	{
+		tmp = *(str + i);
+		*(str + i) = *(str + j);
+		*(str + j) = tmp;
+	}
 }

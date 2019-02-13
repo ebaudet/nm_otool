@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:54:42 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/01/14 16:11:06 by ebaudet          ###   ########.fr       */
+/*   Updated: 2014/03/25 21:45:06 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ char		*ft_strtrim(char const *s)
 	while (s && ft_is_space(s[start]))
 		start++;
 	end = ft_strlen(s) - 1;
-	while (s && ft_is_space(s[end]) && end >= start)
+	res = (char *)malloc((end - start + 1) * sizeof(*res));
+	while (s && ft_is_space(s[end]))
 		end--;
-	res = (char *)malloc((end - start + 2) * sizeof(*res));
-	if (res && s && end != 0)
+	if (res && s)
 	{
 		i = 0;
 		while ((i + start) <= end)
@@ -44,5 +44,6 @@ char		*ft_strtrim(char const *s)
 		res[i] = 0;
 		return (res);
 	}
-	return (NULL);
+	else
+		return (NULL);
 }
