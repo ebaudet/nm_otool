@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   ft_max.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/19 16:51:50 by ebaudet           #+#    #+#             */
-/*   Updated: 2013/11/19 16:51:50 by ebaudet          ###   ########.fr       */
+/*   Created: 2019/02/02 22:47:53 by ebaudet           #+#    #+#             */
+/*   Updated: 2019/02/02 22:52:31 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-int		ft_strncmp(const char *s1, const char *s2, size_t n)
+long int	ft_max(long int a, long int b)
 {
-	size_t	i;
-
-	if (n == 0)
-		return (0);
-	i = 0;
-	while (s1[i] == s2[i] && s1[i] && s2[i] && ((i + 1) < n))
-		i++;
-	return (s1[i] - s2[i]);
+	if (a > b)
+		return (a);
+	return (b);
 }

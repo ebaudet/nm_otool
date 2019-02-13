@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/01/22 22:38:17 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/13 22:20:13 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include "nm.h"
 #include "math.h"
 #include "libft.h"
+#include "libftprintf.h"
 
 static char	get_section_letter(char *section)
 {
@@ -95,6 +96,12 @@ void	print_output(struct symtab_command *sym, int nsyms, char *ptr)
 		} else {
 			ft_puthex((unsigned long)array[i].n_value, 16);
 		}
+		ft_printf("|%c|%03x|%03x|%03x|",
+		       type(segment[i].segname, array[i].n_type, array[i].n_value, array[i].n_sect),
+		       array[i].n_sect,
+		       (unsigned long)array[i].n_type,
+		       array[i].n_desc
+		       );
 		ft_putstr("|");
 		ft_putchar(type(segment[i].segname, array[i].n_type, array[i].n_value, array[i].n_sect));
 		ft_putstr("|");

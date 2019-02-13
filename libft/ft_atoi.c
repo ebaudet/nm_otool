@@ -6,11 +6,16 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:39:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/16 19:05:18 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/01 18:21:20 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+/*
+** The atoi() function converts the initial portion of the string
+** pointed to by <str> to int representation.
+*/
 
 static int	ft_is_nb(char c)
 {
