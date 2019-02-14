@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/04/23 12:31:26 by ebaudet           #+#    #+#              #
-#    Updated: 2019/02/13 22:15:13 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/02/14 16:58:40 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,11 +35,11 @@ $(NAME): $(OTOOL) $(NM)
 
 $(OTOOL): make_libft $(OBJ_OTOOL)
 	$(CC) $(FLAGS) $(OBJ_OTOOL) -o $(OTOOL) $(INC) $(LIB) $(DEBUGFLG)
-	@echo "\n> Compilation \033[35m$(OTOOL)\033[m [\033[32mDONE\033[m]"
+	@echo "> Compilation \033[35m$(OTOOL)\033[m [\033[32mDONE\033[m]\n"
 
 $(NM): make_libft $(OBJ_NM)
 	$(CC) $(FLAGS) $(OBJ_NM) -o $(NM) $(INC) $(LIB) $(DEBUGFLG)
-	@echo "\n> Compilation \033[35m$(NM)\033[m [\033[32mDONE\033[m]"
+	@echo "> Compilation \033[35m$(NM)\033[m [\033[32mDONE\033[m]\n"
 
 .obj/%.o: srcs/%.c
 	@mkdir -p .obj
@@ -48,7 +48,7 @@ $(NM): make_libft $(OBJ_NM)
 make_libft:
 	@echo "Compilation de la libft :"
 	@make -C libft
-	@echo "\n> Compilation \033[35mlibft\033[m [\033[32mDONE\033[m]"
+	@echo ""
 
 clean:
 	rm -rf .obj
