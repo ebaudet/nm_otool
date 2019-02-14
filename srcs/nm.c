@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/13 22:20:13 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/15 00:23:34 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,25 @@ char		type(char *section, int type, int addr, int sect)
 	return (c);
 }
 
+struct section_64	*get_section(struct segment_command_64 *segment, uint32_t offset)
+{
+	struct section_64	*section;
+
+	if (offset <= segment->nsects)
+	{
+		section = (struct section_64 *)&segment[1] + offset - 1;
+		return (section);
+	}
+	return (get_section((struct segment_command_64 *)((void *)segment + segment->cmdsize), offset - segment->nsects));
+}
+
 void	print_output(struct symtab_command *sym, int nsyms, char *ptr)
 {
 	int							i;
 	char						*stringtable;
 	struct nlist_64				*array;
 	struct segment_command_64	*segment;
+	struct section_64			*section;
 
 	array = (void *)ptr + sym->symoff;
 	stringtable = (void *)ptr + sym->stroff;
@@ -91,29 +104,19 @@ void	print_output(struct symtab_command *sym, int nsyms, char *ptr)
 	i = 0;
 	while (i < nsyms)
 	{
-		if (!array[i].n_value) {
+		section = get_section(segment, array[i].n_sect);
+		if (!array[i].n_value)
+		{
 			ft_putstr("                ");
-		} else {
+		}
+		else
+		{
 			ft_puthex((unsigned long)array[i].n_value, 16);
 		}
-		ft_printf("|%c|%03x|%03x|%03x|",
-		       type(segment[i].segname, array[i].n_type, array[i].n_value, array[i].n_sect),
-		       array[i].n_sect,
-		       (unsigned long)array[i].n_type,
-		       array[i].n_desc
-		       );
-		ft_putstr("|");
-		ft_putchar(type(segment[i].segname, array[i].n_type, array[i].n_value, array[i].n_sect));
-		ft_putstr("|");
-		ft_puthex((unsigned long)array[i].n_sect, 3);
-		ft_putstr("|");
-		ft_puthex((unsigned long)array[i].n_type, 3);
-		ft_putstr("|");
-		ft_puthex((unsigned long)array[i].n_desc, 3);
-		ft_putstr("|");
-		ft_putstr(stringtable+array[i].n_un.n_strx);
-		ft_putendl("");
-		// ft_putendl(stringtable + array[i].n_un.n_strx);
+		ft_printf(" %c %s\n",
+			type(section->sectname, array[i].n_type, array[i].n_value, array[i].n_sect),
+			stringtable+array[i].n_un.n_strx
+			);
 		i++;
 	}
 }
