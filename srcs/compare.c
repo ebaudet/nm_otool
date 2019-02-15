@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 19:34:27 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/15 19:43:56 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/15 19:46:15 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_symtable	*compare_tableindex(t_symtable *a, t_symtable *b)
 
 /*
 ** Compare <a> and <b> with the table_index parmeter.
-** Return in resverse ascii order.
+** Return in reverse ascii order.
 */
 
 t_symtable	*compare_tableindex_rev(t_symtable *a, t_symtable *b)
