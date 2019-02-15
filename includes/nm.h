@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/15 19:01:09 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/15 19:40:28 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,12 @@ t_symtable		*new_symtable(unsigned int offset, char symbol,
 t_symtable		*list_add_last_symtable(t_symtable *list, unsigned int offset,
 				char symbol, char *table_index);
 size_t			count_symtable(t_symtable *list);
+
+/*
+** compare.c
+*/
+t_symtable		*compare_tableindex(t_symtable *a, t_symtable *b);
+t_symtable		*compare_tableindex_rev(t_symtable *a, t_symtable *b);
 
 /*
 ** NM_H
