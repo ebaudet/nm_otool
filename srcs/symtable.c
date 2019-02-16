@@ -6,12 +6,13 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 17:42:32 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/15 19:32:24 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/16 19:38:10 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 #include <stdlib.h>
+#include "libftprintf.h"
 
 /*
 ** Create a new link of list t_symtable and assign the <offset>, <symbol>,
@@ -19,17 +20,17 @@
 ** Return a pointer to the new link.
 */
 
-t_symtable	*new_symtable(unsigned int offset, char symbol, char *table_index)
+t_symtable	*new_symtable(char *offset, char symbol, char *table_index)
 {
-	t_symtable	*symtable;
+	t_symtable	*new;
 
-	if ((symtable = (t_symtable *)malloc(sizeof(t_symtable))) == NULL)
+	if ((new = (t_symtable *)malloc(sizeof(t_symtable))) == NULL)
 		return (NULL);
-	symtable->offset = offset;
-	symtable->symbol = symbol;
-	symtable->table_index = table_index;
-	symtable->next = NULL;
-	return (symtable);
+	new->offset = offset;
+	new->symbol = symbol;
+	new->table_index = table_index;
+	new->next = NULL;
+	return (new);
 }
 
 /*
@@ -39,19 +40,24 @@ t_symtable	*new_symtable(unsigned int offset, char symbol, char *table_index)
 ** Return a pointeur to the new link.
 */
 
-t_symtable	*list_add_last_symtable(t_symtable *list, unsigned int offset,
+t_symtable	*list_add_last_symtable(t_symtable **list, char *offset,
 	char symbol, char *table_index)
 {
 	t_symtable	*tmp;
-	t_symtable	*symtable;
+	t_symtable	*new;
 
-	if ((symtable = new_symtable(offset, symbol, table_index)) == NULL)
+	if ((new = new_symtable(offset, symbol, table_index)) == NULL)
 		return (NULL);
-	tmp = list;
+	if (*list == NULL)
+	{
+		*list = new;
+		return (*list);
+	}
+	tmp = *list;
 	while (tmp && tmp->next)
 		tmp = tmp->next;
-	tmp->next = symtable;
-	return (symtable);
+	tmp->next = new;
+	return (new);
 }
 
 /*
@@ -60,39 +66,79 @@ t_symtable	*list_add_last_symtable(t_symtable *list, unsigned int offset,
 ** Return the first element of the list.
 */
 
-t_symtable	*list_add_order_symtable(t_symtable *list, t_symtable *new,
+t_symtable	*list_add_order_symtable(t_symtable **list, t_symtable *new,
 	t_compate_symtable compare)
 {
 	t_symtable	*tmp;
 	t_symtable	*old;
 
-	tmp = list;
-	old = list;
-	while (tmp && tmp->next && (tmp == (compare)(tmp, new)))
+	ft_printf("   {in list_add_order_symtable: offset[%16s] symbol[%c] table_index[%s] while[", new->offset, new->symbol, new->table_index);
+	if (*list == NULL)
 	{
+		*list = new;
+		new->next = NULL;
+		return (*list);
+	}
+	if (new == (compare)(*list, new))
+	{
+		ft_printf("%31k.%k");
+		new->next = (*list);
+		*list = new;
+		return (*list);
+	}
+	tmp = *list;
+	old = *list;
+	while (tmp && (tmp == (compare)(tmp, new)))
+	{
+		ft_printf("%31k.%k");
 		old = tmp;
 		tmp = tmp->next;
 	}
+	ft_printf("]}\n");
+	new->next = old->next;
 	old->next = new;
-	new->next = tmp;
-	return (list);
+	// old->next = new;
+	// new->next = tmp;
+	return (*list);
 }
 
 /*
 ** Count the number of elements of the list <list>
 */
 
-size_t		count_symtable(t_symtable *list)
+size_t		count_symtable(t_symtable **list)
 {
 	t_symtable	*tmp;
 	size_t		cpt;
 
 	cpt = 0;
-	tmp = list;
+	tmp = *list;
 	while (tmp)
 	{
 		tmp = tmp->next;
 		cpt++;
 	}
 	return (cpt);
+}
+
+/*
+** Free the chained list <list>
+*/
+
+void	free_symtable(t_symtable **list)
+{
+	t_symtable	*tmp;
+	t_symtable	*old;
+
+	if (!list || *list == NULL)
+		return ;
+	tmp = *list;
+	while (tmp != NULL)
+	{
+		old = tmp;
+		tmp = tmp->next;
+		free(old->offset);
+		free(old);
+	}
+	ft_printf("   {free list %32kOK%k}\n");
 }
