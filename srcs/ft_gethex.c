@@ -1,21 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   math.h                                             :+:      :+:    :+:   */
+/*   ft_gethex.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/04/24 19:51:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/16 16:42:30 by ebaudet          ###   ########.fr       */
+/*   Created: 2019/02/16 16:41:20 by ebaudet           #+#    #+#             */
+/*   Updated: 2019/02/16 18:47:19 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MATH_H
-# define MATH_H
+#include "libft.h"
+#include "math.h"
 
-long long int	ft_pow(int nb, int pow);
-void			ft_puthex(long long int nb, int width);
-char			*ft_gethex(long long int nb, int width);
+char	*ft_gethex(long long int nb, int width)
+{
+	char			val[width + 1];
+	int				i;
+	long long int	tmp;
 
-
-#endif
+	i = width;
+	while (--i >= 0)
+	{
+		tmp = nb / ft_pow(16, i);
+		nb -= tmp * ft_pow(16, i);
+		tmp = (tmp < 10 ? tmp + '0' : tmp - 10 + 'a');
+		val[width - (i + 1)] = tmp;
+	}
+	val[width] = '\0';
+	return (ft_strdup(val));
+}
