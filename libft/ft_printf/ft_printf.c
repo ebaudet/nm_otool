@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/21 20:45:55 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/13 22:20:49 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/18 17:35:31 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,19 @@ int			ft_printf(const char *format, ...)
 	ft_getsstr(&t, format);
 	va_end(t.ap);
 	write(STDOUT_FILENO, t.str, t.size);
+	free(t.str);
+	return (t.size);
+}
+
+int			ft_printf_fd(int fd, const char *format, ...)
+{
+	t_ftprintf	t;
+
+	t.size = 0;
+	va_start(t.ap, format);
+	ft_getsstr(&t, format);
+	va_end(t.ap);
+	write(fd, t.str, t.size);
 	free(t.str);
 	return (t.size);
 }
