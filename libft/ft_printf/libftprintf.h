@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/21 22:53:23 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/13 20:30:34 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/18 17:35:22 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ typedef struct			s_handler_len
 */
 t_ftsprintf				*ft_sprintf(const char *format, ...);
 int						ft_printf(const char *format, ...);
+int						ft_printf_fd(int fd, const char *format, ...);
 
 /*
 ** params.c
