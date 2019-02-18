@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/16 18:42:45 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/18 17:43:02 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 
 #include <stddef.h>
 
-int				print_error(char *message);
-int				file_error(char *message, char *file);
-unsigned int	endian_swap(unsigned int x);
+
 
 typedef struct	s_symtable
 {
@@ -47,6 +45,17 @@ t_symtable		*compare_tableindex(t_symtable *a, t_symtable *b);
 t_symtable		*compare_tableindex_rev(t_symtable *a, t_symtable *b);
 t_symtable		*compare_end(t_symtable *a, t_symtable *b);
 t_symtable		*compare_first(t_symtable *a, t_symtable *b);
+
+/*
+** ft_error.c
+*/
+int				print_error(char *message);
+int				file_error(char *message, char *file, char *function);
+
+/*
+** endian_swap.c
+*/
+unsigned int	endian_swap(unsigned int x);
 
 /*
 ** NM_H

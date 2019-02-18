@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 17:42:32 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/16 19:38:10 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/18 16:58:27 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,6 @@ t_symtable	*list_add_order_symtable(t_symtable **list, t_symtable *new,
 	ft_printf("]}\n");
 	new->next = old->next;
 	old->next = new;
-	// old->next = new;
-	// new->next = tmp;
 	return (*list);
 }
 
