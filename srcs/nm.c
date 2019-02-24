@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/18 23:25:34 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/22 17:35:00 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,15 @@ char	get_symbol(char *section, int type, int addr, int sect)
 	return (c);
 }
 
-void	print_output(t_symtable **list)
+void	print_output(t_symtable **list, int size)
 {
 	t_symtable	*tmp;
 
 	tmp = *list;
 	while (tmp)
 	{
-		ft_printf("%16s %c %s\n", tmp->offset, tmp->symbol, tmp->table_index);
+		ft_printf("%.*s %c %s\n", size, tmp->offset, tmp->symbol,
+			tmp->table_index);
 		tmp = tmp->next;
 	}
 }
@@ -89,15 +90,23 @@ int		nm(char *ptr)
 	magic_number = *(unsigned int *)ptr;
 	if (magic_number == MH_MAGIC_64)
 	{
-		// ft_printf("%33k<call handle_64>%k\n");
+		ft_printf("%33k<call handle_64>%k\n");
 		handle_64(ptr, &list);
-		// ft_printf("%33k<end handle_64>%k\n");
+		ft_printf("%33k<end handle_64>%k\n");
+		ft_printf("%33k<call print_output>%k\n");
+		print_output(&list, 16);
+		ft_printf("%33k<end print_output>%k\n");
+
 	}
 	else if (magic_number == MH_MAGIC)
 	{
-		// ft_printf("%33k<call handle_32>%k\n");
+		ft_printf("%33k<call handle_32>%k\n");
 		handle_32(ptr, &list);
-		// ft_printf("%33k<end handle_32>%k\n");
+		ft_printf("%33k<end handle_32>%k\n");
+		ft_printf("%33k<call print_output>%k\n");
+		print_output(&list, 8);
+		ft_printf("%33k<end print_output>%k\n");
+
 	}
 	else if (magic_number == FAT_CIGAM)
 	{
@@ -111,12 +120,9 @@ int		nm(char *ptr)
 		ft_printf("%33k<magic_number = %x>%k\n", magic_number);
 		return (0);
 	}
-	// ft_printf("%33k<call print_output>%k\n");
-	print_output(&list);
-	// ft_printf("%33k<end print_output>%k\n");
-	// ft_printf("%33k<call free_symtable>%k\n");
+	ft_printf("%33k<call free_symtable>%k\n");
 	free_symtable(&list);
-	// ft_printf("%33k<end free_symtable>%k\n");
+	ft_printf("%33k<end free_symtable>%k\n");
 	return (1);
 }
 
