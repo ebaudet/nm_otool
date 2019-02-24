@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/18 23:03:38 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/22 17:32:12 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef t_symtable	*(*t_compate_symtable)(t_symtable *, t_symtable *);
 char				get_section_letter(char *section);
 char				undef(int type, int addr, char c);
 char				get_symbol(char *section, int type, int addr, int sect);
-void				print_output(t_symtable **list);
+void				print_output(t_symtable **list, int size);
 
 /*
 ** nm_64.c
