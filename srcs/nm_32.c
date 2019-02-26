@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:55:29 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/22 17:58:22 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/25 23:15:29 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ t_symtable *add_symtable_32(struct nlist array, struct section *section, char *s
 		ft_printf("   {elememt list creation %31kERROR%k}\n");
 		return (NULL);
 	}
-	ft_printf("   {new: offset[%16s] symbol[%c] table_index[%s]}\n", new->offset, new->symbol, new->table_index);
-	list_add_order_symtable(list, new, compare_tableindex);
-	ft_printf("   {list add %32kOK%k}\n");
+	// ft_printf("   {new: offset[%16s] symbol[%c] table_index[%s]}\n", new->offset, new->symbol, new->table_index);
+	list_add_order_symtable(list, new, compare_end);
+	// ft_printf("   {list add %32kOK%k}\n");
 	return (new);
 }
 
@@ -70,7 +70,8 @@ void	get_symtable_32(struct symtab_command *sym, int nsyms, char *ptr,
 	{
 		// ft_printf("%33k<syms %d/%d>%k\n", i, nsyms);
 		section = get_section_32(segment, array[i].n_sect);
-		add_symtable_32(array[i], section, stringtable, list);
+		if ((array[i].n_type & N_STAB) == 0)
+			add_symtable_32(array[i], section, stringtable, list);
 		i++;
 	}
 }

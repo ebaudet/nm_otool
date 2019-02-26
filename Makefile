@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/04/23 12:31:26 by ebaudet           #+#    #+#              #
-#    Updated: 2019/02/18 23:03:54 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/02/24 17:17:31 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ INC			= -I includes -I libft/includes -I libft/ft_printf
 FLAGS		= -Wall -Wextra -Werror
 LIB			= -L libft -lft
 DEBUGFLG	= -fsanitize=address -g3
-DEBUGFLG	=
+# DEBUGFLG	=
 CC			= cc
 
 all: $(NAME)

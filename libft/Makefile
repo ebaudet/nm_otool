@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/21 12:00:46 by ebaudet           #+#    #+#              #
-#    Updated: 2019/02/13 22:15:09 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/02/24 17:18:22 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ OBJS	= ${SRCS:%.c=.obj/%.o}
 INC		= -I ./includes/ -I ./ft_printf/
 FLAGS	= -Wall -Wextra -Werror -fno-builtin -fno-stack-protector -pedantic -ansi
 FLAGS	= -Wall -Wextra -Werror
-DEBUGFLG = -fsanitize=address -g3
+# DEBUGFLG = -fsanitize=address -g3
 DEBUGFLG =
 CC		= gcc
 AR		= ar rc
