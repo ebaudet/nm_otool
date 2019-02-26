@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/22 17:35:00 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/25 23:14:12 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ int		nm(char *ptr)
 	if (magic_number == MH_MAGIC_64)
 	{
 		ft_printf("%33k<call handle_64>%k\n");
+		// ft_printf("type: N_STAB[%b], N_PEXT[%b], N_TYPE[%b], N_EXT[%b], N_UNDF[%b], N_ABS[%b], N_SECT[%b], N_PBUD[%b], N_INDR[%b] \n", N_STAB, N_PEXT, N_TYPE, N_EXT, N_UNDF, N_ABS, N_SECT, N_PBUD, N_INDR);
 		handle_64(ptr, &list);
 		ft_printf("%33k<end handle_64>%k\n");
 		ft_printf("%33k<call print_output>%k\n");

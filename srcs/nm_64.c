@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/18 23:24:38 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/02/26 02:22:12 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,24 @@ t_symtable *add_symtable_64(struct nlist_64 array, struct section_64 *section, c
 			offset = ft_strdup("                ");
 	else
 		offset = ft_gethex((unsigned long)array.n_value, 16);
-	// ft_printf("%34k->%k {in get_symtable: offset[%16s] symbol[%c] table_index[%s]}\n",
-	//           offset,
-	//           get_symbol(section->sectname, array.n_type, array.n_value, array.n_sect),
-	//           stringtable+array.n_un.n_strx);
+	ft_printf("%34k->%k {in get_symtable: offset[%16s] type[%x], value[%d], sect[%d], symbol[%c] table_index[%s]}\n",
+	          offset,
+	          array.n_type,
+	          array.n_value,
+	          array.n_sect,
+	          get_symbol(section->sectname, array.n_type, array.n_value, array.n_sect),
+	          stringtable+array.n_un.n_strx);
 	new = new_symtable(offset, get_symbol(section->sectname, array.n_type,
 		array.n_value, array.n_sect),
 		stringtable+array.n_un.n_strx);
 	if (new == NULL)
 	{
-		// ft_printf("   {elememt list creation %31kERROR%k}\n");
+		ft_printf("   {elememt list creation %31kERROR%k}\n");
 		return (NULL);
 	}
-	// ft_printf("   {new: offset[%16s] symbol[%c] table_index[%s]}\n", new->offset, new->symbol, new->table_index);
+	ft_printf("   {new: offset[%16s] symbol[%c] table_index[%s]}\n", new->offset, new->symbol, new->table_index);
 	list_add_order_symtable(list, new, compare_tableindex);
-	// ft_printf("   {list add %32kOK%k}\n");
+	ft_printf("   {list add %32kOK%k}\n");
 	return (new);
 }
 
@@ -70,7 +73,7 @@ void	get_symtable_64(struct symtab_command *sym, int nsyms, char *ptr,
 	{
 		// ft_printf("%33k<syms %d/%d>%k\n", i, nsyms);
 		section = get_section_64(segment, array[i].n_sect);
-		add_symtable_64(array[i], section, stringtable, list);
+		srcs/nm_32.c
 		i++;
 	}
 }
