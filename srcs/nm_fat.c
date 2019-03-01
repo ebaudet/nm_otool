@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 06:10:27 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 20:21:23 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 #include "libft.h"
 #include "libftprintf.h"
 
-void	put_achitecture_name(char *av, int cputype)
+void		put_achitecture_name(char *av, int cputype, int my_arch)
 {
+	if (my_arch)
+		return;
 	ft_printf("\n%s (for architecture ", av);
 	if (cputype == CPU_TYPE_I386)
 		ft_putstr("i386");
@@ -52,33 +54,50 @@ void	put_achitecture_name(char *av, int cputype)
 // on retrouve notre archi.
 // Si oui, on affichera les tables de symboles seulement pour notre architecture
 // Si non, on affichera toutes les architectures, comme pour l'option -arch
-// int		my_arch(char *ptr, struct fat_header *fheader, struct fat_arch *farch,
-// 	int flag)
-// {
-// 	int		i;
+static int	is_my_arch(char *ptr, struct fat_header *fheader, struct fat_arch *farch,
+	int flag)
+{
+	(void)ptr;
+	(void)fheader;
+	(void)farch;
+	(void)flag;
+	unsigned int			i;
 
-// 	i = 0;
-// 	while (++i <= bed(fheader->nfat_arch, flag))
-// 	{
-// 		header->cputype;
-// 	}
-// }
+	if (flag & FLAG_ARCH)
+		return (0);
 
-void	handle_fat(char *ptr, t_symtable **list, char *av, int flag)
+	i = 0;
+	while (++i <= bed(fheader->nfat_arch, flag))
+	{
+// 		ft_printf("{%31kfat_arch%k: cputype:%x, cpusubtype:%x, offset:%d, size:%d\
+// , align:%d}\n", bed(farch->cputype, flag), bed(farch->cpusubtype, flag),
+// bed(farch->offset, flag), bed(farch->size, flag), ft_pow(2, bed(farch->align, flag)));
+		if (bed(farch->cputype, flag) == CPU_TYPE_X86_64)
+			return (1);
+		farch++;
+	}
+	return (0);
+}
+
+void		handle_fat(char *ptr, t_symtable **list, char *av, int flag)
 {
 	struct fat_header		*fheader;
-	struct fat_arch			*arch;
+	struct fat_arch			*farch;
 	unsigned int			i;
 	struct mach_header_64	*header;
+	int						my_arch;
 
 	fheader = (struct fat_header *)ptr;
 	// ft_printf("{magic:%#x, nfat_arch:%d}\n", bed(fheader->magic, flag), bed(fheader->nfat_arch, flag));
 	i = 0;
-	arch = (struct fat_arch *)(fheader + 1);
+	farch = (struct fat_arch *)(fheader + 1);
+	my_arch = is_my_arch(ptr, fheader, farch, flag);
 	while (++i <= bed(fheader->nfat_arch, flag))
 	{
-		header = (void *)ptr + bed(arch->offset, flag);
-		put_achitecture_name(av, bed(header->cputype, flag));
+		if (my_arch && (bed(farch->cputype, flag) != CPU_TYPE_X86_64) && farch++)
+			continue ;
+		header = (void *)ptr + bed(farch->offset, flag);
+		put_achitecture_name(av, bed(farch->cputype, flag), my_arch);
 		if (header->magic == MH_MAGIC_64)
 		{
 			flag &= ~FLAG_BIGEN;
@@ -92,7 +111,7 @@ void	handle_fat(char *ptr, t_symtable **list, char *av, int flag)
 			print_output(list, 8);
 		}
 		free_symtable(list);
-		arch++;
+		farch++;
 		flag |= FLAG_BIGEN;
 	}
 }

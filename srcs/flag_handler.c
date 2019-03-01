@@ -6,23 +6,25 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 03:03:08 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 04:54:29 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 20:29:22 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "nm.h"
+#include "libftprintf.h"
 
 static int		flag_help(char **av)
 {
-	ft_putstr("USAGE: ");
+	ft_printf("%+kUSAGE%k: ");
 	ft_putstr(av[0]);
-	ft_putstr(" [-pPr][-arch] <input files>\n\nOPTIONS:\n\nGeneral options:\n\
--help\t- Display available options\n\
--p\t- Don't sort; display in symbol-table order.\n\
--P\t- Don't sort inverse; display in symbol-table inverse order.\n\
--r\t- Sort in reverse order.\n\
--arch\t- Display symbole for all architectures contained in the binary.\n");
+	ft_printf(" [-pPr][-arch] <input files>\n\n%+kOPTIONS%k:\n\n\
+%-kGeneral options%k:\n\
+-%+khelp%k\t- Display available options\n\
+-%+kp%k\t- Don't sort; display in symbol-table order.\n\
+-%+kP%k\t- Don't sort inverse; display in symbol-table inverse order.\n\
+-%+kr%k\t- Sort in reverse order.\n\
+-%+karch%k\t- Display symbole for all architectures contained in the binary.\n");
 	return (-1);
 }
 
