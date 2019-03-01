@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:55:29 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/25 23:15:29 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 02:57:55 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ t_symtable *add_symtable_32(struct nlist array, struct section *section, char *s
 			offset = ft_strdup("                ");
 	else
 		offset = ft_gethex((unsigned long)array.n_value, 8);
-	ft_printf("%34k->%k {in get_symtable: offset[%16s] symbol[%c] table_index[%s]}\n",
-	          offset,
-	          get_symbol(section->sectname, array.n_type, array.n_value, array.n_sect),
-	          stringtable+array.n_un.n_strx);
+	// ft_printf("%34k->%k {in get_symtable: offset[%16s] symbol[%c] table_index[%s]}\n",
+	//           offset,
+	//           get_symbol(section->sectname, array.n_type, array.n_value, array.n_sect),
+	//           stringtable+array.n_un.n_strx);
 	new = new_symtable(offset, get_symbol(section->sectname, array.n_type,
 		array.n_value, array.n_sect),
 		stringtable+array.n_un.n_strx);
@@ -88,10 +88,10 @@ void	handle_32(char *ptr, t_symtable **list)
 	ncmds = header->ncmds;
 	i = 0;
 	lc = (void *)ptr + sizeof(*header);
-	ft_printf("{HEADER: magic:%x, cputype:%d, cpusubtype:%d, filetype:%d, ncmds:%d, sizeofcmds:%d, flags:%d}\n",
-	 header->magic, header->cputype,
-header->cpusubtype, header->filetype, header->ncmds, header->sizeofcmds,
-header->flags);
+// 	ft_printf("{HEADER: magic:%x, cputype:%d, cpusubtype:%d, filetype:%d, ncmds:%d, sizeofcmds:%d, flags:%d}\n",
+// 	 header->magic, header->cputype,
+// header->cpusubtype, header->filetype, header->ncmds, header->sizeofcmds,
+// header->flags);
 	while (i < ncmds)
 	{
 		// ft_printf("%33k<cmd %d/%d>%k\n", i, ncmds);

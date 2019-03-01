@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/25 23:14:12 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 02:56:25 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,12 @@ void	print_output(t_symtable **list, int size)
 	}
 }
 
-int		nm(char *ptr)
+int		nm(char *ptr, char *av)
 {
 	unsigned int		magic_number;
 	t_symtable			*list;
 
+	list = NULL;
 	magic_number = *(unsigned int *)ptr;
 	if (magic_number == MH_MAGIC_64)
 	{
@@ -114,7 +115,9 @@ int		nm(char *ptr)
 		// @TODO: gérer ici les fat binaries
 		ft_printf("%33k<magic_number = %x | FAT_CIGAM>%k\n", magic_number);
 		ft_printf("%36k~Todo: handle FAT_CIGAM binaries~%k\n", magic_number);
-		return (1);
+		handle_fat(ptr, &list, av);
+		// print_output(&list, 16);
+		// return (1);
 	}
 	else
 	{
@@ -134,28 +137,37 @@ int		main(int ac, char **av)
 	char			*ptr;
 	int				i;
 
+	// (void)ac;
+	// (void)av;
+	// ft_printf("%0.8x %0.8x %0.8x %0.8x\n", 0x00, 0x10 & 0x01, 0x10 & ~0x01, 0x1111 & ~0x0010);
+	// ft_printf("%0.8x %0.8x %0.8x %0.8x\n", 0x00, 0x0010 | 0x1001, 0x10 | ~0x01, 0x11 | ~0x01);
+	// return (1);
+
 	if (ac < 2)
 	{
 		ft_printf_fd(2, "There are %d args given to the function\n", ac);
 		return (print_error("Please give me an arg"));
 	}
-	i = 1;
-	while (++i <= ac)
+	i = 0;
+	while (++i < ac)
 	{
 		if (ac > 2)
-			ft_printf("%s:\n", av[i - 1]);
-		if ((fd = open(av[i - 1], O_RDONLY)) < 0)
-			return (file_error("No such file or directory.", av[i - 1], av[0]));
-		if (fstat(fd, &buf) < 0)
-			return (file_error("Error fstat.", av[i - 1], av[0]));
-		if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
-			== MAP_FAILED)
-			return (file_error("Error mmap.", av[i - 1], av[0]));
-		if (nm(ptr) == 0)
-			file_error("The file was not recognized as a valid object file", av[i - 1], av[0]);
-		if (munmap(ptr, buf.st_size) < 0)
-			return (file_error("Error munmap.", av[i - 1], av[0]));
-		close(fd);
+			ft_printf("%s:\n", av[i]);
+		if ((fd = open(av[i], O_RDONLY)) < 0)
+			 file_error("No such file or directory.", av[i], av[0]);
+		else
+		{
+			if (fstat(fd, &buf) < 0)
+				return (file_error("Error fstat.", av[i], av[0]));
+			if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
+				== MAP_FAILED)
+				return (file_error("Error mmap.", av[i], av[0]));
+			if (nm(ptr, av[i]) == 0)
+				file_error("The file was not recognized as a valid object file", av[i], av[0]);
+			if (munmap(ptr, buf.st_size) < 0)
+				return (file_error("Error munmap.", av[i], av[0]));
+			close(fd);
+		}
 	}
 
 	return (EXIT_SUCCESS);

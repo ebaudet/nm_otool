@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/22 17:32:12 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 02:26:38 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,12 @@ struct section		*get_section_32(struct segment_command *segment,
 void				get_symtable_32(struct symtab_command *sym, int nsyms,
 					char *ptr, t_symtable **list);
 void				handle_32(char *ptr, t_symtable **list);
+
+/*
+** nm_fat.c
+*/
+void				handle_fat(char *ptr, t_symtable **list, char *av);
+
 
 /*
 ** symtable.c
