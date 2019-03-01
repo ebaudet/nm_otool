@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 17:42:32 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 02:54:53 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 06:01:28 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,5 +138,5 @@ void	free_symtable(t_symtable **list)
 		free(old->offset);
 		free(old);
 	}
-	// ft_printf("   {free list %32kOK%k}\n");
+	*list = NULL;
 }

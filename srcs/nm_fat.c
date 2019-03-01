@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 05:44:46 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 06:10:27 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,30 @@ void	put_achitecture_name(char *av, int cputype)
 	ft_putendl("):");
 }
 
-int
+// TODO : check pour n'afficher que l'architecture x86_64 si l'option FLAG_ARCH
+// n'est pas indiquée.
+// Pour faire ça, il faut faire une boucle dans les fat_arch et determiner si
+// on retrouve notre archi.
+// Si oui, on affichera les tables de symboles seulement pour notre architecture
+// Si non, on affichera toutes les architectures, comme pour l'option -arch
+// int		my_arch(char *ptr, struct fat_header *fheader, struct fat_arch *farch,
+// 	int flag)
+// {
+// 	int		i;
+
+// 	i = 0;
+// 	while (++i <= bed(fheader->nfat_arch, flag))
+// 	{
+// 		header->cputype;
+// 	}
+// }
 
 void	handle_fat(char *ptr, t_symtable **list, char *av, int flag)
 {
 	struct fat_header		*fheader;
 	struct fat_arch			*arch;
-	unsigned int	i;
-	struct mach_header_64 	*header;
+	unsigned int			i;
+	struct mach_header_64	*header;
 
 	fheader = (struct fat_header *)ptr;
 	// ft_printf("{magic:%#x, nfat_arch:%d}\n", bed(fheader->magic, flag), bed(fheader->nfat_arch, flag));
@@ -62,7 +78,7 @@ void	handle_fat(char *ptr, t_symtable **list, char *av, int flag)
 	while (++i <= bed(fheader->nfat_arch, flag))
 	{
 		header = (void *)ptr + bed(arch->offset, flag);
-		put_achitecture_name(av, header->cputype);
+		put_achitecture_name(av, bed(header->cputype, flag));
 		if (header->magic == MH_MAGIC_64)
 		{
 			flag &= ~FLAG_BIGEN;
@@ -75,6 +91,7 @@ void	handle_fat(char *ptr, t_symtable **list, char *av, int flag)
 			handle_32((char *)header, list, flag);
 			print_output(list, 8);
 		}
+		free_symtable(list);
 		arch++;
 		flag |= FLAG_BIGEN;
 	}
