@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 02:56:25 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 04:23:11 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	print_output(t_symtable **list, int size)
 	}
 }
 
-int		nm(char *ptr, char *av)
+int		nm(char *ptr, char *av, int flag)
 {
 	unsigned int		magic_number;
 	t_symtable			*list;
@@ -93,7 +93,7 @@ int		nm(char *ptr, char *av)
 	{
 		ft_printf("%33k<call handle_64>%k\n");
 		// ft_printf("type: N_STAB[%b], N_PEXT[%b], N_TYPE[%b], N_EXT[%b], N_UNDF[%b], N_ABS[%b], N_SECT[%b], N_PBUD[%b], N_INDR[%b] \n", N_STAB, N_PEXT, N_TYPE, N_EXT, N_UNDF, N_ABS, N_SECT, N_PBUD, N_INDR);
-		handle_64(ptr, &list);
+		handle_64(ptr, &list, flag);
 		ft_printf("%33k<end handle_64>%k\n");
 		ft_printf("%33k<call print_output>%k\n");
 		print_output(&list, 16);
@@ -103,7 +103,7 @@ int		nm(char *ptr, char *av)
 	else if (magic_number == MH_MAGIC)
 	{
 		ft_printf("%33k<call handle_32>%k\n");
-		handle_32(ptr, &list);
+		handle_32(ptr, &list, flag);
 		ft_printf("%33k<end handle_32>%k\n");
 		ft_printf("%33k<call print_output>%k\n");
 		print_output(&list, 8);
@@ -115,7 +115,7 @@ int		nm(char *ptr, char *av)
 		// @TODO: gérer ici les fat binaries
 		ft_printf("%33k<magic_number = %x | FAT_CIGAM>%k\n", magic_number);
 		ft_printf("%36k~Todo: handle FAT_CIGAM binaries~%k\n", magic_number);
-		handle_fat(ptr, &list, av);
+		handle_fat(ptr, &list, av, flag);
 		// print_output(&list, 16);
 		// return (1);
 	}
@@ -136,19 +136,19 @@ int		main(int ac, char **av)
 	struct stat		buf;
 	char			*ptr;
 	int				i;
-
-	// (void)ac;
-	// (void)av;
-	// ft_printf("%0.8x %0.8x %0.8x %0.8x\n", 0x00, 0x10 & 0x01, 0x10 & ~0x01, 0x1111 & ~0x0010);
-	// ft_printf("%0.8x %0.8x %0.8x %0.8x\n", 0x00, 0x0010 | 0x1001, 0x10 | ~0x01, 0x11 | ~0x01);
-	// return (1);
+	int				flag;
 
 	if (ac < 2)
 	{
 		ft_printf_fd(2, "There are %d args given to the function\n", ac);
 		return (print_error("Please give me an arg"));
 	}
-	i = 0;
+
+	flag = 0;
+	if ((i = nm_flag_handler(av, &flag)) < 0)
+		return (EXIT_SUCCESS);
+	ft_printf("i = %d\n", i);
+	// i = 0;
 	while (++i < ac)
 	{
 		if (ac > 2)
@@ -162,7 +162,7 @@ int		main(int ac, char **av)
 			if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
 				== MAP_FAILED)
 				return (file_error("Error mmap.", av[i], av[0]));
-			if (nm(ptr, av[i]) == 0)
+			if (nm(ptr, av[i], flag) == 0)
 				file_error("The file was not recognized as a valid object file", av[i], av[0]);
 			if (munmap(ptr, buf.st_size) < 0)
 				return (file_error("Error munmap.", av[i], av[0]));

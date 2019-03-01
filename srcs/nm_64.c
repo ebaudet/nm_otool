@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 02:49:48 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 04:44:19 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ struct section_64	*get_section_64(struct segment_command_64 *segment, uint32_t o
 	return (get_section_64((struct segment_command_64 *)((void *)segment + segment->cmdsize), offset - segment->nsects));
 }
 
-t_symtable *add_symtable_64(struct nlist_64 array, struct section_64 *section, char *stringtable, t_symtable **list)
+t_symtable *add_symtable_64(struct nlist_64 array, struct section_64 *section,
+	char *stringtable, t_symtable **list, int flag)
 {
 	t_symtable	*new;
 	char		*offset;
@@ -35,29 +36,24 @@ t_symtable *add_symtable_64(struct nlist_64 array, struct section_64 *section, c
 			offset = ft_strdup("                ");
 	else
 		offset = ft_gethex((unsigned long)array.n_value, 16);
-	// ft_printf("%34k->%k {in get_symtable: offset[%16s] type[%x], value[%d], sect[%d], symbol[%c] table_index[%s]}\n",
-	//           offset,
-	//           array.n_type,
-	//           array.n_value,
-	//           array.n_sect,
-	//           get_symbol(section->sectname, array.n_type, array.n_value, array.n_sect),
-	//           stringtable+array.n_un.n_strx);
 	new = new_symtable(offset, get_symbol(section->sectname, array.n_type,
 		array.n_value, array.n_sect),
 		stringtable+array.n_un.n_strx);
 	if (new == NULL)
-	{
-		ft_printf("   {elememt list creation %31kERROR%k}\n");
 		return (NULL);
-	}
-	// ft_printf("   {new: offset[%16s] symbol[%c] table_index[%s]}\n", new->offset, new->symbol, new->table_index);
-	list_add_order_symtable(list, new, compare_tableindex);
-	// ft_printf("   {list add %32kOK%k}\n");
+	if (flag & FLAG_P)
+		list_add_order_symtable(list, new, compare_end);
+	else if (flag & FLAG_PCAPS)
+		list_add_order_symtable(list, new, compare_first);
+	else if (flag & FLAG_R)
+		list_add_order_symtable(list, new, compare_tableindex_rev);
+	else
+		list_add_order_symtable(list, new, compare_tableindex);
 	return (new);
 }
 
 void	get_symtable_64(struct symtab_command *sym, int nsyms, char *ptr,
-                  t_symtable **list)
+                  t_symtable **list, int flag)
 {
 	int							i;
 	char						*stringtable;
@@ -74,12 +70,12 @@ void	get_symtable_64(struct symtab_command *sym, int nsyms, char *ptr,
 		// ft_printf("%33k<syms %d/%d>%k\n", i, nsyms);
 		section = get_section_64(segment, array[i].n_sect);
 		if ((array[i].n_type & N_STAB) == 0)
-			add_symtable_64(array[i], section, stringtable, list);
+			add_symtable_64(array[i], section, stringtable, list, flag);
 		i++;
 	}
 }
 
-void	handle_64(char *ptr, t_symtable **list)
+void	handle_64(char *ptr, t_symtable **list, int flag)
 {
 	int						ncmds;
 	int						i;
@@ -101,7 +97,7 @@ void	handle_64(char *ptr, t_symtable **list)
 		if (lc->cmd == LC_SYMTAB)
 		{
 			sym = (struct symtab_command *)lc;
-			get_symtable_64(sym, sym->nsyms, ptr, list);
+			get_symtable_64(sym, sym->nsyms, ptr, list, flag);
 			break ;
 		}
 		lc = (void *)lc + lc->cmdsize;

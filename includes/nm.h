@@ -6,25 +6,29 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 02:26:38 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 04:44:58 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NM_H
 # define NM_H
 
-#include <stddef.h>
-#include <stdio.h>
-#include <sys/mman.h>
-#include <mach-o/loader.h>
-#include <mach-o/nlist.h>
-#include <mach-o/fat.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include "math.h"
+# include <stddef.h>
+# include <stdio.h>
+# include <sys/mman.h>
+# include <mach-o/loader.h>
+# include <mach-o/nlist.h>
+# include <mach-o/fat.h>
+# include <fcntl.h>
+# include <sys/stat.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include "math.h"
 
+# define FLAG_P		0b1
+# define FLAG_PCAPS	0b10
+# define FLAG_R		0b100
+# define FLAG_ARCH	0b1000
 
 typedef struct		s_symtable
 {
@@ -51,28 +55,32 @@ struct section_64	*get_section_64(struct segment_command_64 *segment,
 					uint32_t offset);
 t_symtable 			*add_symtable_64(struct nlist_64 array,
 					struct section_64 *section, char *stringtable,
-					t_symtable **list);
+					t_symtable **list, int flag);
 void				get_symtable_64(struct symtab_command *sym, int nsyms,
-					char *ptr, t_symtable **list);
-void				handle_64(char *ptr, t_symtable **list);
+					char *ptr, t_symtable **list, int flag);
+void				handle_64(char *ptr, t_symtable **list, int flag);
 
 /*
 ** nm_32.c
 */
 t_symtable 			*add_symtable_32(struct nlist array,
 					struct section *section, char *stringtable,
-					t_symtable **list);
+					t_symtable **list, int flag);
 struct section		*get_section_32(struct segment_command *segment,
 					uint32_t offset);
 void				get_symtable_32(struct symtab_command *sym, int nsyms,
-					char *ptr, t_symtable **list);
-void				handle_32(char *ptr, t_symtable **list);
+					char *ptr, t_symtable **list, int flag);
+void				handle_32(char *ptr, t_symtable **list, int flag);
 
 /*
 ** nm_fat.c
 */
-void				handle_fat(char *ptr, t_symtable **list, char *av);
+void				handle_fat(char *ptr, t_symtable **list, char *av, int flag);
 
+/*
+** flag_handler.c
+*/
+int					nm_flag_handler(char **av, int *flag);
 
 /*
 ** symtable.c
