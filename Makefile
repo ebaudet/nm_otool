@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/04/23 12:31:26 by ebaudet           #+#    #+#              #
-#    Updated: 2019/02/24 17:17:31 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/02/28 04:29:23 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME		= nm_otool
 
 NM			= ft_nm
 F_NM		= ft_pow.c ft_puthex.c ft_gethex.c ft_error.c endian_swap.c \
-			symtable.c compare.c nm_32.c nm_64.c nm.c
+			symtable.c compare.c nm_32.c nm_64.c nm_fat.c nm.c
 SRC_NM		= $(addprefix srcs/, $(F_NM))
 OBJ_NM		= $(SRC_NM:srcs/%.c=.obj/%.o)
 
