@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 04:23:11 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 05:17:49 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,14 @@
 #include "libft.h"
 #include "libftprintf.h"
 
-char	get_section_letter(char *section)
+unsigned int	bed(unsigned int x, int flag)
+{
+	if (flag & FLAG_BIGEN)
+		return (endian_swap(x));
+	return (x);
+}
+
+char			get_section_letter(char *section)
 {
 	char	c;
 
@@ -30,7 +37,7 @@ char	get_section_letter(char *section)
 	return (c);
 }
 
-char	undef(int type, int addr, char c)
+char			undef(int type, int addr, char c)
 {
 	if ((type & N_TYPE) == N_UNDF)
 	{
@@ -42,7 +49,7 @@ char	undef(int type, int addr, char c)
 	return (c);
 }
 
-char	get_symbol(char *section, int type, int addr, int sect)
+char			get_symbol(char *section, int type, int addr, int sect)
 {
 	char	c;
 
@@ -69,7 +76,7 @@ char	get_symbol(char *section, int type, int addr, int sect)
 	return (c);
 }
 
-void	print_output(t_symtable **list, int size)
+void			print_output(t_symtable **list, int size)
 {
 	t_symtable	*tmp;
 
@@ -82,55 +89,46 @@ void	print_output(t_symtable **list, int size)
 	}
 }
 
-int		nm(char *ptr, char *av, int flag)
+int				nm(char *ptr, char *av, int flag)
 {
 	unsigned int		magic_number;
 	t_symtable			*list;
 
 	list = NULL;
 	magic_number = *(unsigned int *)ptr;
-	if (magic_number == MH_MAGIC_64)
+	flag &= ~FLAG_BIGEN;
+	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
 	{
-		ft_printf("%33k<call handle_64>%k\n");
-		// ft_printf("type: N_STAB[%b], N_PEXT[%b], N_TYPE[%b], N_EXT[%b], N_UNDF[%b], N_ABS[%b], N_SECT[%b], N_PBUD[%b], N_INDR[%b] \n", N_STAB, N_PEXT, N_TYPE, N_EXT, N_UNDF, N_ABS, N_SECT, N_PBUD, N_INDR);
+		if (magic_number == MH_CIGAM_64)
+			flag |= FLAG_BIGEN;
 		handle_64(ptr, &list, flag);
-		ft_printf("%33k<end handle_64>%k\n");
-		ft_printf("%33k<call print_output>%k\n");
 		print_output(&list, 16);
-		ft_printf("%33k<end print_output>%k\n");
-
 	}
-	else if (magic_number == MH_MAGIC)
+	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
 	{
-		ft_printf("%33k<call handle_32>%k\n");
+		if (magic_number == MH_CIGAM)
+			flag |= FLAG_BIGEN;
 		handle_32(ptr, &list, flag);
-		ft_printf("%33k<end handle_32>%k\n");
-		ft_printf("%33k<call print_output>%k\n");
 		print_output(&list, 8);
-		ft_printf("%33k<end print_output>%k\n");
-
 	}
-	else if (magic_number == FAT_CIGAM)
+	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
 	{
-		// @TODO: gérer ici les fat binaries
-		ft_printf("%33k<magic_number = %x | FAT_CIGAM>%k\n", magic_number);
-		ft_printf("%36k~Todo: handle FAT_CIGAM binaries~%k\n", magic_number);
+		if (magic_number == FAT_CIGAM)
+			flag |= FLAG_BIGEN;
 		handle_fat(ptr, &list, av, flag);
-		// print_output(&list, 16);
-		// return (1);
 	}
 	else
 	{
 		ft_printf("%33k<magic_number = %x>%k\n", magic_number);
 		return (0);
 	}
-	ft_printf("%33k<call free_symtable>%k\n");
+	// ft_printf("%33k<call free_symtable>%k\n");
 	free_symtable(&list);
-	ft_printf("%33k<end free_symtable>%k\n");
+	// ft_printf("%33k<end free_symtable>%k\n");
 	return (1);
 }
 
-int		main(int ac, char **av)
+int				main(int ac, char **av)
 {
 	int				fd;
 	struct stat		buf;
@@ -147,14 +145,12 @@ int		main(int ac, char **av)
 	flag = 0;
 	if ((i = nm_flag_handler(av, &flag)) < 0)
 		return (EXIT_SUCCESS);
-	ft_printf("i = %d\n", i);
-	// i = 0;
 	while (++i < ac)
 	{
 		if (ac > 2)
-			ft_printf("%s:\n", av[i]);
+			ft_printf("\n%s:\n", av[i]);
 		if ((fd = open(av[i], O_RDONLY)) < 0)
-			 file_error("No such file or directory.", av[i], av[0]);
+			file_error("No such file or directory.", av[i], av[0]);
 		else
 		{
 			if (fstat(fd, &buf) < 0)

@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 04:44:58 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 05:30:40 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # define FLAG_PCAPS	0b10
 # define FLAG_R		0b100
 # define FLAG_ARCH	0b1000
+# define FLAG_BIGEN	0b10000
 
 typedef struct		s_symtable
 {
@@ -43,6 +44,7 @@ typedef t_symtable	*(*t_compate_symtable)(t_symtable *, t_symtable *);
 /*
 ** nm.c
 */
+unsigned int		bed(unsigned int x, int flag);
 char				get_section_letter(char *section);
 char				undef(int type, int addr, char c);
 char				get_symbol(char *section, int type, int addr, int sect);
@@ -67,7 +69,7 @@ t_symtable 			*add_symtable_32(struct nlist array,
 					struct section *section, char *stringtable,
 					t_symtable **list, int flag);
 struct section		*get_section_32(struct segment_command *segment,
-					uint32_t offset);
+					uint32_t offset, int flag);
 void				get_symtable_32(struct symtab_command *sym, int nsyms,
 					char *ptr, t_symtable **list, int flag);
 void				handle_32(char *ptr, t_symtable **list, int flag);
