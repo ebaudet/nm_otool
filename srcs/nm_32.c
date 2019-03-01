@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:55:29 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 04:40:21 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 05:34:16 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ t_symtable *add_symtable_32(struct nlist array, struct section *section,
 	if (!array.n_value)
 			offset = ft_strdup("                ");
 	else
-		offset = ft_gethex((unsigned long)array.n_value, 8);
-	new = new_symtable(offset, get_symbol(section->sectname, array.n_type,
-		array.n_value, array.n_sect),
-		stringtable+array.n_un.n_strx);
+		offset = ft_gethex((unsigned long)bed(array.n_value, flag), 8);
+	new = new_symtable(offset, get_symbol(section->sectname,
+		bed(array.n_type, flag), bed(array.n_value, flag),
+		bed(array.n_sect, flag)), stringtable+bed(array.n_un.n_strx, flag));
 	if (new == NULL)
 		return (NULL);
 	if (flag & FLAG_P)
@@ -41,36 +41,37 @@ t_symtable *add_symtable_32(struct nlist array, struct section *section,
 }
 
 struct section	*get_section_32(struct segment_command *segment,
-                               uint32_t offset)
+                               uint32_t offset, int flag)
 {
 	struct section	*section;
 
-	if (offset <= segment->nsects)
+	if (offset <= bed(segment->nsects, flag))
 	{
 		section = (struct section *)&segment[1] + offset - 1;
 		return (section);
 	}
 	return (get_section_32((struct segment_command *)((void *)segment +
-		segment->cmdsize), offset - segment->nsects));
+		bed(segment->cmdsize, flag)), offset - bed(segment->nsects, flag),
+		flag));
 }
 
 void	get_symtable_32(struct symtab_command *sym, int nsyms, char *ptr,
                   t_symtable **list, int flag)
 {
-	int							i;
-	char						*stringtable;
-	struct nlist				*array;
+	int						i;
+	char					*stringtable;
+	struct nlist			*array;
 	struct segment_command	*segment;
 	struct section			*section;
 
-	array = (void *)ptr + sym->symoff;
-	stringtable = (void *)ptr + sym->stroff;
+	array = (void *)ptr + bed(sym->symoff, flag);
+	stringtable = (void *)ptr + bed(sym->stroff, flag);
 	segment = (void *)ptr + sizeof(struct mach_header);
 	i = 0;
 	while (i < nsyms)
 	{
-		section = get_section_32(segment, array[i].n_sect);
-		if ((array[i].n_type & N_STAB) == 0)
+		section = get_section_32(segment, bed(array[i].n_sect, flag), flag);
+		if ((bed(array[i].n_type, flag) & N_STAB) == 0)
 			add_symtable_32(array[i], section, stringtable, list, flag);
 		i++;
 	}
@@ -85,7 +86,7 @@ void	handle_32(char *ptr, t_symtable **list, int flag)
 	struct symtab_command	*sym;
 
 	header = (struct mach_header *)ptr;
-	ncmds = header->ncmds;
+	ncmds = bed(header->ncmds, flag);
 	i = 0;
 	lc = (void *)ptr + sizeof(*header);
 // 	ft_printf("{HEADER: magic:%x, cputype:%d, cpusubtype:%d, filetype:%d, ncmds:%d, sizeofcmds:%d, flags:%d}\n",
@@ -95,13 +96,13 @@ void	handle_32(char *ptr, t_symtable **list, int flag)
 	while (i < ncmds)
 	{
 		// ft_printf("%33k<cmd %d/%d>%k\n", i, ncmds);
-		if (lc->cmd == LC_SYMTAB)
+		if (bed(lc->cmd, flag) == LC_SYMTAB)
 		{
 			sym = (struct symtab_command *)lc;
-			get_symtable_32(sym, sym->nsyms, ptr, list, flag);
+			get_symtable_32(sym, bed(sym->nsyms, flag), ptr, list, flag);
 			break ;
 		}
-		lc = (void *)lc + lc->cmdsize;
+		lc = (void *)lc + bed(lc->cmdsize, flag);
 		i++;
 	}
 }
