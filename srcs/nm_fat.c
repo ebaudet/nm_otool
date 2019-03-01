@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 02:56:09 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/01 04:24:35 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	put_achitecture_name(char *av, int cputype)
 	ft_putendl("):");
 }
 
-void	handle_fat(char *ptr, t_symtable **list, char *av)
+void	handle_fat(char *ptr, t_symtable **list, char *av, int flag)
 {
 	(void)list;
 	(void)ptr;
@@ -73,7 +73,7 @@ void	handle_fat(char *ptr, t_symtable **list, char *av)
 		{
 			// ft_printf("%33k<call handle_64>%k\n");
 			// ft_printf("%s (for architecture )", av);
-			handle_64((char *)header, list);
+			handle_64((char *)header, list, flag);
 			// ft_printf("%33k<end handle_64>%k\n");
 			// ft_printf("%33k<call print_output>%k\n");
 			print_output(list, 16);
@@ -82,7 +82,7 @@ void	handle_fat(char *ptr, t_symtable **list, char *av)
 		else if (header->magic == MH_MAGIC)
 		{
 			// ft_printf("%33k<call handle_32>%k\n");
-			handle_32((char *)header, list);
+			handle_32((char *)header, list, flag);
 			// ft_printf("%33k<end handle_32>%k\n");
 			// ft_printf("%33k<call print_output>%k\n");
 			print_output(list, 8);
