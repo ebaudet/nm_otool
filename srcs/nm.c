@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 05:17:49 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/03 19:52:13 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,16 @@
 
 unsigned int	bed(unsigned int x, int flag)
 {
-	if (flag & FLAG_BIGEN)
+	if (flag == (flag & FLAG_BIGEN))
 		return (endian_swap(x));
+	return (x);
+}
+
+void		*pbed(void *x, int flag)
+{
+	// (void)flag;
+	if (flag & FLAG_BIGEN)
+		return (p_endian_swap(x));
 	return (x);
 }
 
@@ -141,7 +149,6 @@ int				main(int ac, char **av)
 		ft_printf_fd(2, "There are %d args given to the function\n", ac);
 		return (print_error("Please give me an arg"));
 	}
-
 	flag = 0;
 	if ((i = nm_flag_handler(av, &flag)) < 0)
 		return (EXIT_SUCCESS);

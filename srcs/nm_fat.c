@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 20:21:23 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/03 20:17:11 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ void		put_achitecture_name(char *av, int cputype, int my_arch)
 	else if (cputype == CPU_TYPE_I860)
 		ft_putstr("i860");
 	else if (cputype == CPU_TYPE_POWERPC)
-		ft_putstr("powerpc");
+		ft_putstr("ppc");
 	else if (cputype == CPU_TYPE_POWERPC64)
-		ft_putstr("powerpc64");
+		ft_putstr("ppc64");
 	ft_putendl("):");
 }
 
@@ -98,17 +98,52 @@ void		handle_fat(char *ptr, t_symtable **list, char *av, int flag)
 			continue ;
 		header = (void *)ptr + bed(farch->offset, flag);
 		put_achitecture_name(av, bed(farch->cputype, flag), my_arch);
-		if (header->magic == MH_MAGIC_64)
+		ft_printf("<JE PASSE ICI %x>\n", bed(header->magic, flag));
+		unsigned short int a, b;
+		a = 0xf0f0;
+		b = 0xff00;
+		ft_printf(
+		"a:%0.4x, b:%0.4x, !a:%0.4x, !b:%0.4x, ~a:%0.4x, ~b:%0.4x, a&b:%0.4x, a|b:%0.4x, a^b:%0.4x\n",
+		 a, b, !a, !b, ~a, ~b, a&b, a|b, a^b);
+		if (flag == (flag | FLAG_BIGEN))
+			ft_printf("1.FLAG_BIGEN is put\n");
+		if (flag & FLAG_BIGEN)
+			ft_printf("1.FLAG_BIGEN is put 2\n");
+		if (flag == (flag & ~FLAG_BIGEN))
+			ft_printf("1.FLAG_BIGEN is not put\n");
+		if (flag & ~FLAG_BIGEN)
+			ft_printf("1.FLAG_BIGEN is not put2\n");
+
+		flag &= ~FLAG_BIGEN;
+		if (flag == (flag | FLAG_BIGEN))
+			ft_printf("2.FLAG_BIGEN is put\n");
+		if (flag & FLAG_BIGEN)
+			ft_printf("2.FLAG_BIGEN is put 2\n");
+		if (flag == (flag & ~FLAG_BIGEN))
+			ft_printf("2.FLAG_BIGEN is not put\n");
+		if (flag & ~FLAG_BIGEN)
+			ft_printf("2.FLAG_BIGEN is not put2\n");
+
+
+		if (header->magic == MH_MAGIC_64 || header->magic == MH_CIGAM_64)
 		{
-			flag &= ~FLAG_BIGEN;
+			if (bed(header->magic, flag) == MH_CIGAM_64)
+				flag |= FLAG_BIGEN;
+			else
+				flag &= ~FLAG_BIGEN;
 			handle_64((char *)header, list, flag);
 			print_output(list, 16);
 		}
-		else if (header->magic == MH_MAGIC)
+		else if (header->magic == MH_MAGIC || header->magic == MH_CIGAM)
 		{
-			flag &= ~FLAG_BIGEN;
+			if (bed(header->magic, flag) == MH_CIGAM)
+				flag |= FLAG_BIGEN;
+			else
+				flag &= ~FLAG_BIGEN;
 			handle_32((char *)header, list, flag);
 			print_output(list, 8);
+		} else {
+			ft_printf("header magic:%x\n", header->magic);
 		}
 		free_symtable(list);
 		farch++;
