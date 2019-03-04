@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/03 01:51:07 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/04 03:10:42 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int					file_error(char *message, char *file, char *function);
 ** endian_swap.c
 */
 unsigned int		endian_swap(unsigned int x);
-void				*p_endian_swap(void *p);
+void				*p_endian_swap_64(void *p);
 
 /*
 ** NM_H
