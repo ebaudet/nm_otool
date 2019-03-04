@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:55:29 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/03 19:01:08 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/04 03:11:56 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ t_symtable *add_symtable_32(struct nlist array, struct section *section,
 		offset = ft_gethex((unsigned long)bed(array.n_value, flag), 8);
 	ft_printf("{add_symtable_32: array: %p, section: %p, stringtable: %p}\n",
 	         &array, section, stringtable);
-	ft_printf("{%32kget_symbol: sectname:%p, n_type:%x, n_value:%x, n_sect:%x",
-	          section->sectname, bed(array.n_type, flag), bed(array.n_value, flag), bed(array.n_sect, flag));
-	ft_printf(", sectname: %s%k}\n", section->sectname - 15);
+	ft_printf("{%32kget_symbol: sectname:%p|%p, n_type:%x, n_value:%x, n_sect:%x",
+	          bed((unsigned int)section->sectname, flag),section->sectname,  bed(array.n_type, flag), bed(array.n_value, flag), bed(array.n_sect, flag));
+	ft_printf(", sectname: %s%k}\n", bed((unsigned int)section->sectname, flag));
 	// exit(0);
 	// ft_printf("%1.1s\n", sectname);
 	// new = new_symtable(offset, get_symbol(sectname,
