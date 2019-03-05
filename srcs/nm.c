@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/04 03:13:26 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/05 21:45:27 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,8 @@
 
 unsigned int	bed(unsigned int x, int flag)
 {
-	if (flag == (flag & FLAG_BIGEN))
+	if (flag & FLAG_BIGEN)
 		return (endian_swap(x));
-	return (x);
-}
-
-void		*pbed(void *x, int flag)
-{
-	if (flag == (flag & FLAG_BIGEN))
-		return (p_endian_swap_64(x));
 	return (x);
 }
 
