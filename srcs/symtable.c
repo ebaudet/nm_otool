@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 17:42:32 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 06:01:28 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/06 18:28:47 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ size_t		count_symtable(t_symtable **list)
 ** Free the chained list <list>
 */
 
-void	free_symtable(t_symtable **list)
+void		free_symtable(t_symtable **list)
 {
 	t_symtable	*tmp;
 	t_symtable	*old;

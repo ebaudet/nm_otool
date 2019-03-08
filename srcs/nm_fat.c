@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/05 21:50:27 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/06 18:55:31 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,6 @@ static int	is_my_arch(char *ptr, struct fat_header *fheader, struct fat_arch *fa
 	i = 0;
 	while (++i <= bed(fheader->nfat_arch, flag))
 	{
-// 		ft_printf("{%31kfat_arch%k: cputype:%x, cpusubtype:%x, offset:%d, size:%d\
-// , align:%d}\n", bed(farch->cputype, flag), bed(farch->cpusubtype, flag),
-// bed(farch->offset, flag), bed(farch->size, flag), ft_pow(2, bed(farch->align, flag)));
 		if (bed(farch->cputype, flag) == CPU_TYPE_X86_64)
 			return (1);
 		farch++;
@@ -87,70 +84,31 @@ void		handle_fat(char *ptr, t_symtable **list, char *av, int flag)
 	struct mach_header_64	*header;
 	int						my_arch;
 
-	// ft_printf("%33k[%s]%k", (flag & FLAG_BIGEN) ? "is big-endian" : "is litle-endian");
 	fheader = (struct fat_header *)ptr;
-	// ft_printf("{fheader: %p, magic:%#x, nfat_arch:%d, type: %s}\n",
-	//           fheader, fheader->magic, bed(fheader->nfat_arch, flag), (flag & FLAG_BIGEN) ? "big-endian" : "litle-endian");
-	// ft_printf("%33k[%s]%k", (flag & FLAG_BIGEN) ? "is big-endian" : "is litle-endian");
-
 	i = 0;
 	farch = (struct fat_arch *)(fheader + 1);
 	my_arch = is_my_arch(ptr, fheader, farch, flag);
-	// ft_printf("%33k[%s]%k", (flag & FLAG_BIGEN) ? "is big-endian" : "is litle-endian");
-
 	while (++i <= bed(fheader->nfat_arch, flag))
 	{
-		// ft_printf("{fat_arch: cputype:%x, cpusubtype:%x, offset: %d, size:%d, align:%d}",
-		//           bed(farch->cputype, flag), bed(farch->cpusubtype, flag), bed(farch->offset, flag),
-		//           bed(farch->size, flag), ft_pow(2, bed(farch->align, flag)));
-		// ft_printf("%33k[%s]%k", (flag & FLAG_BIGEN) ? "is big-endian" : "is litle-endian");
 		if (my_arch && (bed(farch->cputype, flag) != CPU_TYPE_X86_64) && farch++)
 			continue ;
 		header = (void *)ptr + bed(farch->offset, flag);
 		put_achitecture_name(av, bed(farch->cputype, flag), my_arch);
-		// ft_printf("%33k[%s]%k", (flag & FLAG_BIGEN) ? "is big-endian" : "is litle-endian");
-
-		// ft_printf("<JE PASSE ICI %x|%x>\n", bed(header->magic, flag), header->magic);
-
 		if (header->magic == MH_MAGIC_64 || header->magic == MH_CIGAM_64)
 		{
-			if (bed(header->magic, flag) == MH_CIGAM_64)
-				flag |= FLAG_BIGEN;
-			else
-				flag &= ~FLAG_BIGEN;
-			// ft_printf("%33k[%s]%k", (flag & FLAG_BIGEN) ? "is big-endian" : "is litle-endian");
-			handle_64((char *)header, list, flag);
+			handle_64((char *)header, list, (header->magic == MH_CIGAM_64) ?
+				flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
 			print_output(list, 16);
 		}
 		else if (header->magic == MH_MAGIC || header->magic == MH_CIGAM)
 		{
-			// ft_printf("%33k[->%s]%k", (flag & FLAG_BIGEN) ? "is big-endian" : "is litle-endian");
-
-			// ft_printf("header magic is : %x\n", bed(header->magic, flag));
-
-			if (bed(MH_CIGAM, flag) == bed(header->magic, flag))
-			{
-				// ft_printf("is big-endian: MH_CIGAM=%x", MH_CIGAM);
-				flag |= FLAG_BIGEN;
-			}
-			else{
-				// ft_printf("is little-endian: MH_MAGIC=%x", MH_MAGIC);
-				flag &= ~FLAG_BIGEN;
-			}
-			// ft_printf("{HEADER: magic:%x, cputype:%x, cpusubtype:%x, filetype:%x, ncmds:%x, sizeofcmds:%x, flags:%x}\n",
-			// bed(header->magic, flag), bed(header->cputype, flag),
-			// bed(header->cpusubtype, flag), bed(header->filetype, flag), bed(header->ncmds, flag), bed(header->sizeofcmds, flag),
-			// header->flags);
-			// ft_printf("%33k[%s]%k", (flag & FLAG_BIGEN) ? "is big-endian" : "is litle-endian");
-			handle_32((char *)header, list, flag);
+			handle_32((char *)header, list, MH_CIGAM == header->magic ?
+				flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
 			print_output(list, 8);
 		}
 		else
-		{
 			ft_printf("header magic:%x\n", header->magic);
-		}
 		free_symtable(list);
 		farch++;
-		flag |= FLAG_BIGEN;
 	}
 }

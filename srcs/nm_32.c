@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:55:29 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/05 21:50:51 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/06 20:35:00 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ t_symtable *add_symtable_32(struct nlist array, struct section *section,
 		list_add_order_symtable(list, new, compare_first);
 	else if (flag & FLAG_R)
 		list_add_order_symtable(list, new, compare_tableindex_rev);
+	else if (flag & FLAG_N)
+		list_add_order_symtable(list, new, compare_offset);
 	else
 		list_add_order_symtable(list, new, compare_tableindex);
 	return (new);

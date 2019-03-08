@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 04:44:19 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/06 20:37:17 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ t_symtable *add_symtable_64(struct nlist_64 array, struct section_64 *section,
 		list_add_order_symtable(list, new, compare_first);
 	else if (flag & FLAG_R)
 		list_add_order_symtable(list, new, compare_tableindex_rev);
+	else if (flag & FLAG_N)
+		list_add_order_symtable(list, new, compare_offset);
 	else
 		list_add_order_symtable(list, new, compare_tableindex);
 	return (new);
@@ -87,10 +89,10 @@ void	handle_64(char *ptr, t_symtable **list, int flag)
 	ncmds = header->ncmds;
 	i = 0;
 	lc = (void *)ptr + sizeof(*header);
-// 	ft_printf("{HEADER: magic:%x, cputype:%d, cpusubtype:%d, filetype:%d, ncmds:%d, sizeofcmds:%d, flags:%d, reserved:%d}\n",
-// 	 header->magic, header->cputype,
-// header->cpusubtype, header->filetype, header->ncmds, header->sizeofcmds,
-// header->flags, header->reserved);
+	ft_printf("{HEADER: magic:%x, cputype:%d, cpusubtype:%d, filetype:%d, ncmds:%d, sizeofcmds:%d, flags:%d, reserved:%d}\n",
+	 header->magic, header->cputype,
+header->cpusubtype, header->filetype, header->ncmds, header->sizeofcmds,
+header->flags, header->reserved);
 	while (i < ncmds)
 	{
 		// ft_printf("%33k<cmd %d/%d>%k\n", i, ncmds);
