@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/05 21:45:52 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/06 20:35:35 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define FLAG_R		0b100
 # define FLAG_ARCH	0b1000
 # define FLAG_BIGEN	0b10000
+# define FLAG_N		0b100000
 
 typedef struct		s_symtable
 {
@@ -102,6 +103,7 @@ t_symtable			*compare_tableindex(t_symtable *a, t_symtable *b);
 t_symtable			*compare_tableindex_rev(t_symtable *a, t_symtable *b);
 t_symtable			*compare_end(t_symtable *a, t_symtable *b);
 t_symtable			*compare_first(t_symtable *a, t_symtable *b);
+t_symtable			*compare_offset(t_symtable *a, t_symtable *b);
 
 /*
 ** ft_error.c

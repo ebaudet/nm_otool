@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 03:03:08 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/01 20:29:22 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/06 20:36:34 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,13 @@ static void		add_flag(char *av, int *flag)
 	while (av[++i])
 	{
 		if (av[i] == 'p')
-			*flag = (*flag & ~FLAG_PCAPS & ~FLAG_R) | FLAG_P;
+			*flag = (*flag & ~FLAG_PCAPS & ~FLAG_R & ~FLAG_N) | FLAG_P;
 		if (av[i] == 'P')
-			*flag = (*flag & ~FLAG_P & ~FLAG_R) | FLAG_PCAPS;
+			*flag = (*flag & ~FLAG_P & ~FLAG_R & ~FLAG_N) | FLAG_PCAPS;
 		if (av[i] == 'r')
-			*flag = (*flag & ~FLAG_P & ~FLAG_PCAPS) | FLAG_R;
+			*flag = (*flag & ~FLAG_P & ~FLAG_PCAPS & ~FLAG_N) | FLAG_R;
+		if (av[i] == 'n')
+			*flag = (*flag & ~FLAG_P & ~FLAG_PCAPS & ~FLAG_R) | FLAG_N;
 	}
 }
 
