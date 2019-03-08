@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 19:34:27 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/08 17:29:41 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/08 19:59:36 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,9 @@ t_symtable	*compare_first(t_symtable *a, t_symtable *b)
 
 t_symtable	*compare_offset(t_symtable *a, t_symtable *b)
 {
-	if (ft_strcmp(a->offset, b->offset) <= 0)
+	if (ft_strcmp(a->offset, b->offset) < 0)
 		return (a);
+	else if (ft_strcmp(a->offset, b->offset) == 0)
+		return (compare_tableindex(a, b));
 	return (b);
 }

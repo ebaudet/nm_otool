@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/06 20:35:35 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/08 19:21:40 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # define FLAG_ARCH	0b1000
 # define FLAG_BIGEN	0b10000
 # define FLAG_N		0b100000
+# define FLAG_PRINT	0b1000000
 
 typedef struct		s_symtable
 {
@@ -39,6 +40,12 @@ typedef struct		s_symtable
 	char				*table_index;
 	struct s_symtable	*next;
 }					t_symtable;
+
+typedef struct		s_arch_info {
+	char			*name;
+	cpu_type_t		cputype;
+	cpu_subtype_t	cpusubtype;
+}					t_arch_info;
 
 typedef t_symtable	*(*t_compate_symtable)(t_symtable *, t_symtable *);
 
@@ -49,7 +56,8 @@ unsigned int		bed(unsigned int x, int flag);
 char				get_section_letter(char *section);
 char				undef(int type, int addr, char c);
 char				get_symbol(char *section, int type, int addr, int sect);
-void				print_output(t_symtable **list, int size);
+void				print_output(t_symtable **list, int size, char *av, int flag);
+int					handle_type(char *ptr, char *av, int flag);
 
 /*
 ** nm_64.c
@@ -61,7 +69,7 @@ t_symtable 			*add_symtable_64(struct nlist_64 array,
 					t_symtable **list, int flag);
 void				get_symtable_64(struct symtab_command *sym, int nsyms,
 					char *ptr, t_symtable **list, int flag);
-void				handle_64(char *ptr, t_symtable **list, int flag);
+int					handle_64(char *ptr, t_symtable **list, int flag);
 
 /*
 ** nm_32.c
@@ -73,12 +81,12 @@ struct section		*get_section_32(struct segment_command *segment,
 					uint32_t offset, int flag);
 void				get_symtable_32(struct symtab_command *sym, int nsyms,
 					char *ptr, t_symtable **list, int flag);
-void				handle_32(char *ptr, t_symtable **list, int flag);
+int					handle_32(char *ptr, t_symtable **list, int flag);
 
 /*
 ** nm_fat.c
 */
-void				handle_fat(char *ptr, t_symtable **list, char *av, int flag);
+int					handle_fat(char *ptr, char *av, int flag);
 
 /*
 ** flag_handler.c

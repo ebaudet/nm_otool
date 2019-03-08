@@ -6,13 +6,15 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/05 21:45:27 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/08 20:02:20 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 #include "libft.h"
 #include "libftprintf.h"
+
+#include <ar.h>
 
 unsigned int	bed(unsigned int x, int flag)
 {
@@ -76,10 +78,12 @@ char			get_symbol(char *section, int type, int addr, int sect)
 	return (c);
 }
 
-void			print_output(t_symtable **list, int size)
+void			print_output(t_symtable **list, int size, char *av, int flag)
 {
 	t_symtable	*tmp;
 
+	if (flag & FLAG_PRINT)
+		ft_printf("\n%s:\n", av);
 	tmp = *list;
 	while (tmp)
 	{
@@ -89,42 +93,41 @@ void			print_output(t_symtable **list, int size)
 	}
 }
 
-int				nm(char *ptr, char *av, int flag)
+int				handle_type(char *ptr, char *av, int flag)
 {
 	unsigned int		magic_number;
 	t_symtable			*list;
+	int					size_print;
+	// struct ar_hdr		*ar;
 
 	list = NULL;
 	magic_number = *(unsigned int *)ptr;
-	flag &= ~FLAG_BIGEN;
 	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
-	{
-		if (magic_number == MH_CIGAM_64)
-			flag |= FLAG_BIGEN;
-		handle_64(ptr, &list, flag);
-		print_output(&list, 16);
-	}
+		size_print = handle_64(ptr, &list, (magic_number == MH_CIGAM_64) ?
+			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
 	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
-	{
-		if (magic_number == MH_CIGAM)
-			flag |= FLAG_BIGEN;
-		handle_32(ptr, &list, flag);
-		print_output(&list, 8);
-	}
+		size_print = handle_32(ptr, &list, (magic_number == MH_CIGAM) ?
+			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
-	{
-		if (magic_number == FAT_CIGAM)
-			flag |= FLAG_BIGEN;
-		handle_fat(ptr, &list, av, flag);
-	}
+		size_print = handle_fat(ptr, av, (magic_number == FAT_CIGAM) ?
+			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
 	else
 	{
-		ft_printf("%33k<magic_number = %x>%k\n", magic_number);
+		// ft_printf("%33k<magic_number = %x>%k\n", magic_number);
+		// ft_printf("[%.*s]\n[%s]\n", SARMAG, ptr, ARMAG);
+		// if (!ft_strncmp((const char *)ptr, ARMAG, SARMAG))
+		// {
+		// 	ar = (struct ar_hdr *)(SARMAG * sizeof(char) + ptr);
+		// 	ft_printf("{archinve: ar_name:%.16s, ar_date:%.12s, ar_uid:%.6s, ar_gid:%.6s, ar_mode:%.8s, ar_size: %.10s}\n",
+		//         ar->ar_name, ar->ar_date, ar->ar_uid, ar->ar_gid, ar->ar_mode);
+		// }
 		return (0);
 	}
-	// ft_printf("%33k<call free_symtable>%k\n");
+	if (size_print < 0)
+		return (0);
+	if (size_print > 0)
+		print_output(&list, size_print, av, flag);
 	free_symtable(&list);
-	// ft_printf("%33k<end free_symtable>%k\n");
 	return (1);
 }
 
@@ -144,10 +147,9 @@ int				main(int ac, char **av)
 	flag = 0;
 	if ((i = nm_flag_handler(av, &flag)) < 0)
 		return (EXIT_SUCCESS);
+	flag = (ac - i > 0) ? flag | FLAG_PRINT : flag;
 	while (++i < ac)
 	{
-		if (ac > 2)
-			ft_printf("\n%s:\n", av[i]);
 		if ((fd = open(av[i], O_RDONLY)) < 0)
 			file_error("No such file or directory.", av[i], av[0]);
 		else
@@ -157,13 +159,12 @@ int				main(int ac, char **av)
 			if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
 				== MAP_FAILED)
 				return (file_error("Error mmap.", av[i], av[0]));
-			if (nm(ptr, av[i], flag) == 0)
-				file_error("The file was not recognized as a valid object file", av[i], av[0]);
+			if (handle_type(ptr, av[i], flag) == 0)
+				file_error("The file was not recognized as a valid object file\n", av[i], av[0]);
 			if (munmap(ptr, buf.st_size) < 0)
 				return (file_error("Error munmap.", av[i], av[0]));
 			close(fd);
 		}
 	}
-
 	return (EXIT_SUCCESS);
 }
