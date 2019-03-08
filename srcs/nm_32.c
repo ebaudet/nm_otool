@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:55:29 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/06 20:35:00 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/08 17:57:20 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	get_symtable_32(struct symtab_command *sym, int nsyms, char *ptr,
 	}
 }
 
-void	handle_32(char *ptr, t_symtable **list, int flag)
+int		handle_32(char *ptr, t_symtable **list, int flag)
 {
 	int						ncmds;
 	int						i;
@@ -116,4 +116,5 @@ void	handle_32(char *ptr, t_symtable **list, int flag)
 		lc = (void *)lc + bed(lc->cmdsize, flag);
 		i++;
 	}
+	return (8);
 }

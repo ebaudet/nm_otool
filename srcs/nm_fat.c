@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/06 18:55:31 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/08 19:25:13 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,77 @@
 #include "libft.h"
 #include "libftprintf.h"
 
-void		put_achitecture_name(char *av, int cputype, int my_arch)
+static const t_arch_info g_infos[] = {
+	{"any", CPU_TYPE_ANY, CPU_SUBTYPE_MULTIPLE},
+	{"arm", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_ALL},
+	{"arm64", CPU_TYPE_ARM64, CPU_SUBTYPE_ARM64_ALL},
+	{"arm64", CPU_TYPE_ARM64, CPU_SUBTYPE_ARM64_V8},
+	{"armv4t", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_V4T},
+	{"armv5", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_V5TEJ},
+	{"armv6", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_V6},
+	{"armv6m", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_V6M},
+	{"armv7", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_V7},
+	{"armv7em", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_V7EM},
+	{"armv7f", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_V7F},
+	{"armv7k", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_V7K},
+	{"armv7m", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_V7M},
+	{"armv7s", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_V7S},
+	{"armv8", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_V8},
+	{"big", CPU_TYPE_ANY, CPU_SUBTYPE_BIG_ENDIAN},
+	{"hppa", CPU_TYPE_HPPA, CPU_SUBTYPE_HPPA_ALL},
+	{"hppa7100LC", CPU_TYPE_HPPA, CPU_SUBTYPE_HPPA_7100LC},
+	{"i386", CPU_TYPE_I386, CPU_SUBTYPE_I386_ALL},
+	{"i486", CPU_TYPE_I386, CPU_SUBTYPE_486},
+	{"i486SX", CPU_TYPE_I386, CPU_SUBTYPE_486SX},
+	{"i586", CPU_TYPE_I386, CPU_SUBTYPE_586},
+	{"i686", CPU_TYPE_I386, CPU_SUBTYPE_PENTPRO},
+	{"i860", CPU_TYPE_I860, CPU_SUBTYPE_I860_ALL},
+	{"little", CPU_TYPE_ANY, CPU_SUBTYPE_LITTLE_ENDIAN},
+	{"m68030", CPU_TYPE_MC680x0, CPU_SUBTYPE_MC68030_ONLY},
+	{"m68040", CPU_TYPE_MC680x0, CPU_SUBTYPE_MC68040},
+	{"m68k", CPU_TYPE_MC680x0, CPU_SUBTYPE_MC680x0_ALL},
+	{"m88k", CPU_TYPE_MC88000, CPU_SUBTYPE_MC88000_ALL},
+	{"pentIIm3", CPU_TYPE_I386, CPU_SUBTYPE_PENTII_M3},
+	{"pentIIm5", CPU_TYPE_I386, CPU_SUBTYPE_PENTII_M5},
+	{"pentium", CPU_TYPE_I386, CPU_SUBTYPE_PENT},
+	{"pentium4", CPU_TYPE_I386, CPU_SUBTYPE_PENTIUM_4},
+	{"pentpro", CPU_TYPE_I386, CPU_SUBTYPE_PENTPRO},
+	{"ppc", CPU_TYPE_POWERPC, CPU_SUBTYPE_POWERPC_ALL},
+	{"ppc601", CPU_TYPE_POWERPC, CPU_SUBTYPE_POWERPC_601},
+	{"ppc603", CPU_TYPE_POWERPC, CPU_SUBTYPE_POWERPC_603},
+	{"ppc603e", CPU_TYPE_POWERPC, CPU_SUBTYPE_POWERPC_603e},
+	{"ppc603ev", CPU_TYPE_POWERPC, CPU_SUBTYPE_POWERPC_603ev},
+	{"ppc604", CPU_TYPE_POWERPC, CPU_SUBTYPE_POWERPC_604},
+	{"ppc604e", CPU_TYPE_POWERPC, CPU_SUBTYPE_POWERPC_604e},
+	{"ppc64", CPU_TYPE_POWERPC64, CPU_SUBTYPE_POWERPC_ALL},
+	{"ppc7450", CPU_TYPE_POWERPC, CPU_SUBTYPE_POWERPC_7450},
+	{"ppc750", CPU_TYPE_POWERPC, CPU_SUBTYPE_POWERPC_750},
+	{"ppc970", CPU_TYPE_POWERPC, CPU_SUBTYPE_POWERPC_970},
+	{"ppc970-64", CPU_TYPE_POWERPC64, CPU_SUBTYPE_POWERPC_970},
+	{"sparc", CPU_TYPE_SPARC, CPU_SUBTYPE_SPARC_ALL},
+	{"x86_64", CPU_TYPE_X86_64, CPU_SUBTYPE_X86_64_ALL},
+	{"x86_64", CPU_TYPE_X86_64, 0x80000003},
+	{"x86_64", CPU_TYPE_I386, CPU_SUBTYPE_X86_64_H},
+	{"x86_64", CPU_TYPE_X86_64, CPU_SUBTYPE_X86_64_H},
+	{"xscale", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_XSCALE},
+	{NULL, 0, 0}
+};
+
+void		put_achitecture_name(char *av, cpu_type_t cputype,
+	cpu_subtype_t cpusubtype, int my_arch)
 {
+	int		i;
+
 	if (my_arch)
 		return;
 	ft_printf("\n%s (for architecture ", av);
-	if (cputype == CPU_TYPE_I386)
-		ft_putstr("i386");
-	else if (cputype == CPU_TYPE_X86)
-		ft_putstr("x86");
-	else if (cputype == CPU_TYPE_X86_64)
-		ft_putstr("x86_64");
-	else if (cputype == CPU_TYPE_MC680x0)
-		ft_putstr("mc680x0");
-	else if (cputype == CPU_TYPE_MC98000)
-		ft_putstr("mc98000");
-	else if (cputype == CPU_TYPE_HPPA)
-		ft_putstr("hppa");
-	else if (cputype == CPU_TYPE_ARM)
-		ft_putstr("arm");
-	else if (cputype == CPU_TYPE_ARM64)
-		ft_putstr("arm64");
-	else if (cputype == CPU_TYPE_MC88000)
-		ft_putstr("mc88000");
-	else if (cputype == CPU_TYPE_SPARC)
-		ft_putstr("sparc");
-	else if (cputype == CPU_TYPE_I860)
-		ft_putstr("i860");
-	else if (cputype == CPU_TYPE_POWERPC)
-		ft_putstr("ppc");
-	else if (cputype == CPU_TYPE_POWERPC64)
-		ft_putstr("ppc64");
+	i = -1;
+	while (g_infos[++i].name != NULL)
+	{
+		if (g_infos[i].cputype == cputype
+		    && g_infos[i].cpusubtype == cpusubtype)
+		    ft_putstr(g_infos[i].name);
+	}
 	ft_putendl("):");
 }
 
@@ -69,14 +109,14 @@ static int	is_my_arch(char *ptr, struct fat_header *fheader, struct fat_arch *fa
 	i = 0;
 	while (++i <= bed(fheader->nfat_arch, flag))
 	{
-		if (bed(farch->cputype, flag) == CPU_TYPE_X86_64)
+		if (bed(farch->cputype, flag) == CPU_TYPE_X86_64 && bed(farch->cpusubtype, flag) == 0x80000003)
 			return (1);
 		farch++;
 	}
 	return (0);
 }
 
-void		handle_fat(char *ptr, t_symtable **list, char *av, int flag)
+int			handle_fat(char *ptr, char *av, int flag)
 {
 	struct fat_header		*fheader;
 	struct fat_arch			*farch;
@@ -90,25 +130,15 @@ void		handle_fat(char *ptr, t_symtable **list, char *av, int flag)
 	my_arch = is_my_arch(ptr, fheader, farch, flag);
 	while (++i <= bed(fheader->nfat_arch, flag))
 	{
-		if (my_arch && (bed(farch->cputype, flag) != CPU_TYPE_X86_64) && farch++)
+		if (my_arch && !(bed(farch->cputype, flag) == CPU_TYPE_X86_64
+			&& bed(farch->cpusubtype, flag) == 0x80000003) && farch++)
 			continue ;
 		header = (void *)ptr + bed(farch->offset, flag);
-		put_achitecture_name(av, bed(farch->cputype, flag), my_arch);
-		if (header->magic == MH_MAGIC_64 || header->magic == MH_CIGAM_64)
-		{
-			handle_64((char *)header, list, (header->magic == MH_CIGAM_64) ?
-				flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
-			print_output(list, 16);
-		}
-		else if (header->magic == MH_MAGIC || header->magic == MH_CIGAM)
-		{
-			handle_32((char *)header, list, MH_CIGAM == header->magic ?
-				flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
-			print_output(list, 8);
-		}
-		else
-			ft_printf("header magic:%x\n", header->magic);
-		free_symtable(list);
+		put_achitecture_name(av, bed(farch->cputype, flag),
+			bed(farch->cpusubtype, flag), my_arch);
+		flag &= ~FLAG_PRINT;
+		handle_type((char *)header, av, flag);
 		farch++;
 	}
+	return (0);
 }
