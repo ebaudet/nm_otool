@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 19:34:27 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/06 20:42:43 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/08 17:01:38 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ t_symtable	*compare_first(t_symtable *a, t_symtable *b)
 
 t_symtable	*compare_offset(t_symtable *a, t_symtable *b)
 {
-	if ()
 	if (a->offset <= b->offset)
 		return (a);
 	return (b);
