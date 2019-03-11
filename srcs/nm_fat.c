@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/08 19:25:13 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/11 15:52:47 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ static const t_arch_info g_infos[] = {
 	{"sparc", CPU_TYPE_SPARC, CPU_SUBTYPE_SPARC_ALL},
 	{"x86_64", CPU_TYPE_X86_64, CPU_SUBTYPE_X86_64_ALL},
 	{"x86_64", CPU_TYPE_X86_64, 0x80000003},
-	{"x86_64", CPU_TYPE_I386, CPU_SUBTYPE_X86_64_H},
-	{"x86_64", CPU_TYPE_X86_64, CPU_SUBTYPE_X86_64_H},
+	{"x86_64h", CPU_TYPE_I386, CPU_SUBTYPE_X86_64_H},
+	{"x86_64h", CPU_TYPE_X86_64, CPU_SUBTYPE_X86_64_H},
 	{"xscale", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_XSCALE},
 	{NULL, 0, 0}
 };

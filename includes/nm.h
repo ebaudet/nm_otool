@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/08 19:21:40 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/11 16:55:29 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ typedef t_symtable	*(*t_compate_symtable)(t_symtable *, t_symtable *);
 /*
 ** nm.c
 */
-unsigned int		bed(unsigned int x, int flag);
 char				get_section_letter(char *section);
 char				undef(int type, int addr, char c);
 char				get_symbol(char *section, int type, int addr, int sect);
@@ -63,7 +62,7 @@ int					handle_type(char *ptr, char *av, int flag);
 ** nm_64.c
 */
 struct section_64	*get_section_64(struct segment_command_64 *segment,
-					uint32_t offset);
+					uint32_t offset, int flag);
 t_symtable 			*add_symtable_64(struct nlist_64 array,
 					struct section_64 *section, char *stringtable,
 					t_symtable **list, int flag);
@@ -123,6 +122,9 @@ int					file_error(char *message, char *file, char *function);
 ** endian_swap.c
 */
 unsigned int		endian_swap(unsigned int x);
+unsigned long		lendian_swap(unsigned long x);
+unsigned int		bed(unsigned int x, int flag);
+unsigned long		lbed(unsigned long x, int flag);
 
 /*
 ** NM_H
