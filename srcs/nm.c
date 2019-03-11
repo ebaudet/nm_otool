@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/08 20:02:20 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/11 17:04:45 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,6 @@
 #include "libftprintf.h"
 
 #include <ar.h>
-
-unsigned int	bed(unsigned int x, int flag)
-{
-	if (flag & FLAG_BIGEN)
-		return (endian_swap(x));
-	return (x);
-}
 
 char			get_section_letter(char *section)
 {
