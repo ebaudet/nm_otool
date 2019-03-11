@@ -6,11 +6,11 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/27 20:52:17 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/11 17:05:19 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/11 17:07:19 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-q#include "nm.h"
+#include "nm.h"
 
 unsigned int	endian_swap(unsigned int x)
 {
