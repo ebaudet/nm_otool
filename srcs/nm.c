@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/12 15:15:24 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/12 21:06:47 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "libftprintf.h"
 
 #include <ar.h>
+#include <ranlib.h>
 
 char			get_section_letter(char *section)
 {
@@ -89,12 +90,34 @@ void			print_output(t_symtable **list, int size, char *av, int flag)
 void	handle_arch(char *ptr, char *av, int flag)
 {
 	struct ranlib	*ran;
-
+	long size;
+000000000000350
 	(void)av;
 	(void)flag;
 
-	ran = (struct ranlib *)ptr;
-	ft_printf("{handle_arch: ranlib ran_strx}");
+	if (!ft_strncmp((const char *)ptr, SYMDEF_SORTED, strlen(SYMDEF_SORTED)))
+	{
+		ft_printf("-->%.*s<--\n", strlen(SYMDEF_SORTED), ptr);
+		ptr += strlen(SYMDEF_SORTED);
+		size = (long)*(long*)ptr;
+		ptr += sizeof(long);
+		ft_printf(">%p<\n", ptr);
+		ft_printf("%lx\n", size);
+		int i;
+		for (i = 0; i < 200; i++)
+		{
+			ft_printf("ptr-->%08x<--\n", bed(*(int *)(ptr + i * sizeof(int)), flag));
+		}
+	}
+	else
+	{
+		ft_printf("-->%.*s<--\n", strlen(SYMDEF), ptr);
+		ptr += strlen(SYMDEF);
+		ran = (struct ranlib *)ptr;
+
+		ft_printf("{handle_arch: ranlib ran_strx:%x, ran_name: %s, ran_off:%x}", ran->ran_un.ran_strx, ran->ran_un.ran_name, ran->ran_off);
+
+	}
 }
 
 int				handle_type(char *ptr, char *av, int flag)
