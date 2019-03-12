@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/11 17:04:45 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/12 15:15:24 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,23 @@ void			print_output(t_symtable **list, int size, char *av, int flag)
 	}
 }
 
+void	handle_arch(char *ptr, char *av, int flag)
+{
+	struct ranlib	*ran;
+
+	(void)av;
+	(void)flag;
+
+	ran = (struct ranlib *)ptr;
+	ft_printf("{handle_arch: ranlib ran_strx}");
+}
+
 int				handle_type(char *ptr, char *av, int flag)
 {
 	unsigned int		magic_number;
 	t_symtable			*list;
 	int					size_print;
-	// struct ar_hdr		*ar;
+	struct ar_hdr		*ar;
 
 	list = NULL;
 	magic_number = *(unsigned int *)ptr;
@@ -106,14 +117,15 @@ int				handle_type(char *ptr, char *av, int flag)
 			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
 	else
 	{
-		// ft_printf("%33k<magic_number = %x>%k\n", magic_number);
-		// ft_printf("[%.*s]\n[%s]\n", SARMAG, ptr, ARMAG);
-		// if (!ft_strncmp((const char *)ptr, ARMAG, SARMAG))
-		// {
-		// 	ar = (struct ar_hdr *)(SARMAG * sizeof(char) + ptr);
-		// 	ft_printf("{archinve: ar_name:%.16s, ar_date:%.12s, ar_uid:%.6s, ar_gid:%.6s, ar_mode:%.8s, ar_size: %.10s}\n",
-		//         ar->ar_name, ar->ar_date, ar->ar_uid, ar->ar_gid, ar->ar_mode);
-		// }
+		ft_printf("%33k<magic_number = %x>%k\n", magic_number);
+		ft_printf("[%.*s]\n[%s]\n", SARMAG, ptr, ARMAG);
+		if (!ft_strncmp((const char *)ptr, ARMAG, SARMAG))
+		{
+			ar = (struct ar_hdr *)(SARMAG * sizeof(char) + ptr);
+			ft_printf("{archinve: ar_name:%.16s, ar_date:%.12s, ar_uid:%.6s, ar_gid:%.6s, ar_mode:%.8s, ar_size: %.10s}\n",
+		        ar->ar_name, ar->ar_date, ar->ar_uid, ar->ar_gid, ar->ar_mode);
+			handle_arch((char *)(ar + 1), av, flag);
+		}
 		return (0);
 	}
 	if (size_print < 0)
