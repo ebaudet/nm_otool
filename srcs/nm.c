@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/12 21:06:47 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/18 17:42:30 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,34 +89,29 @@ void			print_output(t_symtable **list, int size, char *av, int flag)
 
 void	handle_arch(char *ptr, char *av, int flag)
 {
-	struct ranlib	*ran;
-	long size;
-000000000000350
+	int 			size;
+	int				shift;
+// 000000000000350
 	(void)av;
 	(void)flag;
 
-	if (!ft_strncmp((const char *)ptr, SYMDEF_SORTED, strlen(SYMDEF_SORTED)))
+	if (!ft_strncmp((const char *)ptr, SYMDEF_SORTED, 20) ||
+		!ft_strncmp((const char *)ptr, SYMDEF, 20))
 	{
-		ft_printf("-->%.*s<--\n", strlen(SYMDEF_SORTED), ptr);
-		ptr += strlen(SYMDEF_SORTED);
-		size = (long)*(long*)ptr;
-		ptr += sizeof(long);
+		ft_printf("-->%.*s<--\n", 20, ptr);
+		ptr += 20;
+		size = *((int *)ptr);
+		ptr += sizeof(int);
 		ft_printf(">%p<\n", ptr);
-		ft_printf("%lx\n", size);
-		int i;
-		for (i = 0; i < 200; i++)
+		ft_printf("%x\n", size);
+		shift = -1;
+		while ((++shift * sizeof(int)) < (unsigned long)size)
 		{
-			ft_printf("ptr-->%08x<--\n", bed(*(int *)(ptr + i * sizeof(int)), flag));
+			ft_printf("ptr-->symbol:%08x\tobject:%08x<--\n",
+				bed(*(int *)(ptr + shift * sizeof(int)), flag),
+				bed(*(int *)(ptr + (shift + 1) * sizeof(int)), flag));
+			++shift;
 		}
-	}
-	else
-	{
-		ft_printf("-->%.*s<--\n", strlen(SYMDEF), ptr);
-		ptr += strlen(SYMDEF);
-		ran = (struct ranlib *)ptr;
-
-		ft_printf("{handle_arch: ranlib ran_strx:%x, ran_name: %s, ran_off:%x}", ran->ran_un.ran_strx, ran->ran_un.ran_name, ran->ran_off);
-
 	}
 }
 
@@ -146,7 +141,7 @@ int				handle_type(char *ptr, char *av, int flag)
 		{
 			ar = (struct ar_hdr *)(SARMAG * sizeof(char) + ptr);
 			ft_printf("{archinve: ar_name:%.16s, ar_date:%.12s, ar_uid:%.6s, ar_gid:%.6s, ar_mode:%.8s, ar_size: %.10s}\n",
-		        ar->ar_name, ar->ar_date, ar->ar_uid, ar->ar_gid, ar->ar_mode);
+		        ar->ar_name, ar->ar_date, ar->ar_uid, ar->ar_gid, ar->ar_mode, ar->ar_size);
 			handle_arch((char *)(ar + 1), av, flag);
 		}
 		return (0);
