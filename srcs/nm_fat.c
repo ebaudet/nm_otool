@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/11 15:52:47 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/19 16:34:35 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ int			handle_fat(char *ptr, char *av, int flag)
 		put_achitecture_name(av, bed(farch->cputype, flag),
 			bed(farch->cpusubtype, flag), my_arch);
 		flag &= ~FLAG_PRINT;
-		handle_type((char *)header, av, flag);
+		handle_type((char *)header, av, NULL, flag);
 		farch++;
 	}
 	return (0);

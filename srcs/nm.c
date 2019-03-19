@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/19 13:06:27 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/19 20:40:21 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,17 @@ char			get_symbol(char *section, int type, int addr, int sect)
 	return (c);
 }
 
-void			print_output(t_symtable **list, int size, char *av, int flag)
+void			print_output(t_symtable **list, int size, char *file, char *object, int flag)
 {
 	t_symtable	*tmp;
 
 	if (flag & FLAG_PRINT)
-		ft_printf("\n%s:\n", av);
+	{
+		if (object != NULL)
+			ft_printf("\n%s(%s):\n", file, object);
+		else
+			ft_printf("\n%s:\n", file);
+	}
 	tmp = *list;
 	while (tmp)
 	{
@@ -87,48 +92,45 @@ void			print_output(t_symtable **list, int size, char *av, int flag)
 	}
 }
 
-void	handle_arch(char *base, char *ptr, int offset, char *av, int flag)
+void	handle_arch(char *ptr, int offset, char *av, int flag)
 {
-	int 			size;
-	int				shift;
-	char			*tmp;
+
 	char 			*next;
 	struct ar_hdr	*ar;
 	(void)av;
-	(void)flag;
 
 	if (!ft_strncmp((const char *)ptr, SYMDEF_SORTED, 20) ||
 		!ft_strncmp((const char *)ptr, SYMDEF, 20))
 	{
 		next = ptr + offset;
-		ft_printf("-->%.*s<--\n", 20, ptr);
-		ptr += 20;
-		size = *((int *)ptr);
-		ptr += sizeof(int);
-		ft_printf(">%p<\n", ptr);
-		ft_printf("%x\n", size);
-		shift = -1;
-		while ((++shift * sizeof(int)) < (unsigned long)size)
-		{
-			ft_printf("ptr-->symbol:%08x\tobject:%08x<--\n",
-				bed(*(int *)(ptr + shift * sizeof(int)), flag),
-				bed(*(int *)(ptr + (shift + 1) * sizeof(int)), flag));
-			++shift;
-			tmp = base + bed(*(int *)(ptr + (shift) * sizeof(int)), flag);
-			ft_printf("[header:%32k%.60s%k type:%32k%-20s%k code_hexa:%31k", tmp, tmp + 60);
-			for (int i = 0; i < 50; i++)
-				ft_printf("%02hhx", tmp[i + 80]);
-			ft_printf("%k %d %d]\n", ft_strlen(tmp + 60), 60 + ((ft_strlen(tmp + 60) + 1) / 10) * 10);
-			handle_type(tmp + 72 + ((ft_strlen(tmp + 60) - 1) / 8) * 8, tmp + 60, flag);
-		}
-		tmp = base + bed(*(int *)(ptr + (shift) * sizeof(int)), flag);
-		while (ft_strncmp(tmp, AR_EFMT1, ft_strlen(AR_EFMT1)))
-		{
-			ft_putchar('.');
-			tmp++;
-		}
-		ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", tmp, tmp + 60);
-		handle_type(tmp + 72 + ((ft_strlen(tmp + 60) - 1) / 8) * 8, tmp + 60, flag);
+		// ft_printf("-->%.*s<--\n", 20, ptr);
+		// ptr += 20;
+		// size = *((int *)ptr);
+		// ptr += sizeof(int);
+		// ft_printf(">%p<\n", ptr);
+		// ft_printf("%x\n", size);
+		// shift = -1;
+		// while ((++shift * sizeof(int)) < (unsigned long)size)
+		// {
+		// 	ft_printf("ptr-->symbol:%08x\tobject:%08x<--\n",
+		// 		bed(*(int *)(ptr + shift * sizeof(int)), flag),
+		// 		bed(*(int *)(ptr + (shift + 1) * sizeof(int)), flag));
+		// 	++shift;
+		// 	tmp = base + bed(*(int *)(ptr + (shift) * sizeof(int)), flag);
+		// 	ft_printf("[header:%32k%.60s%k type:%32k%-20s%k code_hexa:%31k", tmp, tmp + 60);
+		// 	for (int i = 0; i < 50; i++)
+		// 		ft_printf("%02hhx", tmp[i + 80]);
+		// 	ft_printf("%k %d %d]\n", ft_strlen(tmp + 60), 60 + ((ft_strlen(tmp + 60) + 1) / 10) * 10);
+		// 	handle_type(tmp + 72 + ((ft_strlen(tmp + 60) - 1) / 8) * 8, tmp + 60, flag);
+		// }
+		// tmp = base + bed(*(int *)(ptr + (shift) * sizeof(int)), flag);
+		// while (ft_strncmp(tmp, AR_EFMT1, ft_strlen(AR_EFMT1)))
+		// {
+		// 	ft_putchar('.');
+		// 	tmp++;
+		// }
+		// ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", tmp, tmp + 60);
+		// handle_type(tmp + 72 + ((ft_strlen(tmp + 60) - 1) / 8) * 8, tmp + 60, flag);
 
 		// If an argument is an archive, a listing for
        	// each  object  file  in the archive will be produced.
@@ -137,8 +139,7 @@ void	handle_arch(char *base, char *ptr, int offset, char *av, int flag)
        	ft_printf("{original ptr:%p, size:%d, next: %p}\n", get_ptr(NULL), get_size(-1), next);
        	while (sec_ptr(next))
        	{
-       		ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
-			handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
+			handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, av, next + 60, flag);
 			ar = (struct ar_hdr *)next;
 			next += ft_atoi(ar->ar_size) + 60;
        	}
@@ -155,49 +156,7 @@ void	handle_arch(char *base, char *ptr, int offset, char *av, int flag)
 	}
 }
 
-/*
-
-libft/libft.a(ft_concat.o):
-                 U ___stack_chk_fail
-                 U ___stack_chk_guard
-                 U _free
-0000000000000150 T _ft_concat
-0000000000000000 T _ft_concat2
-0000000000000080 T _ft_concat2c
-0000000000000120 T _ft_concat2endl
-00000000000003c0 T _ft_concatc
-                 U _ft_memalloc
-                 U _ft_strcat
-                 U _ft_strcpy
-                 U _ft_strdup
-                 U _ft_strlen
-
-ft_concat.o:
-                 U ___stack_chk_fail
-                 U ___stack_chk_guard
-                 U _free
-0000000000000150 T _ft_concat
-                 T _ft_concat2 				<< error no print 0000000000000000
-0000000000000080 T _ft_concat2c
-0000000000000120 T _ft_concat2endl
-00000000000003c0 T _ft_concatc
-                 U _ft_memalloc
-                 U _ft_strcat
-                 U _ft_strcpy
-                 U _ft_strdup
-                 U _ft_strlen
-
-
-ft_filewithanameverylongtotestwhatisthecomportementofthefunctionnmewiththearchive.o:
-                 T _ft_filewithanameverylongtotestwhatisthecomportementofthefunctionnmewiththearchive
-                 U _ft_memset
-
-libft/libft.a(ft_filewithanameverylongtotestwhatisthecomportementofthefunctionnmewiththearchive.o):
-0000000000000000 T _ft_filewithanameverylongtotestwhatisthecomportementofthefunctionnmewiththearchive
-                 U _ft_memset
-*/
-
-int				handle_type(char *ptr, char *av, int flag)
+int				handle_type(char *ptr, char *file, char *object, int flag)
 {
 	unsigned int		magic_number;
 	t_symtable			*list;
@@ -213,28 +172,38 @@ int				handle_type(char *ptr, char *av, int flag)
 		size_print = handle_32(ptr, &list, (magic_number == MH_CIGAM) ?
 			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
-		size_print = handle_fat(ptr, av, (magic_number == FAT_CIGAM) ?
+		size_print = handle_fat(ptr, file, (magic_number == FAT_CIGAM) ?
 			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
 	else
 	{
-		ft_printf("%33k<magic_number = %x>%k\n", magic_number);
-		ft_printf("[%.*s]\n[%s]\n", SARMAG, ptr, ARMAG);
+		// ft_printf("%33k<magic_number = %x>%k\n", magic_number);
+		// ft_printf("[%.*s]\n[%s]\n", SARMAG, ptr, ARMAG);
 		if (!ft_strncmp((const char *)ptr, ARMAG, SARMAG))
 		{
 			ar = (struct ar_hdr *)(SARMAG * sizeof(char) + ptr);
-			ft_printf("{archinve: ar_name:%.16s, ar_date:%.12s, ar_uid:%.6s, ar_gid:%.6s, ar_mode:%.8s, ar_size: %.10s}\n",
-		        ar->ar_name, ar->ar_date, ar->ar_uid, ar->ar_gid, ar->ar_mode, ar->ar_size);
-			handle_arch(ptr, (char *)(ar + 1), ft_atoi(ar->ar_size), av, flag);
+			// ft_printf("{archinve: ar_name:%.16s, ar_date:%.12s, ar_uid:%.6s, ar_gid:%.6s, ar_mode:%.8s, ar_size: %.10s}\n",
+		        // ar->ar_name, ar->ar_date, ar->ar_uid, ar->ar_gid, ar->ar_mode, ar->ar_size);
+			handle_arch((char *)(ar + 1), ft_atoi(ar->ar_size), file, flag);
 		}
 		return (0);
 	}
 	if (size_print < 0)
 		return (0);
 	if (size_print > 0)
-		print_output(&list, size_print, av, flag);
+		print_output(&list, size_print, file, object, flag);
 	free_symtable(&list);
 	return (1);
 }
+
+/*
+	Bugs on /usr/bin/AssetCacheActivatorUtil
+	/usr/bin/applesingle
+
+	/usr/bin/AssetCacheActivatorUtil
+	/usr/bin/applesingle
+	/usr/bin/audiodevice
+	/usr/bin/automator
+*/
 
 int				main(int ac, char **av)
 {
@@ -266,7 +235,7 @@ int				main(int ac, char **av)
 				return (file_error("Error mmap.", av[i], av[0]));
 			get_ptr(ptr);
 			get_size(buf.st_size);
-			if (handle_type(ptr, av[i], flag) == 0)
+			if (handle_type(ptr, av[i], NULL, flag) == 0)
 				file_error("The file was not recognized as a valid object file\n", av[i], av[0]);
 			if (munmap(ptr, buf.st_size) < 0)
 				return (file_error("Error munmap.", av[i], av[0]));
