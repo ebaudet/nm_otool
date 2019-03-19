@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/19 02:02:14 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/19 03:09:20 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,17 +87,20 @@ void			print_output(t_symtable **list, int size, char *av, int flag)
 	}
 }
 
-void	handle_arch(char *base, char *ptr, char *av, int flag)
+void	handle_arch(char *base, char *ptr, int offset, char *av, int flag)
 {
 	int 			size;
 	int				shift;
 	char			*tmp;
+	char 			*next;
+	struct ar_hdr	*ar;
 	(void)av;
 	(void)flag;
 
 	if (!ft_strncmp((const char *)ptr, SYMDEF_SORTED, 20) ||
 		!ft_strncmp((const char *)ptr, SYMDEF, 20))
 	{
+		next = ptr + offset;
 		ft_printf("-->%.*s<--\n", 20, ptr);
 		ptr += 20;
 		size = *((int *)ptr);
@@ -118,6 +121,29 @@ void	handle_arch(char *base, char *ptr, char *av, int flag)
 			ft_printf("%k %d %d]\n", ft_strlen(tmp + 60), 60 + ((ft_strlen(tmp + 60) + 1) / 10) * 10);
 			handle_type(tmp + 72 + ((ft_strlen(tmp + 60) - 1) / 8) * 8, tmp + 60, flag);
 		}
+		tmp = base + bed(*(int *)(ptr + (shift) * sizeof(int)), flag);
+		while (ft_strncmp(tmp, AR_EFMT1, ft_strlen(AR_EFMT1)))
+		{
+			ft_putchar('.');
+			tmp++;
+		}
+		ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", tmp, tmp + 60);
+		handle_type(tmp + 72 + ((ft_strlen(tmp + 60) - 1) / 8) * 8, tmp + 60, flag);
+
+		// If an argument is an archive, a listing for
+       	// each  object  file  in the archive will be produced.
+       	// => here are the objects files in the archive.
+       	// /!\ But how to find the end ?
+		ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
+		handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
+		ar = (struct ar_hdr *)next;
+		next += ft_atoi(ar->ar_size) + 60;
+		ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
+		handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
+		ar = (struct ar_hdr *)next;
+		next += ft_atoi(ar->ar_size) + 60;
+		ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
+		handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
 	}
 }
 
@@ -182,7 +208,7 @@ int				handle_type(char *ptr, char *av, int flag)
 			ar = (struct ar_hdr *)(SARMAG * sizeof(char) + ptr);
 			ft_printf("{archinve: ar_name:%.16s, ar_date:%.12s, ar_uid:%.6s, ar_gid:%.6s, ar_mode:%.8s, ar_size: %.10s}\n",
 		        ar->ar_name, ar->ar_date, ar->ar_uid, ar->ar_gid, ar->ar_mode, ar->ar_size);
-			handle_arch(ptr, (char *)(ar + 1), av, flag);
+			handle_arch(ptr, (char *)(ar + 1), ft_atoi(ar->ar_size), av, flag);
 		}
 		return (0);
 	}
