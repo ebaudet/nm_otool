@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/11 16:55:29 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/19 12:59:32 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,13 @@ unsigned int		endian_swap(unsigned int x);
 unsigned long		lendian_swap(unsigned long x);
 unsigned int		bed(unsigned int x, int flag);
 unsigned long		lbed(unsigned long x, int flag);
+
+/*
+** ft_secure.c
+*/
+int					get_size(int size);
+char				*get_ptr(char *ptr);
+int					sec_ptr(char *ptr);
 
 /*
 ** NM_H
