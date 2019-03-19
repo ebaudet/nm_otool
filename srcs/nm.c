@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/19 03:09:20 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/19 13:06:27 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	handle_arch(char *base, char *ptr, int offset, char *av, int flag)
 				bed(*(int *)(ptr + (shift + 1) * sizeof(int)), flag));
 			++shift;
 			tmp = base + bed(*(int *)(ptr + (shift) * sizeof(int)), flag);
-			ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k code_hexa:%31k", tmp, tmp + 60);
+			ft_printf("[header:%32k%.60s%k type:%32k%-20s%k code_hexa:%31k", tmp, tmp + 60);
 			for (int i = 0; i < 50; i++)
 				ft_printf("%02hhx", tmp[i + 80]);
 			ft_printf("%k %d %d]\n", ft_strlen(tmp + 60), 60 + ((ft_strlen(tmp + 60) + 1) / 10) * 10);
@@ -134,16 +134,24 @@ void	handle_arch(char *base, char *ptr, int offset, char *av, int flag)
        	// each  object  file  in the archive will be produced.
        	// => here are the objects files in the archive.
        	// /!\ But how to find the end ?
-		ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
-		handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
-		ar = (struct ar_hdr *)next;
-		next += ft_atoi(ar->ar_size) + 60;
-		ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
-		handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
-		ar = (struct ar_hdr *)next;
-		next += ft_atoi(ar->ar_size) + 60;
-		ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
-		handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
+       	ft_printf("{original ptr:%p, size:%d, next: %p}\n", get_ptr(NULL), get_size(-1), next);
+       	while (sec_ptr(next))
+       	{
+       		ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
+			handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
+			ar = (struct ar_hdr *)next;
+			next += ft_atoi(ar->ar_size) + 60;
+       	}
+		// ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
+		// handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
+		// ar = (struct ar_hdr *)next;
+		// next += ft_atoi(ar->ar_size) + 60;
+		// ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
+		// handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
+		// ar = (struct ar_hdr *)next;
+		// next += ft_atoi(ar->ar_size) + 60;
+		// ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
+		// handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
 	}
 }
 
@@ -179,6 +187,14 @@ ft_concat.o:
                  U _ft_strdup
                  U _ft_strlen
 
+
+ft_filewithanameverylongtotestwhatisthecomportementofthefunctionnmewiththearchive.o:
+                 T _ft_filewithanameverylongtotestwhatisthecomportementofthefunctionnmewiththearchive
+                 U _ft_memset
+
+libft/libft.a(ft_filewithanameverylongtotestwhatisthecomportementofthefunctionnmewiththearchive.o):
+0000000000000000 T _ft_filewithanameverylongtotestwhatisthecomportementofthefunctionnmewiththearchive
+                 U _ft_memset
 */
 
 int				handle_type(char *ptr, char *av, int flag)
@@ -248,6 +264,8 @@ int				main(int ac, char **av)
 			if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
 				== MAP_FAILED)
 				return (file_error("Error mmap.", av[i], av[0]));
+			get_ptr(ptr);
+			get_size(buf.st_size);
 			if (handle_type(ptr, av[i], flag) == 0)
 				file_error("The file was not recognized as a valid object file\n", av[i], av[0]);
 			if (munmap(ptr, buf.st_size) < 0)
