@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/18 17:42:30 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/19 02:02:14 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,11 @@ void			print_output(t_symtable **list, int size, char *av, int flag)
 	}
 }
 
-void	handle_arch(char *ptr, char *av, int flag)
+void	handle_arch(char *base, char *ptr, char *av, int flag)
 {
 	int 			size;
 	int				shift;
-// 000000000000350
+	char			*tmp;
 	(void)av;
 	(void)flag;
 
@@ -111,9 +111,49 @@ void	handle_arch(char *ptr, char *av, int flag)
 				bed(*(int *)(ptr + shift * sizeof(int)), flag),
 				bed(*(int *)(ptr + (shift + 1) * sizeof(int)), flag));
 			++shift;
+			tmp = base + bed(*(int *)(ptr + (shift) * sizeof(int)), flag);
+			ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k code_hexa:%31k", tmp, tmp + 60);
+			for (int i = 0; i < 50; i++)
+				ft_printf("%02hhx", tmp[i + 80]);
+			ft_printf("%k %d %d]\n", ft_strlen(tmp + 60), 60 + ((ft_strlen(tmp + 60) + 1) / 10) * 10);
+			handle_type(tmp + 72 + ((ft_strlen(tmp + 60) - 1) / 8) * 8, tmp + 60, flag);
 		}
 	}
 }
+
+/*
+
+libft/libft.a(ft_concat.o):
+                 U ___stack_chk_fail
+                 U ___stack_chk_guard
+                 U _free
+0000000000000150 T _ft_concat
+0000000000000000 T _ft_concat2
+0000000000000080 T _ft_concat2c
+0000000000000120 T _ft_concat2endl
+00000000000003c0 T _ft_concatc
+                 U _ft_memalloc
+                 U _ft_strcat
+                 U _ft_strcpy
+                 U _ft_strdup
+                 U _ft_strlen
+
+ft_concat.o:
+                 U ___stack_chk_fail
+                 U ___stack_chk_guard
+                 U _free
+0000000000000150 T _ft_concat
+                 T _ft_concat2 				<< error no print 0000000000000000
+0000000000000080 T _ft_concat2c
+0000000000000120 T _ft_concat2endl
+00000000000003c0 T _ft_concatc
+                 U _ft_memalloc
+                 U _ft_strcat
+                 U _ft_strcpy
+                 U _ft_strdup
+                 U _ft_strlen
+
+*/
 
 int				handle_type(char *ptr, char *av, int flag)
 {
@@ -142,7 +182,7 @@ int				handle_type(char *ptr, char *av, int flag)
 			ar = (struct ar_hdr *)(SARMAG * sizeof(char) + ptr);
 			ft_printf("{archinve: ar_name:%.16s, ar_date:%.12s, ar_uid:%.6s, ar_gid:%.6s, ar_mode:%.8s, ar_size: %.10s}\n",
 		        ar->ar_name, ar->ar_date, ar->ar_uid, ar->ar_gid, ar->ar_mode, ar->ar_size);
-			handle_arch((char *)(ar + 1), av, flag);
+			handle_arch(ptr, (char *)(ar + 1), av, flag);
 		}
 		return (0);
 	}
