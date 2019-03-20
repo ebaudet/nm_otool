@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:55:29 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/08 17:57:20 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/20 18:44:43 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,24 @@ t_symtable *add_symtable_32(struct nlist array, struct section *section,
 {
 	t_symtable	*new;
 	char		*offset;
+	char		symbol;
 
+	symbol = get_symbol(section->sectname, bed(array.n_type, flag),
+		lbed(array.n_value, flag), bed(array.n_sect, flag));
 	if (!array.n_value)
-			offset = ft_strdup("                ");
+	{
+		if (ft_strchr("uU", symbol))
+			offset = ft_strdup("        ");
+		else
+			offset = ft_strdup("00000000");
+	}
 	else
 		offset = ft_gethex((unsigned long)bed(array.n_value, flag), 8);
 	// ft_printf("{add_symtable_32: array: %p, section: %p, stringtable: %p}\n",
 	//          &array, section, stringtable);
 	// ft_printf("{%32kget_symbol: sectname:%p|%p, n_type:%x, n_value:%x, n_sect:%x%k}",
 	//           section->sectname ,section->sectname,  bed(array.n_type, flag), bed(array.n_value, flag), bed(array.n_sect, flag));
-	new = new_symtable(offset, get_symbol(section->sectname,
-		bed(array.n_type, flag), bed(array.n_value, flag),
-		bed(array.n_sect, flag)), stringtable+bed(array.n_un.n_strx, flag));
+	new = new_symtable(offset, symbol, stringtable+bed(array.n_un.n_strx, flag));
 	if (new == NULL)
 		return (NULL);
 	if (flag & FLAG_P)

@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/19 20:40:21 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/20 18:54:32 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ void	handle_arch(char *ptr, int offset, char *av, int flag)
        	// each  object  file  in the archive will be produced.
        	// => here are the objects files in the archive.
        	// /!\ But how to find the end ?
+       	flag |= FLAG_PRINT;
        	ft_printf("{original ptr:%p, size:%d, next: %p}\n", get_ptr(NULL), get_size(-1), next);
        	while (sec_ptr(next))
        	{
@@ -221,7 +222,7 @@ int				main(int ac, char **av)
 	flag = 0;
 	if ((i = nm_flag_handler(av, &flag)) < 0)
 		return (EXIT_SUCCESS);
-	flag = (ac - i > 0) ? flag | FLAG_PRINT : flag;
+	flag = ((ac - i - 2) > 0) ? flag | FLAG_PRINT : flag;
 	while (++i < ac)
 	{
 		if ((fd = open(av[i], O_RDONLY)) < 0)
@@ -229,17 +230,21 @@ int				main(int ac, char **av)
 		else
 		{
 			if (fstat(fd, &buf) < 0)
-				return (file_error("Error fstat.", av[i], av[0]));
-			if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
-				== MAP_FAILED)
-				return (file_error("Error mmap.", av[i], av[0]));
-			get_ptr(ptr);
-			get_size(buf.st_size);
-			if (handle_type(ptr, av[i], NULL, flag) == 0)
-				file_error("The file was not recognized as a valid object file\n", av[i], av[0]);
-			if (munmap(ptr, buf.st_size) < 0)
-				return (file_error("Error munmap.", av[i], av[0]));
-			close(fd);
+				file_error("Error fstat.", av[i], av[0]);
+			else
+				if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
+					== MAP_FAILED)
+					file_error("Error mmap.", av[i], av[0]);
+				else
+				{
+					get_ptr(ptr);
+					get_size(buf.st_size);
+					if (handle_type(ptr, av[i], NULL, flag) == 0)
+						file_error("The file was not recognized as a valid object file\n", av[i], av[0]);
+					if (munmap(ptr, buf.st_size) < 0)
+						file_error("Error munmap.", av[i], av[0]);
+					close(fd);
+				}
 		}
 	}
 	return (EXIT_SUCCESS);
