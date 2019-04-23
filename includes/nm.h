@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/19 16:08:08 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/23 19:19:13 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # define FLAG_BIGEN	0b10000
 # define FLAG_N		0b100000
 # define FLAG_PRINT	0b1000000
+# define FLAG_PPC	0b10000000
 
 typedef struct		s_symtable
 {
