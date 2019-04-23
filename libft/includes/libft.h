@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/21 11:44:10 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/08 19:41:43 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/03/19 11:06:41 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ char	*ft_dtoa(double d, unsigned int precision);
 char	*ft_ldtoa(long double d, unsigned int precision);
 int		ft_max(int a, int b);
 int		ft_min(int a, int b);
+
+void	ft_filewithanameverylongtotestwhatisthecomportementofthefunctionnmewiththearchive(void *s, size_t n);
 
 /*
 ** LIBFT_H

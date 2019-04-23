@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:55:29 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/20 18:44:43 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/23 19:42:27 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,20 @@ t_symtable *add_symtable_32(struct nlist array, struct section *section,
 	char		*offset;
 	char		symbol;
 
-	symbol = get_symbol(section->sectname, bed(array.n_type, flag),
-		lbed(array.n_value, flag), bed(array.n_sect, flag));
+	// flag &= FLAG_BIGEN;
+
+	// flag = flag & ~FLAG_BIGEN;
+	// flag = flag | FLAG_BIGEN;
+
+	if (flag & FLAG_PPC) {
+		// ft_printf("sectname: %5s\n", section);
+		symbol = get_symbol(section->sectname, array.n_type,
+			bed(array.n_value, flag), bed(array.n_sect, flag));
+	} else {
+		symbol = get_symbol(section->sectname, bed(array.n_type, flag),
+			lbed(array.n_value, flag), bed(array.n_sect, flag));
+	}
+
 	if (!array.n_value)
 	{
 		if (ft_strchr("uU", symbol))
@@ -82,7 +94,11 @@ void	get_symtable_32(struct symtab_command *sym, int nsyms, char *ptr,
 	i = 0;
 	while (i < nsyms)
 	{
-		section = get_section_32(segment, bed(array[i].n_sect, flag), flag);
+		if (flag & FLAG_PPC) {
+			section = get_section_32(segment, array[i].n_sect, flag);
+		} else {
+			section = get_section_32(segment, bed(array[i].n_sect, flag), flag);
+		}
 		if ((bed(array[i].n_type, flag) & N_STAB) == 0)
 			add_symtable_32(array[i], section, stringtable, list, flag);
 		i++;

@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/20 18:54:32 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/23 19:41:55 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ char			get_section_letter(char *section)
 
 char			undef(int type, int addr, char c)
 {
+	// ft_printf("undef: type %x, addr: %p, c:%c\n", type, addr, c);
 	if ((type & N_TYPE) == N_UNDF)
 	{
 		if (addr)
@@ -167,14 +168,25 @@ int				handle_type(char *ptr, char *file, char *object, int flag)
 	list = NULL;
 	magic_number = *(unsigned int *)ptr;
 	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
+	{
+		ft_printf("handle_64 \n");
 		size_print = handle_64(ptr, &list, (magic_number == MH_CIGAM_64) ?
 			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
+	}
 	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
+	{
+		ft_printf("handle_32 \n");
+
 		size_print = handle_32(ptr, &list, (magic_number == MH_CIGAM) ?
 			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
+	}
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
+	{
+		ft_printf("handle_fat \n");
+
 		size_print = handle_fat(ptr, file, (magic_number == FAT_CIGAM) ?
 			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
+	}
 	else
 	{
 		// ft_printf("%33k<magic_number = %x>%k\n", magic_number);
