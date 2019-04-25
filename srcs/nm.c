@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/25 16:46:25 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/25 19:37:38 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ char			get_section_letter(char *section)
 
 char			undef(int type, int addr, char c)
 {
-	// ft_printf("undef: type %x, addr: %p, c:%c\n", type, addr, c);
 	if ((type & N_TYPE) == N_UNDF)
 	{
 		if (addr)
@@ -208,56 +207,57 @@ int				handle_type(char *ptr, char *file, char *object, int flag)
 	return (1);
 }
 
-/*
-	Bugs on /usr/bin/AssetCacheActivatorUtil
-	/usr/bin/applesingle
-
-	/usr/bin/AssetCacheActivatorUtil
-	/usr/bin/applesingle
-	/usr/bin/audiodevice
-	/usr/bin/automator
-*/
-
-int				main(int ac, char **av)
+int 	check_file(t_nm *nm)
 {
 	int				fd;
 	struct stat		buf;
-	char			*ptr;
-	int				i;
-	int				flag;
 
+	if ((fd = open(nm->file, O_RDONLY)) < 0)
+		return (file_error("No such file or directory.", nm));
+	if (fstat(fd, &buf) < 0)
+		return (file_error("Error fstat.", nm));
+	if ((nm->ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
+				== MAP_FAILED)
+		return (file_error("Error mmap.", nm));
+	get_ptr(nm->ptr);
+	get_size(buf.st_size);
+	if (handle_type(nm->ptr, nm->file, NULL, nm->flag) == 0)
+		file_error("The file was not recognized as a valid object file\n", nm);
+	if (munmap(nm->ptr, buf.st_size) < 0)
+		file_error("Error munmap.", nm);
+	close(fd);
+	return (EXIT_SUCCESS);
+}
+
+void		nm_init(t_nm *nm, char **av)
+{
+	nm->file = NULL;
+	nm->command = av[0];
+	nm->av = av;
+	nm->ptr = NULL;
+	nm->flag = 0;
+}
+
+int 		main(int ac, char **av)
+{
+	t_nm	nm;
+	char	default_name[6] = "a.out";
+	int		i;
+
+	nm_init(&nm, av);
 	if (ac < 2)
 	{
-		ft_printf_fd(2, "There are %d args given to the function\n", ac);
-		return (print_error("Please give me an arg"));
+		nm.file = default_name;
+		return (check_file(&nm));
 	}
-	flag = 0;
-	if ((i = nm_flag_handler(av, &flag)) < 0)
+	nm.file = av[1];
+	if ((i = nm_flag_handler(av, &(nm.flag))) < 0)
 		return (EXIT_SUCCESS);
-	flag = ((ac - i - 2) > 0) ? flag | FLAG_PRINT : flag;
+	nm.flag = ((ac - i - 2) > 0) ? nm.flag | FLAG_PRINT : nm.flag;
 	while (++i < ac)
 	{
-		if ((fd = open(av[i], O_RDONLY)) < 0)
-			file_error("No such file or directory.", av[i], av[0]);
-		else
-		{
-			if (fstat(fd, &buf) < 0)
-				file_error("Error fstat.", av[i], av[0]);
-			else
-				if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
-					== MAP_FAILED)
-					file_error("Error mmap.", av[i], av[0]);
-				else
-				{
-					get_ptr(ptr);
-					get_size(buf.st_size);
-					if (handle_type(ptr, av[i], NULL, flag) == 0)
-						file_error("The file was not recognized as a valid object file\n", av[i], av[0]);
-					if (munmap(ptr, buf.st_size) < 0)
-						file_error("Error munmap.", av[i], av[0]);
-					close(fd);
-				}
-		}
+		nm.file = av[i];
+		check_file(&nm);
 	}
 	return (EXIT_SUCCESS);
 }
