@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/23 18:43:18 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/25 17:09:35 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,24 +71,28 @@ static const t_arch_info g_infos[] = {
 };
 
 char	*put_achitecture_name(char *av, cpu_type_t cputype,
-	cpu_subtype_t cpusubtype, int my_arch)
+	cpu_subtype_t cpusubtype, int my_arch, int print_arch)
 {
 	int		i;
 
 	if (my_arch)
 		return "";
-	ft_printf("\n%s (for architecture ", av);
+	if (print_arch > 1)
+		ft_printf("\n%s (for architecture ", av);
+	else
+		ft_printf("%s:\n", av);
 	i = -1;
 	while (g_infos[++i].name != NULL)
 	{
 		if (g_infos[i].cputype == cputype
 		    && g_infos[i].cpusubtype == cpusubtype) {
-			ft_putstr(g_infos[i].name);
+			if (print_arch > 1)
+				ft_putstr(g_infos[i].name);
 			break;
 		}
 	}
-	ft_putendl("):");
-	ft_printf("->%s<-\n", g_infos[i].name);
+	if (print_arch > 1)
+		ft_putendl("):");
 	return (g_infos[i].name);
 }
 
@@ -139,9 +143,9 @@ int			handle_fat(char *ptr, char *av, int flag)
 			continue ;
 		header = (void *)ptr + bed(farch->offset, flag);
 		if (!ft_strcmp(put_achitecture_name(av, bed(farch->cputype, flag),
-			bed(farch->cpusubtype, flag), my_arch), "ppc"))
+			bed(farch->cpusubtype, flag), my_arch, bed(fheader->nfat_arch, flag)), "ppc"))
 		{
-			ft_printf("%31kppc architecture%k\n");
+			// ft_printf("%31kppc architecture%k\n");
 			flag |= FLAG_PPC;
 			// flag = flag & ~FLAG_BIGEN;
 		}
@@ -151,6 +155,7 @@ int			handle_fat(char *ptr, char *av, int flag)
 		// 	bed(farch->cpusubtype, flag), my_arch);
 		flag &= ~FLAG_PRINT;
 		handle_type((char *)header, av, NULL, flag);
+		flag &= ~FLAG_PPC;
 		farch++;
 	}
 	return (0);
