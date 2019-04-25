@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/23 19:41:55 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/25 16:46:25 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,20 +169,20 @@ int				handle_type(char *ptr, char *file, char *object, int flag)
 	magic_number = *(unsigned int *)ptr;
 	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
 	{
-		ft_printf("handle_64 \n");
+		// ft_printf("handle_64 \n");
 		size_print = handle_64(ptr, &list, (magic_number == MH_CIGAM_64) ?
 			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
 	}
 	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
 	{
-		ft_printf("handle_32 \n");
+		// ft_printf("handle_32 \n");
 
 		size_print = handle_32(ptr, &list, (magic_number == MH_CIGAM) ?
 			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
 	}
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
 	{
-		ft_printf("handle_fat \n");
+		// ft_printf("handle_fat \n");
 
 		size_print = handle_fat(ptr, file, (magic_number == FAT_CIGAM) ?
 			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
