@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/26 18:36:10 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/26 19:35:53 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ typedef struct		s_nm {
 	char			*file;
 	char 			*command;
 	char			**av;
-	char 			*ptr;
 	int 			flag;
+	t_symtable		**list;
 }					t_nm;
 
 typedef t_symtable	*(*t_compate_symtable)(t_symtable *, t_symtable *);
@@ -66,7 +66,9 @@ char				undef(int type, int addr, char c);
 char				get_symbol(char *section, int type, int addr, int sect);
 void				print_output(t_symtable **list, int size, char *file,
 					char *object, int flag); 									// NOPE - norme
-int					handle_type(char *ptr, char *file, char *object, int flag);
+// int					handle_type(t_nm *nm, char *object);
+int				handle_type(t_nm *nm, char *ptr, char *object);
+
 
 /*
 ** nm_64.c
@@ -95,7 +97,8 @@ int					handle_32(char *ptr, t_symtable **list, int flag);
 /*
 ** nm_fat.c
 */
-int					handle_fat(char *ptr, char *av, int flag);
+int			handle_fat(t_nm *nm, char *ptr);
+// int					handle_fat(char *ptr, char *av, int flag);
 
 /*
 ** flag_handler.c
