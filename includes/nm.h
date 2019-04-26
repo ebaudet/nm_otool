@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/25 19:24:30 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/26 18:36:10 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,13 @@ unsigned long		lbed(unsigned long x, int flag);
 int					get_size(int size);
 char				*get_ptr(char *ptr);
 int					sec_ptr(char *ptr);
+
+/*
+** symbol.c
+*/
+char				get_section_letter(char *section);
+char				undef(int type, int addr, char c);
+char				get_symbol(char *section, int type, int addr, int sect);
 
 /*
 ** NM_H
