@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/26 18:18:36 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/26 21:15:26 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,118 +37,66 @@ void			print_output(t_symtable **list, int size, char *file, char *object, int f
 	}
 }
 
-void	handle_arch(char *ptr, int offset, char *av, int flag)
+void	handle_arch(t_nm *nm, char *ptr, int offset)
 {
 
 	char 			*next;
 	struct ar_hdr	*ar;
-	(void)av;
+	// (void)av;
 
 	if (!ft_strncmp((const char *)ptr, SYMDEF_SORTED, 20) ||
 		!ft_strncmp((const char *)ptr, SYMDEF, 20))
 	{
 		next = ptr + offset;
-		// ft_printf("-->%.*s<--\n", 20, ptr);
-		// ptr += 20;
-		// size = *((int *)ptr);
-		// ptr += sizeof(int);
-		// ft_printf(">%p<\n", ptr);
-		// ft_printf("%x\n", size);
-		// shift = -1;
-		// while ((++shift * sizeof(int)) < (unsigned long)size)
-		// {
-		// 	ft_printf("ptr-->symbol:%08x\tobject:%08x<--\n",
-		// 		bed(*(int *)(ptr + shift * sizeof(int)), flag),
-		// 		bed(*(int *)(ptr + (shift + 1) * sizeof(int)), flag));
-		// 	++shift;
-		// 	tmp = base + bed(*(int *)(ptr + (shift) * sizeof(int)), flag);
-		// 	ft_printf("[header:%32k%.60s%k type:%32k%-20s%k code_hexa:%31k", tmp, tmp + 60);
-		// 	for (int i = 0; i < 50; i++)
-		// 		ft_printf("%02hhx", tmp[i + 80]);
-		// 	ft_printf("%k %d %d]\n", ft_strlen(tmp + 60), 60 + ((ft_strlen(tmp + 60) + 1) / 10) * 10);
-		// 	handle_type(tmp + 72 + ((ft_strlen(tmp + 60) - 1) / 8) * 8, tmp + 60, flag);
-		// }
-		// tmp = base + bed(*(int *)(ptr + (shift) * sizeof(int)), flag);
-		// while (ft_strncmp(tmp, AR_EFMT1, ft_strlen(AR_EFMT1)))
-		// {
-		// 	ft_putchar('.');
-		// 	tmp++;
-		// }
-		// ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", tmp, tmp + 60);
-		// handle_type(tmp + 72 + ((ft_strlen(tmp + 60) - 1) / 8) * 8, tmp + 60, flag);
-
-		// If an argument is an archive, a listing for
-       	// each  object  file  in the archive will be produced.
-       	// => here are the objects files in the archive.
-       	// /!\ But how to find the end ?
-       	flag |= FLAG_PRINT;
+       	nm->flag |= FLAG_PRINT;
        	ft_printf("{original ptr:%p, size:%d, next: %p}\n", get_ptr(NULL), get_size(-1), next);
        	while (sec_ptr(next))
        	{
-			handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, av, next + 60, flag);
+			handle_type(nm, next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60);
 			ar = (struct ar_hdr *)next;
 			next += ft_atoi(ar->ar_size) + 60;
        	}
-		// ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
-		// handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
-		// ar = (struct ar_hdr *)next;
-		// next += ft_atoi(ar->ar_size) + 60;
-		// ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
-		// handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
-		// ar = (struct ar_hdr *)next;
-		// next += ft_atoi(ar->ar_size) + 60;
-		// ft_printf("[header:%32k%.60s%k type:%32k%-20.20s%k\n", next, next + 60);
-		// handle_type(next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60, flag);
 	}
 }
 
-int				handle_type(char *ptr, char *file, char *object, int flag)
+// int				handle_type(char *ptr, char *file, char *object, int flag)
+int				handle_type(t_nm *nm, char *ptr, char *object)
 {
 	unsigned int		magic_number;
-	t_symtable			*list;
 	int					size_print;
 	struct ar_hdr		*ar;
 
-	list = NULL;
+	*(nm->list) = NULL;
 	magic_number = *(unsigned int *)ptr;
 	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
 	{
-		// ft_printf("handle_64 \n");
-		size_print = handle_64(ptr, &list, (magic_number == MH_CIGAM_64) ?
-			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
+		size_print = handle_64(ptr, nm->list, (magic_number == MH_CIGAM_64) ?
+			nm->flag | FLAG_BIGEN : nm->flag & ~FLAG_BIGEN);
 	}
 	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
 	{
-		// ft_printf("handle_32 \n");
-
-		size_print = handle_32(ptr, &list, (magic_number == MH_CIGAM) ?
-			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
+		size_print = handle_32(ptr, nm->list, (magic_number == MH_CIGAM) ?
+			nm->flag | FLAG_BIGEN : nm->flag & ~FLAG_BIGEN);
 	}
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
 	{
-		// ft_printf("handle_fat \n");
-
-		size_print = handle_fat(ptr, file, (magic_number == FAT_CIGAM) ?
-			flag | FLAG_BIGEN : flag & ~FLAG_BIGEN);
+		nm->flag = (magic_number == FAT_CIGAM) ? nm->flag | FLAG_BIGEN : nm->flag & ~FLAG_BIGEN;
+		size_print = handle_fat(nm, ptr);
 	}
 	else
 	{
-		// ft_printf("%33k<magic_number = %x>%k\n", magic_number);
-		// ft_printf("[%.*s]\n[%s]\n", SARMAG, ptr, ARMAG);
 		if (!ft_strncmp((const char *)ptr, ARMAG, SARMAG))
 		{
 			ar = (struct ar_hdr *)(SARMAG * sizeof(char) + ptr);
-			// ft_printf("{archinve: ar_name:%.16s, ar_date:%.12s, ar_uid:%.6s, ar_gid:%.6s, ar_mode:%.8s, ar_size: %.10s}\n",
-		        // ar->ar_name, ar->ar_date, ar->ar_uid, ar->ar_gid, ar->ar_mode, ar->ar_size);
-			handle_arch((char *)(ar + 1), ft_atoi(ar->ar_size), file, flag);
+			handle_arch(nm, (char *)(ar + 1), ft_atoi(ar->ar_size));
 		}
 		return (0);
 	}
 	if (size_print < 0)
 		return (0);
 	if (size_print > 0)
-		print_output(&list, size_print, file, object, flag);
-	free_symtable(&list);
+		print_output(nm->list, size_print, nm->file, object, nm->flag);
+	free_symtable(nm->list);
 	return (1);
 }
 
@@ -157,21 +105,23 @@ int 	handle_file(t_nm *nm)
 	int				fd;
 	struct stat		buf;
 	int				return_value;
+	char			*ptr;
 
+	nm->flag |= FLAG_PRINT;
 	return_value = EXIT_SUCCESS;
 	if ((fd = open(nm->file, O_RDONLY)) < 0)
 		return (file_error("No such file or directory.", nm));
 	if (fstat(fd, &buf) < 0)
 		return (file_error("Error fstat.", nm));
-	if ((nm->ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
+	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
 				== MAP_FAILED)
 		return (file_error("Error mmap.", nm));
-	get_ptr(nm->ptr);
+	get_ptr(ptr);
 	get_size(buf.st_size);
-	if (handle_type(nm->ptr, nm->file, NULL, nm->flag) == 0)
+	if (handle_type(nm, ptr, NULL) == 0)
 		return_value = file_error("The file was not recognized as a valid objec\
 t file\n", nm);
-	if (munmap(nm->ptr, buf.st_size) < 0)
+	if (munmap(ptr, buf.st_size) < 0)
 		return_value = file_error("Error munmap.", nm);
 	close(fd);
 	return (return_value);
@@ -182,19 +132,20 @@ void		nm_init(t_nm *nm, char **av)
 	nm->file = NULL;
 	nm->command = av[0];
 	nm->av = av;
-	nm->ptr = NULL;
 	nm->flag = 0;
 }
 
 int 		main(int ac, char **av)
 {
-	t_nm	nm;
-	char	default_name[6] = "a.out";
-	int		i;
-	int		return_value;
+	t_nm		nm;
+	char		default_name[6] = "a.out";
+	int			i;
+	int			return_value;
+	t_symtable	*list;
 
 	return_value = EXIT_SUCCESS;
 	nm_init(&nm, av);
+	nm.list = &list;
 	if (ac < 2)
 	{
 		nm.file = default_name;
