@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/26 21:15:26 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/26 22:09:39 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	handle_arch(t_nm *nm, char *ptr, int offset)
 	{
 		next = ptr + offset;
        	nm->flag |= FLAG_PRINT;
-       	ft_printf("{original ptr:%p, size:%d, next: %p}\n", get_ptr(NULL), get_size(-1), next);
+       	ft_printf("%32k{original ptr:%p, size:%d, next: %p}%k\n", get_ptr(NULL), get_size(-1), next);
        	while (sec_ptr(next))
        	{
 			handle_type(nm, next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8, next + 60);
@@ -57,6 +57,16 @@ void	handle_arch(t_nm *nm, char *ptr, int offset)
 			next += ft_atoi(ar->ar_size) + 60;
        	}
 	}
+}
+
+void	set_bigen(t_nm *nm, unsigned int magic_number)
+{
+	if (magic_number == MH_CIGAM_64
+	    || magic_number == MH_CIGAM
+	    || magic_number == FAT_CIGAM)
+	    nm->flag |= FLAG_BIGEN;
+	else
+		nm->flag &= ~FLAG_BIGEN;
 }
 
 // int				handle_type(char *ptr, char *file, char *object, int flag)
@@ -67,24 +77,25 @@ int				handle_type(t_nm *nm, char *ptr, char *object)
 	struct ar_hdr		*ar;
 
 	*(nm->list) = NULL;
+		// ft_printf("%32k>>>> on passe ici <<<<<%k\n");
 	magic_number = *(unsigned int *)ptr;
+	set_bigen(nm, magic_number);
 	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
 	{
-		size_print = handle_64(ptr, nm->list, (magic_number == MH_CIGAM_64) ?
-			nm->flag | FLAG_BIGEN : nm->flag & ~FLAG_BIGEN);
+		size_print = handle_64(ptr, nm->list, nm->flag);
 	}
 	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
 	{
-		size_print = handle_32(ptr, nm->list, (magic_number == MH_CIGAM) ?
-			nm->flag | FLAG_BIGEN : nm->flag & ~FLAG_BIGEN);
+		size_print = handle_32(ptr, nm->list, nm->flag);
 	}
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
 	{
-		nm->flag = (magic_number == FAT_CIGAM) ? nm->flag | FLAG_BIGEN : nm->flag & ~FLAG_BIGEN;
-		size_print = handle_fat(nm, ptr);
+		// nm->flag = (magic_number == FAT_CIGAM) ? nm->flag | FLAG_BIGEN : nm->flag & ~FLAG_BIGEN;
+		size_print = handle_fat(nm, ptr, nm->flag);
 	}
 	else
 	{
+		// nm->flag &= ~FLAG_BIGEN;
 		if (!ft_strncmp((const char *)ptr, ARMAG, SARMAG))
 		{
 			ar = (struct ar_hdr *)(SARMAG * sizeof(char) + ptr);
@@ -92,6 +103,7 @@ int				handle_type(t_nm *nm, char *ptr, char *object)
 		}
 		return (0);
 	}
+
 	if (size_print < 0)
 		return (0);
 	if (size_print > 0)

@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/26 19:35:53 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/26 22:06:59 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int					handle_32(char *ptr, t_symtable **list, int flag);
 /*
 ** nm_fat.c
 */
-int			handle_fat(t_nm *nm, char *ptr);
+int			handle_fat(t_nm *nm, char *ptr, int flag);
 // int					handle_fat(char *ptr, char *av, int flag);
 
 /*
