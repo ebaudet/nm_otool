@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/26 21:14:21 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/26 22:09:46 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ static int	is_my_arch(char *ptr, struct fat_header *fheader, struct fat_arch *fa
 	return (0);
 }
 
-int			handle_fat(t_nm *nm, char *ptr)
+int			handle_fat(t_nm *nm, char *ptr, int flag)
 {
 	struct fat_header		*fheader;
 	struct fat_arch			*farch;
@@ -135,9 +135,10 @@ int			handle_fat(t_nm *nm, char *ptr)
 	fheader = (struct fat_header *)ptr;
 	i = 0;
 	farch = (struct fat_arch *)(fheader + 1);
-	my_arch = is_my_arch(ptr, fheader, farch, nm->flag);
-	while (++i <= bed(fheader->nfat_arch, nm->flag))
+	my_arch = is_my_arch(ptr, fheader, farch, flag);
+	while (++i <= bed(fheader->nfat_arch, flag))
 	{
+		// ft_printf("%32knfat_arch: %d, %d%k\n", fheader->nfat_arch, bed(fheader->nfat_arch, nm->flag));
 		if (my_arch && !(bed(farch->cputype, nm->flag) == CPU_TYPE_X86_64
 			&& bed(farch->cpusubtype, nm->flag) == 0x80000003) && farch++)
 			continue ;
