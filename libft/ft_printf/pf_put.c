@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   put.c                                              :+:      :+:    :+:   */
+/*   pf_put.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:02:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/12 19:05:54 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 18:22:44 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,8 +210,6 @@ void	type_f(t_ftprintf *t, t_params *params)
 	fill_string(params, ' ', params->width, check_flag(params, MINUS));
 	free(str);
 }
-
-
 
 /*
 ** Option for color : k

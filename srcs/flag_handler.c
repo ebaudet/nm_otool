@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 03:03:08 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/20 17:55:55 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 16:14:05 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ static int		flag_help(char **av)
 -%+kp%k\t- Don't sort; display in symbol-table order.\n\
 -%+kP%k\t- Don't sort inverse; display in symbol-table inverse order.\n\
 -%+kr%k\t- Sort in reverse order.\n\
--%+karch%k\t- Display symbole for all architectures contained in the binary.\n");
+-%+karch%k\t- Display symbole for all architectures contained in the \
+binary.\n");
 	return (-1);
 }
 
@@ -35,7 +36,7 @@ static void		add_flag(char *av, int *flag)
 	if (ft_strcmp(av, "arch") == 0)
 	{
 		*flag |= FLAG_ARCH;
-		return;
+		return ;
 	}
 	i = -1;
 	while (av[++i])
@@ -61,18 +62,18 @@ int				nm_flag_handler(char **av, int *flag)
 		if (ft_strcmp(av[i], "-help") == 0)
 			return (flag_help(av));
 		if (av[i][0] != '-')
-			break;
+			break ;
 		if (ft_strcmp(av[i], "--") == 0)
 		{
 			i++;
-			break;
+			break ;
 		}
 		if (av[i][0] == '-' && av[i][1])
 			add_flag(&av[i][1], flag);
 		else
-			break;
+			break ;
 		if (i < 0)
-			break;
+			break ;
 	}
 	return (i - 1);
 }

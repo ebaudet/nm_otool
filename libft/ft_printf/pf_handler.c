@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handler.c                                          :+:      :+:    :+:   */
+/*   pf_handler.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 17:55:04 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/11 20:53:19 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 18:33:11 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,21 @@
 
 int		call_handler(const char *format, t_ftprintf *t, t_params *params)
 {
-	static t_call_handler	(handler[6]) = {
+	static t_call_handler	handler[] = {
 		{.value = P_FLAGS, .handle = flag_handler},
 		{.value = P_WIDTH, .handle = width_handler},
 		{.value = P_PRECISION, .handle = precision_handler},
 		{.value = P_LENGTH, .handle = length_handler},
 		{.value = P_TYPE, .handle = type_handler},
 		{.value = P_MODULO, .handle = modulo_handler},
+		{.value = NULL, .handle = NULL}
 	};
 	int						i;
 	int						do_stuff;
 
 	do_stuff = 0;
 	i = -1;
-	while (++i < 6)
+	while (handler[++i].value != NULL)
 	{
 		if (format[t->i] && ft_strchr(handler[i].value, format[t->i]))
 		{
@@ -145,30 +146,32 @@ void	length_handler(const char *format, t_ftprintf *t, t_params *params)
 	t->i++;
 }
 
+static const t_handler	g_handler[] = {
+	{.value = 'c', .handle = type_c},
+	{.value = 's', .handle = type_s},
+	{.value = 'p', .handle = type_p},
+	{.value = 'd', .handle = type_d},
+	{.value = 'i', .handle = type_d},
+	{.value = 'o', .handle = type_o},
+	{.value = 'u', .handle = type_u},
+	{.value = 'x', .handle = type_x},
+	{.value = 'X', .handle = type_x_cap},
+	{.value = 'f', .handle = type_f},
+	{.value = 'k', .handle = type_k},
+	{.value = 'b', .handle = type_b},
+	{.value = 0, .handle = NULL}
+};
+
 void	type_handler(const char *format, t_ftprintf *t, t_params *params)
 {
-	static t_handler	(handler[12]) = {
-		{.value = 'c', .handle = type_c},
-		{.value = 's', .handle = type_s},
-		{.value = 'p', .handle = type_p},
-		{.value = 'd', .handle = type_d},
-		{.value = 'i', .handle = type_d},
-		{.value = 'o', .handle = type_o},
-		{.value = 'u', .handle = type_u},
-		{.value = 'x', .handle = type_x},
-		{.value = 'X', .handle = type_x_cap},
-		{.value = 'f', .handle = type_f},
-		{.value = 'k', .handle = type_k},
-		{.value = 'b', .handle = type_b},
-	};
-	int					i;
+	int		i;
 
 	i = -1;
-	while (++i < 12)
+	while (g_handler[++i].value != 0)
 	{
-		if (format[0] == handler[i].value)
+		if (format[0] == g_handler[i].value)
 		{
-			(*handler[i].handle)(t, params);
+			(*g_handler[i].handle)(t, params);
 			t->i++;
 			return ;
 		}

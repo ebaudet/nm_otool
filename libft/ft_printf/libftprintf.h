@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/21 22:53:23 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/18 17:35:22 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 18:34:50 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,8 @@ void					type_k(t_ftprintf *t, t_params *params);
 */
 char					*find_last_number(const char *str);
 char					*ft_strstrchr(const char *haystack, const char *needle);
-void					fill_string(t_params *params, int c, size_t len, int pos);
+void					fill_string(t_params *params, int c, size_t len,
+						int pos);
 void					fill_zero(t_params *params, size_t len);
 int						check_flag(t_params *params, t_flag flag);
 

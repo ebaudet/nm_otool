@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 16:10:51 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 16:17:12 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ t_symtable			*add_symtable_64(struct nlist_64 array,
 	}
 	else
 		offset = ft_gethex((unsigned long)lbed(array.n_value, nm->flag), 16);
-	new = new_symtable(offset, symbol, stringtable+bed(array.n_un.n_strx, nm->flag));
+	new = new_symtable(offset, symbol, stringtable + bed(array.n_un.n_strx,
+		nm->flag));
 	return (list_add(nm, new));
 }
 
@@ -66,7 +67,8 @@ void				get_symtable_64(struct symtab_command *sym, int nsyms,
 	i = 0;
 	while (i < nsyms)
 	{
-		section = get_section_64(segment, bed(array[i].n_sect, nm->flag), nm->flag);
+		section = get_section_64(segment, bed(array[i].n_sect, nm->flag),
+			nm->flag);
 		if ((bed(array[i].n_type, nm->flag) & N_STAB) == 0)
 			add_symtable_64(array[i], section, stringtable, nm);
 		i++;

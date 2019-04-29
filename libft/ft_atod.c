@@ -6,13 +6,13 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:39:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/18 15:50:01 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 18:20:01 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-double ft_pow10(unsigned int y)
+double	ft_pow10(unsigned int y)
 {
 	double result;
 
@@ -25,7 +25,7 @@ double ft_pow10(unsigned int y)
 	return (result);
 }
 
-double		ft_atod(const char *str)
+double	ft_atod(const char *str)
 {
 	double			value;
 	int				sign;

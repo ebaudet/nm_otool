@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:39:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/13 19:54:54 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 18:11:40 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,4 +101,3 @@ char		*ft_dtoa(double d, unsigned int precision)
 	put_decimals(d, precision, str);
 	return (str);
 }
-

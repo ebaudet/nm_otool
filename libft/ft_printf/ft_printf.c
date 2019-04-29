@@ -6,14 +6,14 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/21 20:45:55 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/18 17:35:31 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 18:21:30 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 #include "libft.h"
 
-char *found_arg(const char *needle)
+char		*found_arg(const char *needle)
 {
 	char	*found;
 
