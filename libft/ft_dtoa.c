@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:39:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 18:11:40 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 18:43:12 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,20 +84,39 @@ char		*ft_dtoa(double d, unsigned int precision)
 	char	*tmp;
 	int		len;
 
-	ft_putstr_fd("{in ft_dtoa len[", 2);
 	len = ft_nbchar(d, precision);
 	ft_putnbr_fd(len, 2);
 	str = ft_memalloc(len + 1);
-	ft_putstr_fd("] d[", 2);
 	ft_putnbr_fd((long long int)d, 2);
-	ft_putstr_fd("] tmp[", 2);
 	tmp = ft_itoa((intmax_t)d);
-	ft_putstr_fd(tmp, 2);
-	ft_putstr_fd("] str[", 2);
 	str = ft_strncat(str, tmp, len - precision - 1);
-	ft_putstr_fd(str, 2);
-	ft_putstr_fd("]}", 2);
 	free(tmp);
 	put_decimals(d, precision, str);
 	return (str);
 }
+
+/*
+** char		*ft_dtoa(double d, unsigned int precision)
+** {
+** 	char	*str;
+** 	char	*tmp;
+** 	int		len;
+**
+** 	ft_putstr_fd("{in ft_dtoa len[", 2);
+** 	len = ft_nbchar(d, precision);
+** 	ft_putnbr_fd(len, 2);
+** 	str = ft_memalloc(len + 1);
+** 	ft_putstr_fd("] d[", 2);
+** 	ft_putnbr_fd((long long int)d, 2);
+** 	ft_putstr_fd("] tmp[", 2);
+** 	tmp = ft_itoa((intmax_t)d);
+** 	ft_putstr_fd(tmp, 2);
+** 	ft_putstr_fd("] str[", 2);
+** 	str = ft_strncat(str, tmp, len - precision - 1);
+** 	ft_putstr_fd(str, 2);
+** 	ft_putstr_fd("]}", 2);
+** 	free(tmp);
+** 	put_decimals(d, precision, str);
+** 	return (str);
+** }
+*/

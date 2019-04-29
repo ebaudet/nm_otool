@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/21 22:53:23 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 18:34:50 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 19:02:45 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,18 +146,34 @@ t_params				*params_init(t_params *params);
 t_params				*params_reset(t_params *params);
 
 /*
-** put.c
+** pf_type_float.c
+*/
+void					type_f(t_ftprintf *t, t_params *params);
+
+/*
+** pf_type_int.c
+*/
+void					type_d(t_ftprintf *t, t_params *params);
+void					type_u(t_ftprintf *t, t_params *params);
+
+/*
+** pf_type_hexa.c
+*/
+void					type_p(t_ftprintf *t, t_params *params);
+void					type_x(t_ftprintf *t, t_params *params);
+void					type_x_cap(t_ftprintf *t, t_params *params);
+
+/*
+** pf_type_text.c
 */
 void					type_c(t_ftprintf *t, t_params *params);
 void					type_s(t_ftprintf *t, t_params *params);
-void					type_p(t_ftprintf *t, t_params *params);
-void					type_d(t_ftprintf *t, t_params *params);
+
+/*
+** pf_type_other.c
+*/
 void					type_o(t_ftprintf *t, t_params *params);
 void					type_b(t_ftprintf *t, t_params *params);
-void					type_u(t_ftprintf *t, t_params *params);
-void					type_x(t_ftprintf *t, t_params *params);
-void					type_x_cap(t_ftprintf *t, t_params *params);
-void					type_f(t_ftprintf *t, t_params *params);
 void					type_k(t_ftprintf *t, t_params *params);
 
 /*

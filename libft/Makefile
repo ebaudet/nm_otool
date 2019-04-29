@@ -6,12 +6,12 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/21 12:00:46 by ebaudet           #+#    #+#              #
-#    Updated: 2019/04/29 18:39:50 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/04/29 19:56:21 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME 	= libft.a
-SRCS 	= ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c \
+LSRCS 	= ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c \
 		ft_memchr.c ft_memcmp.c ft_strlen.c ft_strdup.c ft_strcpy.c \
 		ft_strncpy.c ft_strcat.c ft_strncat.c ft_strlcat.c ft_strchr.c \
 		ft_strrchr.c ft_strstr.c ft_strnstr.c ft_strcmp.c ft_strncmp.c \
@@ -24,10 +24,11 @@ SRCS 	= ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c \
 		ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c \
 		get_next_line.c ft_concat.c ft_strreverse.c ft_lutohex.c \
 		ft_atod.c ft_isspace.c ft_abs.c ft_fabs.c ft_dtoa.c ft_lutooct.c \
-		ft_max.c ft_min.c ft_lutobin.c ft_ldtoa.c \
-		ft_printf/ft_printf.c ft_printf/pf_put.c ft_printf/pf_handler.c \
-		ft_printf/pf_functions.c ft_printf/pf_get_dec_lenght.c ft_printf/pf_params.c \
-		ft_printf/pf_buffer.c
+		ft_max.c ft_min.c ft_lutobin.c ft_ldtoa.c
+PRSRCS	= ft_printf.c pf_args.c pf_type_float.c pf_type_hexa.c pf_type_int.c \
+		pf_type_other.c pf_type_text.c pf_handler.c pf_handler_2.c \
+		pf_functions.c pf_get_dec_lenght.c pf_params.c pf_buffer.c
+SRCS	= $(LSRCS) ${PRSRCS:%.c=ft_printf/%.c}
 OBJS	= ${SRCS:%.c=.obj/%.o}
 INC		= -I ./includes/ -I ./ft_printf/
 FLAGS	= -Wall -Wextra -Werror -fno-builtin -fno-stack-protector -pedantic -ansi
