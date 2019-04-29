@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:55:29 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 15:38:14 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 16:09:25 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,14 @@
 #include "libft.h"
 #include "libftprintf.h"
 
-t_symtable *add_symtable_32(struct nlist array, struct section *section, char *stringtable, t_nm *nm)
+t_symtable		*add_symtable_32(struct nlist array, struct section *section,
+				char *stringtable, t_nm *nm)
 {
 	t_symtable	*new;
 	char		*offset;
 	char		symbol;
 
-	// flag &= FLAG_BIGEN;
-
-	// flag = flag & ~FLAG_BIGEN;
-	// flag = flag | FLAG_BIGEN;
-
 	if (nm->flag & FLAG_PPC) {
-		// ft_printf("sectname: %5s\n", section);
 		symbol = get_symbol(section->sectname, array.n_type,
 			bed(array.n_value, nm->flag), bed(array.n_sect, nm->flag));
 	} else {
@@ -43,28 +38,12 @@ t_symtable *add_symtable_32(struct nlist array, struct section *section, char *s
 	}
 	else
 		offset = ft_gethex((unsigned long)bed(array.n_value, nm->flag), 8);
-	// ft_printf("{add_symtable_32: array: %p, section: %p, stringtable: %p}\n",
-	//          &array, section, stringtable);
-	// ft_printf("{%32kget_symbol: sectname:%p|%p, n_type:%x, n_value:%x, n_sect:%x%k}",
-	//           section->sectname ,section->sectname,  bed(array.n_type, flag), bed(array.n_value, flag), bed(array.n_sect, flag));
 	new = new_symtable(offset, symbol, stringtable+bed(array.n_un.n_strx, nm->flag));
-	if (new == NULL)
-		return (NULL);
-	if (nm->flag & FLAG_P)
-		list_add_order_symtable(nm->list, new, compare_end);
-	else if (nm->flag & FLAG_PCAPS)
-		list_add_order_symtable(nm->list, new, compare_first);
-	else if (nm->flag & FLAG_R)
-		list_add_order_symtable(nm->list, new, compare_tableindex_rev);
-	else if (nm->flag & FLAG_N)
-		list_add_order_symtable(nm->list, new, compare_offset);
-	else
-		list_add_order_symtable(nm->list, new, compare_tableindex);
-	return (new);
+	return (list_add(nm, new));
 }
 
 struct section	*get_section_32(struct segment_command *segment,
-                               uint32_t offset, int flag)
+				uint32_t offset, int flag)
 {
 	struct section	*section;
 
@@ -78,7 +57,8 @@ struct section	*get_section_32(struct segment_command *segment,
 		flag));
 }
 
-void	get_symtable_32(struct symtab_command *sym, int nsyms, char *ptr, t_nm *nm)
+void			get_symtable_32(struct symtab_command *sym, int nsyms,
+				char *ptr, t_nm *nm)
 {
 	int						i;
 	char					*stringtable;
@@ -103,7 +83,7 @@ void	get_symtable_32(struct symtab_command *sym, int nsyms, char *ptr, t_nm *nm)
 	}
 }
 
-int		handle_32(char *ptr, t_nm *nm)
+int				handle_32(char *ptr, t_nm *nm)
 {
 	int						ncmds;
 	int						i;
@@ -115,18 +95,8 @@ int		handle_32(char *ptr, t_nm *nm)
 	ncmds = bed(header->ncmds, nm->flag);
 	i = 0;
 	lc = (void *)ptr + sizeof(*header);
-	// ft_printf("%33k[%s]%k", (flag & FLAG_BIGEN) ? "is big-endian" : "is litle-endian");
-	// ft_printf("{HEADER: magic:%x, cputype:%x, cpusubtype:%x, filetype:%x, ncmds:%x, sizeofcmds:%x, flags:%x}\n",
-	// bed(header->magic, flag), bed(header->cputype, flag),
-	// bed(header->cpusubtype, flag), bed(header->filetype, flag), bed(header->ncmds, flag), bed(header->sizeofcmds, flag),
-	// header->flags);
-	// ft_printf("{HEADER: magic:%x, cputype:%x, cpusubtype:%x, filetype:%x, ncmds:%x, sizeofcmds:%x, flags:%x}\n",
-	// header->magic, header->cputype,
-	// header->cpusubtype, header->filetype, header->ncmds, header->sizeofcmds,
-	// header->flags);
 	while (i < ncmds)
 	{
-		// ft_printf("%33k<cmd %d/%d>%k\n", i, ncmds);
 		if (bed(lc->cmd, nm->flag) == LC_SYMTAB)
 		{
 			sym = (struct symtab_command *)lc;
