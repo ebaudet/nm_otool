@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 12:31:43 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/19 13:16:29 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 18:37:14 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*get_ptr(char *ptr)
 
 	if (static_ptr == NULL || ptr != NULL)
 		static_ptr = ptr;
-	return(static_ptr);
+	return (static_ptr);
 }
 
 /*
@@ -55,7 +55,7 @@ int		sec_ptr(char *ptr)
 		return (0);
 	if ((ptr >= start_ptr) && (ptr < (start_ptr + file_size)))
 		return (1);
-	ft_printf("{inside sec_ptr. %31ktest failed%k ptr[%p] outside [%p - %p]\n",
-		ptr, start_ptr, start_ptr + file_size);
+	//ft_printf("{inside sec_ptr. %31ktest failed%k ptr[%p] outside [%p - %p]\n",
+	//ptr, start_ptr, start_ptr + file_size);
 	return (0);
 }

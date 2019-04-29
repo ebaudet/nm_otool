@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/13 21:22:24 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 17:38:18 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@
 #include <mach-o/loader.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
-
-#include <libft.h>
-#include <libftprintf.h>
-// #include "libft.h"
+#include "libftprintf.h"
+#include "libft.h"
 #include "math.h"
 #include "otool.h"
 

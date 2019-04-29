@@ -1,23 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   print_output.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/19 16:49:07 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 18:18:33 by ebaudet          ###   ########.fr       */
+/*   Created: 2019/04/29 16:23:03 by ebaudet           #+#    #+#             */
+/*   Updated: 2019/04/29 16:24:59 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libftprintf.h"
+#include "nm.h"
 
-int		ft_strcmp(const char *s1, const char *s2)
+void	print_output(t_nm *nm, int size, char *object)
 {
-	int		i;
+	t_symtable	*tmp;
 
-	i = 0;
-	while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	if (nm->flag & FLAG_PRINT)
+	{
+		if (object != NULL)
+			ft_printf("\n%s(%s):\n", nm->file, object);
+		else
+			ft_printf("\n%s:\n", nm->file);
+	}
+	tmp = *(nm->list);
+	while (tmp)
+	{
+		ft_printf("%.*s %c %s\n", size, tmp->offset, tmp->symbol,
+			tmp->table_index);
+		tmp = tmp->next;
+	}
 }
