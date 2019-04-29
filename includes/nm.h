@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/26 22:06:59 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 15:37:51 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ typedef t_symtable	*(*t_compate_symtable)(t_symtable *, t_symtable *);
 char				get_section_letter(char *section);
 char				undef(int type, int addr, char c);
 char				get_symbol(char *section, int type, int addr, int sect);
-void				print_output(t_symtable **list, int size, char *file,
-					char *object, int flag); 									// NOPE - norme
+void				print_output(t_nm *nm, int size, char *object);
 // int					handle_type(t_nm *nm, char *object);
 int				handle_type(t_nm *nm, char *ptr, char *object);
 
@@ -74,7 +73,7 @@ int				handle_type(t_nm *nm, char *ptr, char *object);
 ** nm_64.c
 */
 struct section_64	*get_section_64(struct segment_command_64 *segment,
-					uint32_t offset, int flag); 								// NOPE - norme
+					uint32_t offset, int flag);
 t_symtable 			*add_symtable_64(struct nlist_64 array,
 					struct section_64 *section, char *stringtable,
 					t_symtable **list, int flag);								// NOPE - norme
@@ -85,14 +84,11 @@ int					handle_64(char *ptr, t_symtable **list, int flag);
 /*
 ** nm_32.c
 */
-t_symtable 			*add_symtable_32(struct nlist array,
-					struct section *section, char *stringtable,
-					t_symtable **list, int flag); 								// NOPE - norme
+t_symtable *add_symtable_32(struct nlist array, struct section *section, char *stringtable, t_nm *nm);
 struct section		*get_section_32(struct segment_command *segment,
 					uint32_t offset, int flag);
-void				get_symtable_32(struct symtab_command *sym, int nsyms,
-					char *ptr, t_symtable **list, int flag); 					// NOPE - norme
-int					handle_32(char *ptr, t_symtable **list, int flag);
+void				get_symtable_32(struct symtab_command *sym, int nsyms, char *ptr, t_nm *nm);
+int					handle_32(char *ptr, t_nm *nm);
 
 /*
 ** nm_fat.c
