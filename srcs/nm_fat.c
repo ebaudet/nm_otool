@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/25 17:09:35 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 18:28:09 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libft.h"
 #include "libftprintf.h"
 
-static const t_arch_info g_infos[] = {
+static const t_arch_info	g_infos[] = {
 	{"any", CPU_TYPE_ANY, CPU_SUBTYPE_MULTIPLE},
 	{"arm", CPU_TYPE_ARM, CPU_SUBTYPE_ARM_ALL},
 	{"arm64", CPU_TYPE_ARM64, CPU_SUBTYPE_ARM64_ALL},
@@ -70,13 +70,13 @@ static const t_arch_info g_infos[] = {
 	{NULL, 0, 0}
 };
 
-char	*put_achitecture_name(char *av, cpu_type_t cputype,
-	cpu_subtype_t cpusubtype, int my_arch, int print_arch)
+char		*put_achitecture_name(char *av, cpu_type_t cputype,
+			cpu_subtype_t cpusubtype, int my_arch, int print_arch)
 {
 	int		i;
 
 	if (my_arch)
-		return "";
+		return ("");
 	if (print_arch > 1)
 		ft_printf("\n%s (for architecture ", av);
 	else
@@ -85,10 +85,11 @@ char	*put_achitecture_name(char *av, cpu_type_t cputype,
 	while (g_infos[++i].name != NULL)
 	{
 		if (g_infos[i].cputype == cputype
-		    && g_infos[i].cpusubtype == cpusubtype) {
+			&& g_infos[i].cpusubtype == cpusubtype)
+		{
 			if (print_arch > 1)
 				ft_putstr(g_infos[i].name);
-			break;
+			break ;
 		}
 	}
 	if (print_arch > 1)
@@ -96,35 +97,34 @@ char	*put_achitecture_name(char *av, cpu_type_t cputype,
 	return (g_infos[i].name);
 }
 
-// TODO : check pour n'afficher que l'architecture x86_64 si l'option FLAG_ARCH
-// n'est pas indiquée.
-// Pour faire ça, il faut faire une boucle dans les fat_arch et determiner si
-// on retrouve notre archi.
-// Si oui, on affichera les tables de symboles seulement pour notre architecture
-// Si non, on affichera toutes les architectures, comme pour l'option -arch
-static int	is_my_arch(char *ptr, struct fat_header *fheader, struct fat_arch *farch,
+/*
+** TODO : check pour n'afficher que l'architecture x86_64 si l'option FLAG_ARCH
+** n'est pas indiquée.
+** Pour faire ça, il faut faire une boucle dans les fat_arch et determiner si
+** on retrouve notre archi.
+** Si oui, on affichera les tables de symboles seulement pour notre architecture
+** Si non, on affichera toutes les architectures, comme pour l'option -arch
+*/
+
+static int	is_my_arch(struct fat_header *fheader, struct fat_arch *farch,
 	int flag)
 {
-	(void)ptr;
-	(void)fheader;
-	(void)farch;
-	(void)flag;
 	unsigned int			i;
 
 	if (flag & FLAG_ARCH)
 		return (0);
-
 	i = 0;
 	while (++i <= bed(fheader->nfat_arch, flag))
 	{
-		if (bed(farch->cputype, flag) == CPU_TYPE_X86_64 && bed(farch->cpusubtype, flag) == 0x80000003)
+		if (bed(farch->cputype, flag) == CPU_TYPE_X86_64
+			&& bed(farch->cpusubtype, flag) == 0x80000003)
 			return (1);
 		farch++;
 	}
 	return (0);
 }
 
-int			handle_fat(char *ptr, char *av, int flag)
+int			handle_fat(t_nm *nm, char *ptr, int flag)
 {
 	struct fat_header		*fheader;
 	struct fat_arch			*farch;
@@ -135,27 +135,23 @@ int			handle_fat(char *ptr, char *av, int flag)
 	fheader = (struct fat_header *)ptr;
 	i = 0;
 	farch = (struct fat_arch *)(fheader + 1);
-	my_arch = is_my_arch(ptr, fheader, farch, flag);
+	my_arch = is_my_arch(fheader, farch, flag);
 	while (++i <= bed(fheader->nfat_arch, flag))
 	{
-		if (my_arch && !(bed(farch->cputype, flag) == CPU_TYPE_X86_64
-			&& bed(farch->cpusubtype, flag) == 0x80000003) && farch++)
+		if (my_arch && !(bed(farch->cputype, nm->flag) == CPU_TYPE_X86_64
+			&& bed(farch->cpusubtype, nm->flag) == 0x80000003) && farch++)
 			continue ;
-		header = (void *)ptr + bed(farch->offset, flag);
-		if (!ft_strcmp(put_achitecture_name(av, bed(farch->cputype, flag),
-			bed(farch->cpusubtype, flag), my_arch, bed(fheader->nfat_arch, flag)), "ppc"))
+		header = (void *)ptr + bed(farch->offset, nm->flag);
+		if (!ft_strcmp(put_achitecture_name(nm->file, bed(farch->cputype, nm->flag),
+			bed(farch->cpusubtype, nm->flag), my_arch, bed(fheader->nfat_arch, nm->flag)), "ppc"))
 		{
-			// ft_printf("%31kppc architecture%k\n");
-			flag |= FLAG_PPC;
-			// flag = flag & ~FLAG_BIGEN;
+			nm->flag |= FLAG_PPC;
 		}
 		else
-			flag &= ~FLAG_PPC;
-		// put_achitecture_name(av, bed(farch->cputype, flag),
-		// 	bed(farch->cpusubtype, flag), my_arch);
-		flag &= ~FLAG_PRINT;
-		handle_type((char *)header, av, NULL, flag);
-		flag &= ~FLAG_PPC;
+			nm->flag &= ~FLAG_PPC;
+		nm->flag &= ~FLAG_PRINT;
+		handle_type(nm, (char *)header, NULL);
+		nm->flag &= ~FLAG_PPC;
 		farch++;
 	}
 	return (0);

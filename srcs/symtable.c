@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 17:42:32 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/03/06 18:28:47 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 15:59:16 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ t_symtable	*list_add_order_symtable(t_symtable **list, t_symtable *new,
 	t_symtable	*tmp;
 	t_symtable	*old;
 
-	// ft_printf("   {in list_add_order_symtable: offset[%16s] symbol[%c] table_index[%s] while[", new->offset, new->symbol, new->table_index);
 	if (*list == NULL)
 	{
 		*list = new;
@@ -81,7 +80,6 @@ t_symtable	*list_add_order_symtable(t_symtable **list, t_symtable *new,
 	}
 	if (new == (compare)(*list, new))
 	{
-		// ft_printf("%31k.%k");
 		new->next = (*list);
 		*list = new;
 		return (*list);
@@ -90,11 +88,9 @@ t_symtable	*list_add_order_symtable(t_symtable **list, t_symtable *new,
 	old = *list;
 	while (tmp && (tmp == (compare)(tmp, new)))
 	{
-		// ft_printf("%31k.%k");
 		old = tmp;
 		tmp = tmp->next;
 	}
-	// ft_printf("]}\n");
 	new->next = old->next;
 	old->next = new;
 	return (*list);

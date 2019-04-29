@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/23 19:19:13 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 18:17:41 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,9 @@
 
 # include <stddef.h>
 # include <stdio.h>
-# include <sys/mman.h>
 # include <mach-o/loader.h>
 # include <mach-o/nlist.h>
 # include <mach-o/fat.h>
-# include <fcntl.h>
-# include <sys/stat.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include "math.h"
@@ -48,45 +45,63 @@ typedef struct		s_arch_info {
 	cpu_subtype_t	cpusubtype;
 }					t_arch_info;
 
+typedef struct		s_nm {
+	char			*file;
+	char			*command;
+	char			**av;
+	int				flag;
+	t_symtable		**list;
+}					t_nm;
+
 typedef t_symtable	*(*t_compate_symtable)(t_symtable *, t_symtable *);
 
 /*
 ** nm.c
 */
-char				get_section_letter(char *section);
 char				undef(int type, int addr, char c);
 char				get_symbol(char *section, int type, int addr, int sect);
-void				print_output(t_symtable **list, int size, char *file, char *object, int flag);
-int					handle_type(char *ptr, char *file, char *object, int flag);
+
+/*
+** handle_arch.c
+*/
+void				handle_arch(t_nm *nm, char *ptr, int offset);
+
+/*
+** handle_type.c
+*/
+int					handle_type(t_nm *nm, char *ptr, char *object);
+
+/*
+** handle_file.c
+*/
+int					handle_file(t_nm *nm);
 
 /*
 ** nm_64.c
 */
 struct section_64	*get_section_64(struct segment_command_64 *segment,
 					uint32_t offset, int flag);
-t_symtable 			*add_symtable_64(struct nlist_64 array,
-					struct section_64 *section, char *stringtable,
-					t_symtable **list, int flag);
+t_symtable			*add_symtable_64(struct nlist_64 array,
+					struct section_64 *section, char *stringtable, t_nm *nm);
 void				get_symtable_64(struct symtab_command *sym, int nsyms,
-					char *ptr, t_symtable **list, int flag);
-int					handle_64(char *ptr, t_symtable **list, int flag);
+					char *ptr, t_nm *nm);
+int					handle_64(char *ptr, t_nm *nm);
 
 /*
 ** nm_32.c
 */
-t_symtable 			*add_symtable_32(struct nlist array,
-					struct section *section, char *stringtable,
-					t_symtable **list, int flag);
+t_symtable			*add_symtable_32(struct nlist array,
+					struct section *section, char *stringtable, t_nm *nm);
 struct section		*get_section_32(struct segment_command *segment,
 					uint32_t offset, int flag);
 void				get_symtable_32(struct symtab_command *sym, int nsyms,
-					char *ptr, t_symtable **list, int flag);
-int					handle_32(char *ptr, t_symtable **list, int flag);
+					char *ptr, t_nm *nm);
+int					handle_32(char *ptr, t_nm *nm);
 
 /*
 ** nm_fat.c
 */
-int					handle_fat(char *ptr, char *av, int flag);
+int					handle_fat(t_nm *nm, char *ptr, int flag);
 
 /*
 ** flag_handler.c
@@ -105,6 +120,11 @@ size_t				count_symtable(t_symtable **list);
 void				free_symtable(t_symtable **list);
 
 /*
+** list_add.c
+*/
+t_symtable			*list_add(t_nm *nm, t_symtable *new);
+
+/*
 ** compare.c
 */
 t_symtable			*compare_tableindex(t_symtable *a, t_symtable *b);
@@ -117,7 +137,7 @@ t_symtable			*compare_offset(t_symtable *a, t_symtable *b);
 ** ft_error.c
 */
 int					print_error(char *message);
-int					file_error(char *message, char *file, char *function);
+int					file_error(char *message, t_nm *nm);
 
 /*
 ** endian_swap.c
@@ -133,6 +153,18 @@ unsigned long		lbed(unsigned long x, int flag);
 int					get_size(int size);
 char				*get_ptr(char *ptr);
 int					sec_ptr(char *ptr);
+
+/*
+** symbol.c
+*/
+char				get_section_letter(char *section);
+char				undef(int type, int addr, char c);
+char				get_symbol(char *section, int type, int addr, int sect);
+
+/*
+** print_output.c
+*/
+void				print_output(t_nm *nm, int size, char *object);
 
 /*
 ** NM_H
