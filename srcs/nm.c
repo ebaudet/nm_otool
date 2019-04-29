@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/26 22:09:39 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 15:32:41 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,18 @@
 #include <ar.h>
 #include <ranlib.h>
 
-void			print_output(t_symtable **list, int size, char *file, char *object, int flag)
+void			print_output(t_nm *nm, int size, char *object)
 {
 	t_symtable	*tmp;
 
-	if (flag & FLAG_PRINT)
+	if (nm->flag & FLAG_PRINT)
 	{
 		if (object != NULL)
-			ft_printf("\n%s(%s):\n", file, object);
+			ft_printf("\n%s(%s):\n", nm->file, object);
 		else
-			ft_printf("\n%s:\n", file);
+			ft_printf("\n%s:\n", nm->file);
 	}
-	tmp = *list;
+	tmp = *(nm->list);
 	while (tmp)
 	{
 		ft_printf("%.*s %c %s\n", size, tmp->offset, tmp->symbol,
@@ -86,7 +86,7 @@ int				handle_type(t_nm *nm, char *ptr, char *object)
 	}
 	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
 	{
-		size_print = handle_32(ptr, nm->list, nm->flag);
+		size_print = handle_32(ptr, nm);
 	}
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
 	{
@@ -107,7 +107,7 @@ int				handle_type(t_nm *nm, char *ptr, char *object)
 	if (size_print < 0)
 		return (0);
 	if (size_print > 0)
-		print_output(nm->list, size_print, nm->file, object, nm->flag);
+		print_output(nm, size_print, object);
 	free_symtable(nm->list);
 	return (1);
 }
