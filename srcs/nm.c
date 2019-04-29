@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 15:32:41 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 15:44:56 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int				handle_type(t_nm *nm, char *ptr, char *object)
 	set_bigen(nm, magic_number);
 	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
 	{
-		size_print = handle_64(ptr, nm->list, nm->flag);
+		size_print = handle_64(ptr, nm);
 	}
 	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
 	{
