@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 17:55:04 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 19:48:41 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 20:27:09 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ int		call_handler(const char *format, t_ftprintf *t, t_params *params)
 		{
 			(g_call_handler[i].handle)(&format[t->i], t, params);
 			do_stuff++;
-			if (ft_strcmp(g_call_handler[i].value, P_TYPE)
-				|| ft_strcmp(g_call_handler[i].value, P_MODULO))
+			if (!ft_strcmp(g_call_handler[i].value, P_TYPE)
+				|| !ft_strcmp(g_call_handler[i].value, P_MODULO))
 				return (-1);
 		}
 	}

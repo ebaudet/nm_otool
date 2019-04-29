@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/21 22:53:23 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 20:02:57 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 20:24:39 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,10 @@ int						ft_printf_fd(int fd, const char *format, ...);
 /*
 ** pf_getsstr.c
 */
+char					*found_arg(const char *needle);
+int						is_arg(t_ftprintf *t, const char *format,
+						t_params *params);
+void					pf_concat_param(t_ftprintf *t, t_params *params);
 char					*pf_getsstr(t_ftprintf *t, const char *format);
 
 /*
