@@ -6,14 +6,14 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/21 20:45:55 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 20:04:23 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/29 20:30:37 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 #include "libft.h"
 
-static char		*found_arg(const char *needle)
+char	*found_arg(const char *needle)
 {
 	char	*found;
 
@@ -29,7 +29,7 @@ static char		*found_arg(const char *needle)
 	return (found);
 }
 
-static int		is_arg(t_ftprintf *t, const char *format, t_params *params)
+int		is_arg(t_ftprintf *t, const char *format, t_params *params)
 {
 	char			*next_modulo;
 	char			*end_arg;
@@ -49,7 +49,7 @@ static int		is_arg(t_ftprintf *t, const char *format, t_params *params)
 	return (0);
 }
 
-static void		pf_concat_param(t_ftprintf *t, t_params *params)
+void	pf_concat_param(t_ftprintf *t, t_params *params)
 {
 	char	*tmp;
 
@@ -69,7 +69,7 @@ static void		pf_concat_param(t_ftprintf *t, t_params *params)
 	t->str = tmp;
 }
 
-char		*pf_getsstr(t_ftprintf *t, const char *format)
+char	*pf_getsstr(t_ftprintf *t, const char *format)
 {
 	t_params	params;
 
