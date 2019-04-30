@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 18:28:09 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/30 12:42:43 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,18 +106,28 @@ char		*put_achitecture_name(char *av, cpu_type_t cputype,
 ** Si non, on affichera toutes les architectures, comme pour l'option -arch
 */
 
+static int	is_my_arch_current(struct fat_arch *farch, int flag)
+{
+	if (bed(farch->cputype, flag) == CPU_TYPE_X86_64
+		&& (bed(farch->cpusubtype, flag) == 0x80000003
+			|| bed(farch->cpusubtype, flag) == CPU_SUBTYPE_X86_64_ALL))
+		return (1);
+	return (0);
+}
+
 static int	is_my_arch(struct fat_header *fheader, struct fat_arch *farch,
 	int flag)
 {
 	unsigned int			i;
 
 	if (flag & FLAG_ARCH)
+	{
 		return (0);
+	}
 	i = 0;
 	while (++i <= bed(fheader->nfat_arch, flag))
 	{
-		if (bed(farch->cputype, flag) == CPU_TYPE_X86_64
-			&& bed(farch->cpusubtype, flag) == 0x80000003)
+		if (is_my_arch_current(farch, flag))
 			return (1);
 		farch++;
 	}
@@ -131,15 +141,20 @@ int			handle_fat(t_nm *nm, char *ptr, int flag)
 	unsigned int			i;
 	struct mach_header_64	*header;
 	int						my_arch;
+	unsigned int nfat_arch;
 
+	(void)flag;
+	nm->flag |= FLAG_BIGEN;
 	fheader = (struct fat_header *)ptr;
 	i = 0;
 	farch = (struct fat_arch *)(fheader + 1);
-	my_arch = is_my_arch(fheader, farch, flag);
-	while (++i <= bed(fheader->nfat_arch, flag))
+	my_arch = is_my_arch(fheader, farch, nm->flag);
+	nfat_arch = bed(fheader->nfat_arch, nm->flag);
+	while (++i <= nfat_arch)
 	{
-		if (my_arch && !(bed(farch->cputype, nm->flag) == CPU_TYPE_X86_64
-			&& bed(farch->cpusubtype, nm->flag) == 0x80000003) && farch++)
+		nm->flag |= FLAG_BIGEN;
+
+		if (my_arch && !is_my_arch_current(farch, nm->flag) && farch++)
 			continue ;
 		header = (void *)ptr + bed(farch->offset, nm->flag);
 		if (!ft_strcmp(put_achitecture_name(nm->file, bed(farch->cputype, nm->flag),
