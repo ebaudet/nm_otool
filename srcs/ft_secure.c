@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 12:31:43 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 18:37:14 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/30 14:36:34 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,5 @@ int		sec_ptr(char *ptr)
 		return (0);
 	if ((ptr >= start_ptr) && (ptr < (start_ptr + file_size)))
 		return (1);
-	//ft_printf("{inside sec_ptr. %31ktest failed%k ptr[%p] outside [%p - %p]\n",
-	//ptr, start_ptr, start_ptr + file_size);
 	return (0);
 }

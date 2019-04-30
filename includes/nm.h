@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/30 14:16:11 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/30 16:10:48 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct		s_nm {
 	char			**av;
 	int				flag;
 	t_symtable		**list;
+	unsigned int	nfat_arch;
 }					t_nm;
 
 typedef t_symtable	*(*t_compate_symtable)(t_symtable *, t_symtable *);
