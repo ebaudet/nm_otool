@@ -6,28 +6,13 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 16:17:12 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/30 10:52:50 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 #include "libft.h"
 #include "libftprintf.h"
-
-struct section_64	*get_section_64(struct segment_command_64 *segment,
-	uint32_t offset, int flag)
-{
-	struct section_64	*section;
-
-	if (offset <= bed(segment->nsects, flag))
-	{
-		section = (struct section_64 *)&segment[1] + offset - 1;
-		return (section);
-	}
-	return (get_section_64((struct segment_command_64 *)((void *)segment
-		+ bed(segment->cmdsize, flag)), offset - bed(segment->nsects, flag),
-		flag));
-}
 
 t_symtable			*add_symtable_64(struct nlist_64 array,
 					struct section_64 *section, char *stringtable, t_nm *nm)
@@ -50,6 +35,21 @@ t_symtable			*add_symtable_64(struct nlist_64 array,
 	new = new_symtable(offset, symbol, stringtable + bed(array.n_un.n_strx,
 		nm->flag));
 	return (list_add(nm, new));
+}
+
+struct section_64	*get_section_64(struct segment_command_64 *segment,
+	uint32_t offset, int flag)
+{
+	struct section_64	*section;
+
+	if (offset <= bed(segment->nsects, flag))
+	{
+		section = (struct section_64 *)&segment[1] + offset - 1;
+		return (section);
+	}
+	return (get_section_64((struct segment_command_64 *)((void *)segment
+		+ bed(segment->cmdsize, flag)), offset - bed(segment->nsects, flag),
+		flag));
 }
 
 void				get_symtable_64(struct symtab_command *sym, int nsyms,
