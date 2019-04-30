@@ -134,7 +134,7 @@ static int	is_my_arch(struct fat_header *fheader, struct fat_arch *farch,
 	return (0);
 }
 
-int			handle_fat(t_nm *nm, char *ptr, int flag)
+int			handle_fat(t_nm *nm, char *ptr)
 {
 	struct fat_header		*fheader;
 	struct fat_arch			*farch;
@@ -143,7 +143,6 @@ int			handle_fat(t_nm *nm, char *ptr, int flag)
 	int						my_arch;
 	unsigned int nfat_arch;
 
-	(void)flag;
 	nm->flag |= FLAG_BIGEN;
 	fheader = (struct fat_header *)ptr;
 	i = 0;
