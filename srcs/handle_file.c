@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:37:38 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 18:16:09 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/30 14:31:53 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int		handle_file(t_nm *nm)
 		return (file_error("No such file or directory.", nm));
 	if (fstat(fd, &buf) < 0)
 		return (file_error("Error fstat.", nm));
+	if (S_ISDIR(buf.st_mode))
+		return (file_error(": Is a directory.", nm));
 	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
 				== MAP_FAILED)
 		return (file_error("Error mmap.", nm));

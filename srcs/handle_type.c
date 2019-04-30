@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:32:13 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/30 10:50:56 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/30 14:16:22 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int				handle_type(t_nm *nm, char *ptr, char *object)
 	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
 		size_print = handle_32(ptr, nm);
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
-		size_print = handle_fat(nm, ptr, nm->flag);
+		size_print = handle_fat(nm, ptr);
 	else if (!ft_strncmp((const char *)ptr, ARMAG, SARMAG))
 	{
 		ar = (struct ar_hdr *)(SARMAG * sizeof(char) + ptr);
