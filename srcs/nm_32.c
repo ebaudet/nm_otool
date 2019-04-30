@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:55:29 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 16:20:57 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/30 14:53:22 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_symtable		*add_symtable_32(struct nlist array, struct section *section,
 
 	if (nm->flag & FLAG_PPC)
 		symbol = get_symbol(section->sectname, array.n_type,
-			bed(array.n_value, nm->flag), bed(array.n_sect, nm->flag));
+			array.n_value, array.n_sect);
 	else
 		symbol = get_symbol(section->sectname, bed(array.n_type, nm->flag),
 			lbed(array.n_value, nm->flag), bed(array.n_sect, nm->flag));
