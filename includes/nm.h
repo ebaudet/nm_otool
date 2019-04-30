@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 18:17:41 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/30 10:49:24 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char				get_symbol(char *section, int type, int addr, int sect);
 /*
 ** handle_arch.c
 */
-void				handle_arch(t_nm *nm, char *ptr, int offset);
+int					handle_arch(t_nm *nm, char *ptr, int offset);
 
 /*
 ** handle_type.c

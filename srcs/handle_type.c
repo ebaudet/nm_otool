@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:32:13 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 17:19:21 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/30 10:50:56 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "libft.h"
 #include <ranlib.h>
 #include <ar.h>
+#include "libftprintf.h"
 
 static void		set_bigen(t_nm *nm, unsigned int magic_number)
 {
@@ -50,14 +51,12 @@ int				handle_type(t_nm *nm, char *ptr, char *object)
 		size_print = handle_32(ptr, nm);
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
 		size_print = handle_fat(nm, ptr, nm->flag);
-	else
+	else if (!ft_strncmp((const char *)ptr, ARMAG, SARMAG))
 	{
-		if (!ft_strncmp((const char *)ptr, ARMAG, SARMAG))
-		{
-			ar = (struct ar_hdr *)(SARMAG * sizeof(char) + ptr);
-			handle_arch(nm, (char *)(ar + 1), ft_atoi(ar->ar_size));
-		}
-		return (0);
+		ar = (struct ar_hdr *)(SARMAG * sizeof(char) + ptr);
+		size_print = handle_arch(nm, (char *)(ar + 1), ft_atoi(ar->ar_size));
 	}
+	else
+		return (0);
 	return (print_type(size_print, nm, object));
 }

@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:25:57 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 17:16:12 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/04/30 10:49:17 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <ranlib.h>
 #include <ar.h>
 
-void	handle_arch(t_nm *nm, char *ptr, int offset)
+int		handle_arch(t_nm *nm, char *ptr, int offset)
 {
 	char			*next;
 	struct ar_hdr	*ar;
@@ -34,4 +34,5 @@ void	handle_arch(t_nm *nm, char *ptr, int offset)
 			next += ft_atoi(ar->ar_size) + 60;
 		}
 	}
+	return (0);
 }
