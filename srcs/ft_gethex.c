@@ -6,12 +6,12 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/16 16:41:20 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/02/16 18:47:19 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/05/09 23:04:17 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "math.h"
+#include "utils.h"
 
 char	*ft_gethex(long long int nb, int width)
 {
