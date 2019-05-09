@@ -6,12 +6,12 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/24 19:50:52 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/01/14 22:21:40 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/05/09 23:04:09 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "math.h"
+#include "utils.h"
 
 void	ft_puthex(long long int nb, int width)
 {
