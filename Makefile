@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/04/23 12:31:26 by ebaudet           #+#    #+#              #
-#    Updated: 2019/04/29 18:09:25 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/05/09 23:08:28 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ SRC_NM		= $(addprefix srcs/, $(F_NM))
 OBJ_NM		= $(SRC_NM:srcs/%.c=.obj/%.o)
 
 OTOOL		= ft_otool
-F_OTOOL		= ft_pow.c ft_puthex.c ft_error.c otool.c ft_secure.c
+F_OTOOL		= ft_pow.c ft_puthex.c ft_error.c otool.c ft_secure.c endian_swap.c
 SRC_OTOOL	= $(addprefix srcs/, $(F_OTOOL))
 OBJ_OTOOL	= $(SRC_OTOOL:srcs/%.c=.obj/%.o)
 
