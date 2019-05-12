@@ -6,12 +6,11 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 12:31:43 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/30 14:36:34 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/05/09 21:17:18 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "nm.h"
-#include "libftprintf.h"
+#include <stddef.h>
 
 /*
 ** Store the size of the file.

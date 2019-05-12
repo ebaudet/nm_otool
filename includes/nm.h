@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/30 16:10:48 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/05/09 23:09:29 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,9 @@
 # include <mach-o/fat.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include "math.h"
+# include "utils.h"
 
-# define FLAG_P		0b1
-# define FLAG_PCAPS	0b10
-# define FLAG_R		0b100
-# define FLAG_ARCH	0b1000
-# define FLAG_BIGEN	0b10000
-# define FLAG_N		0b100000
-# define FLAG_PRINT	0b1000000
-# define FLAG_PPC	0b10000000
+
 
 typedef struct		s_symtable
 {
@@ -138,15 +131,8 @@ t_symtable			*compare_offset(t_symtable *a, t_symtable *b);
 ** ft_error.c
 */
 int					print_error(char *message);
-int					file_error(char *message, t_nm *nm);
-
-/*
-** endian_swap.c
-*/
-unsigned int		endian_swap(unsigned int x);
-unsigned long		lendian_swap(unsigned long x);
-unsigned int		bed(unsigned int x, int flag);
-unsigned long		lbed(unsigned long x, int flag);
+int					file_error(char *message, char *file);
+int					nm_error(char *message, t_nm *nm);
 
 /*
 ** ft_secure.c
