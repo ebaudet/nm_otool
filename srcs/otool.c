@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/05/17 21:18:26 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/05/18 00:40:45 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	print_section_64(t_otool *otool, struct section_64 *section)
 	{
 		if (!(j % 16))
 		{
-			ft_printf("\n%016x\t", section->addr + j);
+			ft_printf("\n%016lx\t", section->addr + j);
 			// ft_putchar('\n');
 			// ft_puthex(section->addr + j, 16);
 			// ft_putchar('\t');
@@ -77,43 +77,53 @@ void	print_section(t_otool *otool, char *section)
 		print_section_64(otool, (struct section_64 *)section);
 }
 
-size_t	sizeof_mach_header(t_otool *otool)
+size_t	sizeof_mach_header(e_arch arch)
 {
-	if (otool->arch == E_32B)
+	if (arch == E_32B)
 		return (sizeof(struct mach_header));
 	return (sizeof(struct mach_header_64));
 }
 
-size_t	sizeof_segment_command(t_otool *otool)
+size_t	sizeof_segment_command(e_arch arch)
 {
-	if (otool->arch == E_32B)
+	if (arch == E_32B)
 		return (sizeof(struct segment_command));
 	return (sizeof(struct segment_command_64));
 }
 
-size_t	sizeof_section(t_otool *otool)
+size_t	sizeof_section(e_arch arch)
 {
-	if (otool->arch == E_32B)
+	if (arch == E_32B)
 		return (sizeof(struct section));
 	return (sizeof(struct section_64));
 }
 
+uint32_t	get_segment_command_nsects(char *ptr, e_arch arch)
+{
+	if (arch == E_32B)
+		return (((struct segment_command *)ptr)->nsects);
+	return (((struct segment_command_64 *)ptr)->nsects);
+}
+
 void	loop_lc_segment(t_otool *otool, char *addr)
 {
-	struct segment_command_64	*sc;
+	struct segment_command		*sc;
 	struct section				*section;
 	unsigned int				k;
 
-	sc = (struct segment_command_64 *)addr;
+	// ft_printf_fd(2, "%35k > loop_lc_segment < %k\n");
+	sc = (struct segment_command *)addr;
 	if (ft_strcmp(sc->segname, "__TEXT") == 0)
 	{
+		// ft_printf_fd(2, "%35k > section texte trouvée < %k\n");
 		k = 0;
-		addr += sizeof_segment_command(otool);
+		addr += sizeof_segment_command(otool->arch);
 		section = (struct section *)addr;
-		while (k < sc->nsects)
+		while (k < get_segment_command_nsects((char *)sc, otool->arch))
 		{
 			section = (struct section *)addr;
-			addr += sizeof_section(otool);
+			addr += sizeof_section(otool->arch);
+			// ft_printf_fd(2, "%35k >o< %k\n");
 			if (ft_strcmp(section->sectname, "__text") == 0)
 				print_section(otool, (char *)section);
 			k++;
@@ -147,7 +157,7 @@ int		set_arch(t_otool *otool, uint32_t magic)
 	return (1);
 }
 
-unsigned int obed(t_otool *otool, unsigned int val)
+unsigned int obed(unsigned int val, t_otool *otool)
 {
 	int flag;
 
@@ -163,23 +173,27 @@ int		ft_otool(t_otool *otool)
 	unsigned int		i;
 
 	ft_printf_fd(2, "%34kfile is '%s'%k\n", otool->file);
-	addr = otool->ptr + sizeof_mach_header(otool);
+
 	mh = (struct mach_header *)otool->ptr;
 	if (!set_arch(otool, mh->magic))
 		return (-1);
+	addr = otool->ptr + sizeof_mach_header(otool->arch);
 	i = 0;
-	while (i < obed(otool, mh->ncmds))
+	while (i < obed(mh->ncmds, otool))
 	{
 		lc = (struct load_command *)addr;
 
-		if (obed(otool, lc->cmdsize) == 0)
-		{
-			++i;
-			continue ;
-		}
-		if (obed(otool, lc->cmdsize) == otool->segment)
+		// if (obed(lc->cmdsize, otool) == 0)
+		// {
+		// 	++i;
+		// 	continue ;
+		// }
+		// ft_printf_fd(2, "%33k addr(%p|%p) cmd(%d|%d) segment : %d %k\n", otool->ptr, addr, lc->cmd, obed(lc->cmd, otool), otool->segment);
+		if (obed(lc->cmd, otool) == otool->segment)
 			loop_lc_segment(otool, addr);
-		addr = (char *)lc + obed(otool, lc->cmdsize);
+
+		// ft_printf_fd(2, "%33k cmdsize : (%d, %#0x, %d) %k\n", lc->cmdsize, lc->cmdsize, obed(lc->cmdsize, otool));
+		addr = (char *)lc + obed(lc->cmdsize, otool);
 		i++;
 	}
 	return (0);
