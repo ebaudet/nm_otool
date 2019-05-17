@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/05/09 23:27:10 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/05/17 21:18:26 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,22 @@ void	print_section_64(t_otool *otool, struct section_64 *section)
 {
 	unsigned int		j;
 
-	ft_putstr(otool->file);
-	ft_putstr(":\nContents of (__TEXT,__text) section");
+	ft_printf("%s:\nContents of (__TEXT,__text) section", otool->file);
+	// ft_putstr(otool->file);
+	// ft_putstr(":\nContents of (__TEXT,__text) section");
 	j = 0;
 	while (j < section->size)
 	{
 		if (!(j % 16))
 		{
-			ft_putchar('\n');
-			ft_puthex(section->addr + j, 16);
-			ft_putchar('\t');
+			ft_printf("\n%016x\t", section->addr + j);
+			// ft_putchar('\n');
+			// ft_puthex(section->addr + j, 16);
+			// ft_putchar('\t');
 		}
-		ft_puthex(otool->ptr[section->offset + j] & 0xFF, 2);
-		ft_putchar(' ');
+		ft_printf("%02x ", otool->ptr[section->offset + j] & 0xFF);
+		// ft_puthex(otool->ptr[section->offset + j] & 0xFF, 2);
+		// ft_putchar(' ');
 		j++;
 	}
 	ft_putchar('\n');
@@ -74,27 +77,11 @@ void	print_section(t_otool *otool, char *section)
 		print_section_64(otool, (struct section_64 *)section);
 }
 
-void	loop_lc_segment_64(t_otool *otool, char *addr)
+size_t	sizeof_mach_header(t_otool *otool)
 {
-	struct segment_command_64	*sc;
-	struct section_64			*section;
-	unsigned int				k;
-
-	sc = (struct segment_command_64 *)addr;
-	if (ft_strcmp(sc->segname, "__TEXT") == 0)
-	{
-		k = 0;
-		addr += sizeof(struct segment_command_64);
-		section = (struct section_64 *)addr;
-		while (k < sc->nsects)
-		{
-			section = (struct section_64 *)addr;
-			addr += sizeof(struct section_64);
-			if (ft_strcmp(section->sectname, "__text") == 0)
-				print_section(otool, (char *)section);
-			k++;
-		}
-	}
+	if (otool->arch == E_32B)
+		return (sizeof(struct mach_header));
+	return (sizeof(struct mach_header_64));
 }
 
 size_t	sizeof_segment_command(t_otool *otool)
@@ -154,7 +141,7 @@ int		set_arch(t_otool *otool, uint32_t magic)
 	}
 	else
 	{
-		ft_printf("%34kmagic is %x%k\n", magic);
+		ft_printf_fd(2, "%35kmagic is %x%k\n", magic);
 		return (0);
 	}
 	return (1);
@@ -176,60 +163,23 @@ int		ft_otool(t_otool *otool)
 	unsigned int		i;
 
 	ft_printf_fd(2, "%34kfile is '%s'%k\n", otool->file);
-	addr = otool->ptr;
-	mh = (struct mach_header *)addr;
+	addr = otool->ptr + sizeof_mach_header(otool);
+	mh = (struct mach_header *)otool->ptr;
 	if (!set_arch(otool, mh->magic))
 		return (-1);
 	i = 0;
-	ft_printf_fd(2, "%34k ok 1, mh->ncmds = %d, %d %k\n", otool->file, mh->ncmds, obed(otool, mh->ncmds));
-
 	while (i < obed(otool, mh->ncmds))
 	{
 		lc = (struct load_command *)addr;
-
-		ft_printf_fd(2, "%34k ok 2 cmdsize(%d|%d) %k\n", otool->file, lc->cmdsize, obed(otool, lc->cmdsize));
-
 
 		if (obed(otool, lc->cmdsize) == 0)
 		{
 			++i;
 			continue ;
 		}
-
 		if (obed(otool, lc->cmdsize) == otool->segment)
 			loop_lc_segment(otool, addr);
 		addr = (char *)lc + obed(otool, lc->cmdsize);
-		i++;
-		ft_printf_fd(2, "%34k ok 3 %k\n", otool->file);
-	}
-	return (0);
-}
-
-int		ft_otool2(t_otool *otool)
-{
-	struct mach_header_64		*mh;
-	struct load_command			*lc;
-	unsigned int				i;
-	char						*addr;
-
-	addr = otool->ptr;
-	mh = (struct mach_header_64 *)otool->ptr;
-	addr += sizeof(struct mach_header_64);
-	i = 0;
-	if (mh->magic != MH_MAGIC_64)
-		return (-1);
-	set_arch(otool, mh->magic);
-	while (i < mh->ncmds)
-	{
-		lc = (struct load_command *)addr;
-		if (lc->cmdsize == 0)
-		{
-			i++;
-			continue;
-		}
-		if (lc->cmd == LC_SEGMENT_64)
-			loop_lc_segment_64(otool, addr);
-		addr = (char *)lc + lc->cmdsize;
 		i++;
 	}
 	return (0);
@@ -253,9 +203,9 @@ int		treatment_file(char *file)
 		return (file_error("Erreur mmap du fichier ", file));
 	get_ptr(otool.ptr);
 	get_size(buf.st_size);
-	if (ft_otool2(&otool) == -1)
+	if (ft_otool(&otool) == -1)
 	{
-		ft_putstr_fd("not a mac header 64\n", 2);
+		file_error("not a mac header 64/32 bit ", file);
 	}
 	if (munmap(otool.ptr, buf.st_size) < 0)
 		return (file_error("Erreur munmap du fichier ", file));
