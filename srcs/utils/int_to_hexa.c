@@ -1,37 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   otool.h                                            :+:      :+:    :+:   */
+/*   int_to_hexa.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/04/23 12:32:23 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/05/18 01:37:46 by ebaudet          ###   ########.fr       */
+/*   Created: 2014/04/23 15:17:44 by ebaudet           #+#    #+#             */
+/*   Updated: 2019/05/18 01:54:21 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OTOOL_H
-# define OTOOL_H
+#include "libft.h"
 
-typedef enum	te_arch
+void	eb_puthexa(int nbr)
 {
-	E_32B,
-	E_64B
-}				e_arch;
-
-typedef enum	te_end
-{
-	E_BIG,
-	E_LITTLE
-}				e_end;
-
-typedef struct	s_otool
-{
-	e_arch			arch;
-	e_end			endian;
-	char			*file;
-	char			*ptr;
-	unsigned int	segment;
-}				t_otool;
-
-#endif
+	if (nbr >= 0 && nbr <= 9)
+		ft_putchar('0' + nbr);
+	else if (nbr > 9)
+	{
+		ft_putnbr(nbr / 10);
+		ft_putnbr(nbr % 10);
+	}
+	else if (nbr < 0)
+	{
+		ft_putchar('-');
+		ft_putnbr(-nbr);
+	}
+}

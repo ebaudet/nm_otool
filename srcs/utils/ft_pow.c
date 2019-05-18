@@ -1,31 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   int_to_hexa.c                                      :+:      :+:    :+:   */
+/*   ft_pow.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/04/23 15:17:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2014/04/27 20:50:33 by ebaudet          ###   ########.fr       */
+/*   Created: 2014/04/24 19:50:19 by ebaudet           #+#    #+#             */
+/*   Updated: 2019/05/18 01:38:52 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-void	eb_puthexa(int nbr)
+long long int	ft_pow(int nb, unsigned int pow)
 {
-	char	*result;
+	unsigned int	i;
+	long long int	result;
 
-	if (n >= 0 && n <= 9)
-		ft_putchar('0' + n);
-	else if (n > 9)
-	{
-		ft_putnbr(n / 10);
-		ft_putnbr(n % 10);
-	}
-	else if (n < 0)
-	{
-		ft_putchar('-');
-		ft_putnbr(-n);
-	}
+	if (pow == 0)
+		return (1);
+	result = nb;
+	i = 0;
+	while (++i < pow)
+		result *= nb;
+	return (result);
 }
