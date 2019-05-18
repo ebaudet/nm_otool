@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/05/09 23:09:29 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/05/18 02:01:01 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include "utils.h"
-
-
 
 typedef struct		s_symtable
 {
@@ -52,8 +50,7 @@ typedef t_symtable	*(*t_compate_symtable)(t_symtable *, t_symtable *);
 /*
 ** nm.c
 */
-char				undef(int type, int addr, char c);
-char				get_symbol(char *section, int type, int addr, int sect);
+int					nm_error(char *message, t_nm *nm);
 
 /*
 ** handle_arch.c
@@ -126,20 +123,6 @@ t_symtable			*compare_tableindex_rev(t_symtable *a, t_symtable *b);
 t_symtable			*compare_end(t_symtable *a, t_symtable *b);
 t_symtable			*compare_first(t_symtable *a, t_symtable *b);
 t_symtable			*compare_offset(t_symtable *a, t_symtable *b);
-
-/*
-** ft_error.c
-*/
-int					print_error(char *message);
-int					file_error(char *message, char *file);
-int					nm_error(char *message, t_nm *nm);
-
-/*
-** ft_secure.c
-*/
-int					get_size(int size);
-char				*get_ptr(char *ptr);
-int					sec_ptr(char *ptr);
 
 /*
 ** symbol.c

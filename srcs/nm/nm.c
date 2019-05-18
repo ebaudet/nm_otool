@@ -6,11 +6,18 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 17:37:39 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/05/18 01:59:27 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
+#include "libftprintf.h"
+
+int		nm_error(char *message, t_nm *nm)
+{
+	ft_printf_fd(2, "%s: %s %s\n", nm->command, nm->file, message);
+	return (EXIT_FAILURE);
+}
 
 void	nm_init(t_nm *nm, char **av)
 {
