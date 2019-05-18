@@ -1,39 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   otool.h                                            :+:      :+:    :+:   */
+/*   ft_in_array.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/04/23 12:32:23 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/05/18 03:39:42 by ebaudet          ###   ########.fr       */
+/*   Created: 2019/05/18 02:31:42 by ebaudet           #+#    #+#             */
+/*   Updated: 2019/05/18 02:39:27 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OTOOL_H
-# define OTOOL_H
+#include <stddef.h>
 
-typedef enum	te_arch
+int	ft_in_array(const unsigned int *haystack, size_t size, unsigned int needle)
 {
-	E_32B,
-	E_64B
-}				e_arch;
+	size_t	i;
 
-typedef enum	te_end
-{
-	E_BIG,
-	E_LITTLE
-}				e_end;
-
-typedef struct	s_otool
-{
-	e_arch			arch;
-	e_end			endian;
-	char			*file;
-	char			*ptr;
-	unsigned int	segment;
-	int				flag;
-	unsigned int	nfat_arch;
-}				t_otool;
-
-#endif
+	i = 0;
+	while (i < size) {
+		if (haystack[i] == needle)
+			return (1);
+		i++;
+	}
+	return (0);
+}

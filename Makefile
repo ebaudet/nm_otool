@@ -6,14 +6,14 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/04/23 12:31:26 by ebaudet           #+#    #+#              #
-#    Updated: 2019/05/18 02:03:52 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/05/18 03:33:46 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= nm_otool
 
 F_UTILS		= ft_error.c ft_pow.c ft_secure.c ft_puthex.c endian_swap.c \
-			ft_gethex.c int_to_hexa.c
+			ft_gethex.c int_to_hexa.c ft_in_array.c ft_is_my_arch.c
 SRC_UTILS	= $(addprefix srcs/utils/, $(F_UTILS))
 OBJ_UTILS	= $(SRC_UTILS:srcs/utils/%.c=.obj/utils/%.o)
 

@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/05/18 01:59:00 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/05/18 04:01:00 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,8 @@ int		set_arch(t_otool *otool, uint32_t magic)
 	}
 	else
 	{
-		ft_printf_fd(2, "%35kmagic is %x%k\n", magic);
+		if (magic == FAT_CIGAM)
+			otool->endian = E_BIG;
 		return (0);
 	}
 	return (1);
@@ -159,7 +160,7 @@ unsigned int obed(unsigned int val, t_otool *otool)
 	return (bed(val, flag));
 }
 
-int		binary_handler(t_otool *otool)
+int		ot_binary_handler(t_otool *otool)
 {
 	struct mach_header	*mh;
 	struct load_command	*lc;
@@ -184,13 +185,86 @@ int		binary_handler(t_otool *otool)
 	return (0);
 }
 
+int		ot_flag(t_otool *o)
+{
+	int	flag;
+
+	flag = 0;
+	flag |= (o->endian == E_BIG) ? FLAG_BIGEN : flag;
+	o->flag = flag;
+	return (flag);
+}
+
+char		*ot_put_achitecture_name(t_otool *o, cpu_type_t cputype,
+			cpu_subtype_t cpusubtype, int my_arch)
+{
+	int		i;
+
+	if (my_arch)
+		return ("");
+	if (o->nfat_arch > 1)
+		ft_printf("\n%s (for architecture ", o->file);
+	else
+		ft_printf("%s:\n", o->file);
+	i = -1;
+	while (g_infos[++i].name != NULL)
+	{
+		if (g_infos[i].cputype == cputype
+			&& g_infos[i].cpusubtype == cpusubtype)
+		{
+			o->flag = (!ft_strcmp(g_infos[i].name, "ppc"))
+				? o->flag | FLAG_PPC
+				: o->flag & ~FLAG_PPC;
+			if (o->nfat_arch > 1)
+				ft_putstr(g_infos[i].name);
+			break ;
+		}
+	}
+	if (o->nfat_arch > 1)
+		ft_putendl("):");
+	return (g_infos[i].name);
+}
+
+int		ot_fat_handler(t_otool *o)
+{
+	struct fat_header		*fheader;
+	struct fat_arch			*farch;
+	unsigned int			i;
+	int						my_arch;
+
+	fheader = (struct fat_header *)o->ptr;
+	i = 0;
+	farch = (struct fat_arch *)(fheader + 1);
+	my_arch = is_my_arch(fheader, farch, o->flag);
+	o->nfat_arch = bed(fheader->nfat_arch, o->flag);
+	while (++i <= o->nfat_arch)
+	{
+		if (my_arch && !is_my_arch_current(farch, o->flag) && farch++)
+			continue ;
+		ot_put_achitecture_name(o, bed(farch->cputype, o->flag),
+			bed(farch->cpusubtype, o->flag), my_arch);
+		o->flag &= ~FLAG_PRINT;
+		o->ptr += bed(farch->offset, o->flag);
+		ot_binary_handler(o);
+		o->flag &= ~FLAG_PPC;
+		farch++;
+	}
+	return (0);
+}
+
 int		ot_type_handler(t_otool *otool)
 {
-	unsigned int		magic_number;
+	unsigned int		magic;
 
-	magic_number = *(unsigned int *)otool->ptr;
-	// if ()
-	return (1);
+	magic = *(unsigned int *)otool->ptr;
+	if (set_arch(otool, magic))
+		return (ot_binary_handler(otool));
+	if (magic == FAT_MAGIC || magic == FAT_CIGAM)
+	{
+		ot_flag(otool);
+		return (ot_fat_handler(otool));
+	}
+	return (-1);
 }
 
 int		treatment_file(char *file)
@@ -211,10 +285,8 @@ int		treatment_file(char *file)
 		return (file_error("Erreur mmap du fichier ", file));
 	get_ptr(otool.ptr);
 	get_size(buf.st_size);
-	if (binary_handler(&otool) == -1)
-	{
-		file_error("not a mac header 64/32 bit ", file);
-	}
+	if (ot_type_handler(&otool) == -1)
+		ft_printf("%s: is not an object file\n", file);
 	if (munmap(otool.ptr, buf.st_size) < 0)
 		return (file_error("Erreur munmap du fichier ", file));
 	close(fd);
