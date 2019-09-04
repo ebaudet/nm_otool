@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/04 12:56:34 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/04 13:04:01 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include <sys/stat.h>
 #include "libftprintf.h"
 #include "libft.h"
-#include "utils.h"
 #include "otool.h"
 
 unsigned int obed(unsigned int val, t_otool *otool)
