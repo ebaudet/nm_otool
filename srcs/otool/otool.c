@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/08/24 14:52:54 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/04 12:56:34 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	print_section_32(t_otool *otool, struct section *section)
 		if (!(j % 16))
 		{
 			ft_putchar('\n');
-			ft_puthex(get_addr_endian(section->addr, otool) + j, otool->flag & FLAG_PPC ? 8 : 16);
+			ft_puthex(get_addr_endian(section->addr, otool) + j, otool->flag & FLAG_PPC ? 8 : 8);
 			ft_putchar('\t');
 		}
 		ft_puthex(otool->ptr[get_addr_endian(section->offset, otool) + j] & 0xFF, 2);
@@ -156,8 +156,10 @@ void	loop_lc_segment(t_otool *otool, char *addr)
 
 int		set_arch(t_otool *otool, uint32_t magic)
 {
+	// ft_printf("set_arch \n");
 	if (magic == MH_MAGIC_64 || magic == MH_CIGAM_64)
 	{
+		// ft_printf("arch 64b \n");
 		otool->endian = E_LITTLE;
 		otool->arch = E_64B;
 		otool->segment = LC_SEGMENT_64;
@@ -166,6 +168,7 @@ int		set_arch(t_otool *otool, uint32_t magic)
 	}
 	else if (magic == MH_MAGIC || magic == MH_CIGAM)
 	{
+		// ft_printf("arch 32b\n");
 		otool->endian = E_LITTLE;
 		otool->arch = E_32B;
 		otool->segment = LC_SEGMENT;
@@ -174,6 +177,7 @@ int		set_arch(t_otool *otool, uint32_t magic)
 	}
 	else
 	{
+		// ft_printf("arch fat\n");
 		if (magic == FAT_CIGAM)
 			otool->endian = E_BIG;
 		return (0);
@@ -189,11 +193,11 @@ int		ot_binary_handler(t_otool *otool)
 	unsigned int		i;
 
 	ft_printf_fd(2, "%34kfile is '%s'%k\n", otool->file);
-	ft_printf("start ot_binary_handler\n");
+	// ft_printf("start ot_binary_handler\n");
 
 	mh = (struct mach_header *)otool->ptr;
 	if (!set_arch(otool, mh->magic)) {
-		ft_printf("error ot_binary_handler %p %x %x\n", otool->ptr, mh->magic, FAT_CIGAM);
+		// ft_printf("error ot_binary_handler %p %x %x\n", otool->ptr, mh->magic, FAT_CIGAM);
 		return (-1);
 	}
 	addr = otool->ptr + sizeof_mach_header(otool->arch);
@@ -206,7 +210,7 @@ int		ot_binary_handler(t_otool *otool)
 		addr = (char *)lc + obed(lc->cmdsize, otool);
 		i++;
 	}
-	ft_printf("end ot_binary_handler\n");
+	// ft_printf("end ot_binary_handler\n");
 	return (0);
 }
 
@@ -226,7 +230,7 @@ char		*ot_put_achitecture_name(t_otool *o, cpu_type_t cputype,
 	int		i;
 
 	if (!my_arch && o->nfat_arch > 1)
-		ft_printf("\n%s (architecture ", o->file);
+		ft_printf("%s (architecture ", o->file);
 	else
 		ft_printf("%s:\n", o->file);
 	if (my_arch)
@@ -247,7 +251,7 @@ char		*ot_put_achitecture_name(t_otool *o, cpu_type_t cputype,
 	}
 	if (o->nfat_arch > 1)
 		ft_putendl("):");
-	ft_printf("%s\n", o->flag & FLAG_PPC ? "whith FLAG_PPC" : "without FLAG_PPC");
+	// ft_printf("%s\n", o->flag & FLAG_PPC ? "whith FLAG_PPC" : "without FLAG_PPC");
 	return (g_infos[i].name);
 }
 
@@ -270,10 +274,11 @@ int		ot_fat_handler(t_otool *o)
 		ot_put_achitecture_name(o, bed(farch->cputype, o->flag),
 			bed(farch->cpusubtype, o->flag), my_arch);
 		o->flag &= ~FLAG_PRINT;
-		o->ptr += bed(farch->offset, o->flag);
-		ft_printf("before ot_binary_handler\n");
+		// ft_printf("ptr is add to %x\n", bed(farch->offset, o->flag));
+		o->ptr = o->ptr_file + bed(farch->offset, o->flag);
+		// ft_printf("before ot_binary_handler\n");
 		ot_binary_handler(o);
-		ft_printf("after ot_binary_handler\n");
+		// ft_printf("after ot_binary_handler\n");
 		o->flag &= ~FLAG_PPC;
 		farch++;
 	}
@@ -284,6 +289,7 @@ int		ot_type_handler(t_otool *otool)
 {
 	unsigned int		magic;
 
+	otool->ptr = otool->ptr_file;
 	magic = *(unsigned int *)otool->ptr;
 	if (set_arch(otool, magic))
 		return (ot_binary_handler(otool));
@@ -310,14 +316,14 @@ int		treatment_file(char *file)
 		return (file_error("Erreur fstat du fichier ", file));
 	if (S_ISDIR(buf.st_mode))
 		return (file_error(": Is a directory", file));
-	if ((otool.ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
+	if ((otool.ptr_file = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
 		== MAP_FAILED)
 		return (file_error("Erreur mmap du fichier ", file));
-	get_ptr(otool.ptr);
+	get_ptr(otool.ptr_file);
 	get_size(buf.st_size);
 	if (ot_type_handler(&otool) == -1)
 		ft_printf("%s: is not an object file\n", file);
-	if (munmap(otool.ptr, buf.st_size) < 0)
+	if (munmap(otool.ptr_file, buf.st_size) < 0)
 		return (file_error("Erreur munmap du fichier ", file));
 	close(fd);
 	return (EXIT_SUCCESS);
@@ -334,7 +340,9 @@ int		main(int ac, char **av)
 	{
 		while (av[++i])
 		{
-			treatment_file(av[i]);
+			if (EXIT_FAILURE == treatment_file(av[i]))
+				return (EXIT_FAILURE);
+			// treatment_file(av[i]);`
 		}
 	}
 	return (EXIT_SUCCESS);
