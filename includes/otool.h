@@ -6,12 +6,14 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:23 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/05/18 03:39:42 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/08/06 19:13:56 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef OTOOL_H
 # define OTOOL_H
+
+# include <stdbool.h>
 
 typedef enum	te_arch
 {
@@ -34,6 +36,7 @@ typedef struct	s_otool
 	unsigned int	segment;
 	int				flag;
 	unsigned int	nfat_arch;
+	bool			isFat;
 }				t_otool;
 
 #endif

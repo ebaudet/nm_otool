@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/04/23 12:31:26 by ebaudet           #+#    #+#              #
-#    Updated: 2019/05/18 03:33:46 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/08/06 13:14:09 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,6 +69,15 @@ fclean: clean
 	make -C libft fclean
 
 re: fclean all
+
+test-nm:
+	@echo "make && ddiff ./ft_nm nm  /usr/bin/*"
+
+test-otool:
+	@echo 'make && ddiff ./ft_otool "otool -t" /usr/bin/a*'
+
+test-otool1:
+	@echo 'make && ddiff ./ft_otool "otool -t" /usr/bin/appletviewer'
 
 gdb: make_libft
 	cc -g $(FLAGS) $(SRC_OTOOL) -o $(OTOOL) $(INC) $(LIB)
