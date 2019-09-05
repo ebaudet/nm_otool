@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/04 13:04:01 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/05 23:03:18 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ unsigned int obed(unsigned int val, t_otool *otool)
 
 void	print_section_64(t_otool *otool, struct section_64 *section)
 {
-	unsigned int		j;
+	unsigned int	j;
 
 	if (otool->isFat == TRUE)
 		ft_printf("Contents of (__TEXT,__text) section");
@@ -62,22 +62,24 @@ unsigned int	get_addr_endian(unsigned int addr, t_otool *otool)
 
 void	print_section_32(t_otool *otool, struct section *section)
 {
-	unsigned int		j;
+	unsigned int	j;
 
 	if (otool->isFat)
 		ft_printf("Contents of (__TEXT,__text) section");
 	else
-		ft_printf("%s: \nContents of (__TEXT,__text) section", otool->file);
+		ft_printf("%s:\nContents of (__TEXT,__text) section", otool->file);
 	j = 0;
 	while (j < get_addr_endian(section->size, otool))
 	{
 		if (!(j % 16))
 		{
 			ft_putchar('\n');
-			ft_puthex(get_addr_endian(section->addr, otool) + j, otool->flag & FLAG_PPC ? 8 : 8);
+			ft_puthex(get_addr_endian(section->addr, otool) + j,
+				otool->flag & FLAG_PPC ? 8 : 8);
 			ft_putchar('\t');
 		}
-		ft_puthex(otool->ptr[get_addr_endian(section->offset, otool) + j] & 0xFF, 2);
+		ft_puthex(otool->ptr[get_addr_endian(section->offset,
+			otool) + j] & 0xFF, 2);
 		if (!((otool->flag & FLAG_PPC) && (j % 4) - 3))
 			ft_putchar(' ');
 		j += otool->flag & FLAG_PPC ? 1 : 1;
@@ -89,8 +91,10 @@ void	print_section(t_otool *otool, char *section)
 {
 	if (otool->arch == E_32B)
 		print_section_32(otool, (struct section *)section);
-	if (otool->arch == E_64B)
+	else if (otool->arch == E_64B)
 		print_section_64(otool, (struct section_64 *)section);
+	else
+		ft_printf("no arch detected\n");
 }
 
 size_t	sizeof_mach_header(e_arch arch)
@@ -128,37 +132,27 @@ void	loop_lc_segment(t_otool *otool, char *addr)
 	unsigned int				k;
 
 	sc = (struct segment_command *)addr;
-	if (ft_strcmp(sc->segname, "__TEXT") == 0)
+	if (ft_strcmp(sc->segname, "__TEXT") == 0 || sc->cmd == LC_SEGMENT_64)
 	{
 		k = 0;
 		addr += sizeof_segment_command(otool->arch);
 		section = (struct section *)addr;
-		// ft_printf("\nDEBUG:\narch: %s, %s\nget_segment_command_nsects: %d, %d\n",
-		//           otool->arch,
-		//           get_addr_endian(otool->arch, otool),
-		//           get_segment_command_nsects((char *)sc, otool->arch),
-		//           get_addr_endian(get_segment_command_nsects((char *)sc, otool->arch), otool));
-		// otool->arch
-		// get_addr_endian(section->size, otool)
-		while (k < get_addr_endian(get_segment_command_nsects((char *)sc, otool->arch), otool))
+		while (k < get_addr_endian(get_segment_command_nsects((char *)sc,
+			otool->arch), otool))
 		{
 			section = (struct section *)addr;
 			addr += sizeof_section(otool->arch);
 			if (ft_strcmp(section->sectname, "__text") == 0)
 				print_section(otool, (char *)section);
-			// ft_printf("plop");
 			k++;
 		}
 	}
-	// ft_printf("zbra");
 }
 
 int		set_arch(t_otool *otool, uint32_t magic)
 {
-	// ft_printf("set_arch \n");
 	if (magic == MH_MAGIC_64 || magic == MH_CIGAM_64)
 	{
-		// ft_printf("arch 64b \n");
 		otool->endian = E_LITTLE;
 		otool->arch = E_64B;
 		otool->segment = LC_SEGMENT_64;
@@ -167,7 +161,6 @@ int		set_arch(t_otool *otool, uint32_t magic)
 	}
 	else if (magic == MH_MAGIC || magic == MH_CIGAM)
 	{
-		// ft_printf("arch 32b\n");
 		otool->endian = E_LITTLE;
 		otool->arch = E_32B;
 		otool->segment = LC_SEGMENT;
@@ -176,7 +169,6 @@ int		set_arch(t_otool *otool, uint32_t magic)
 	}
 	else
 	{
-		// ft_printf("arch fat\n");
 		if (magic == FAT_CIGAM)
 			otool->endian = E_BIG;
 		return (0);
@@ -191,12 +183,8 @@ int		ot_binary_handler(t_otool *otool)
 	char				*addr;
 	unsigned int		i;
 
-	ft_printf_fd(2, "%34kfile is '%s'%k\n", otool->file);
-	// ft_printf("start ot_binary_handler\n");
-
 	mh = (struct mach_header *)otool->ptr;
 	if (!set_arch(otool, mh->magic)) {
-		// ft_printf("error ot_binary_handler %p %x %x\n", otool->ptr, mh->magic, FAT_CIGAM);
 		return (-1);
 	}
 	addr = otool->ptr + sizeof_mach_header(otool->arch);
@@ -209,7 +197,6 @@ int		ot_binary_handler(t_otool *otool)
 		addr = (char *)lc + obed(lc->cmdsize, otool);
 		i++;
 	}
-	// ft_printf("end ot_binary_handler\n");
 	return (0);
 }
 
@@ -250,7 +237,6 @@ char		*ot_put_achitecture_name(t_otool *o, cpu_type_t cputype,
 	}
 	if (o->nfat_arch > 1)
 		ft_putendl("):");
-	// ft_printf("%s\n", o->flag & FLAG_PPC ? "whith FLAG_PPC" : "without FLAG_PPC");
 	return (g_infos[i].name);
 }
 
@@ -273,11 +259,8 @@ int		ot_fat_handler(t_otool *o)
 		ot_put_achitecture_name(o, bed(farch->cputype, o->flag),
 			bed(farch->cpusubtype, o->flag), my_arch);
 		o->flag &= ~FLAG_PRINT;
-		// ft_printf("ptr is add to %x\n", bed(farch->offset, o->flag));
 		o->ptr = o->ptr_file + bed(farch->offset, o->flag);
-		// ft_printf("before ot_binary_handler\n");
 		ot_binary_handler(o);
-		// ft_printf("after ot_binary_handler\n");
 		o->flag &= ~FLAG_PPC;
 		farch++;
 	}
@@ -341,7 +324,6 @@ int		main(int ac, char **av)
 		{
 			if (EXIT_FAILURE == treatment_file(av[i]))
 				return (EXIT_FAILURE);
-			// treatment_file(av[i]);`
 		}
 	}
 	return (EXIT_SUCCESS);
