@@ -4,9 +4,9 @@
 ## NM :
 diff with :<br>
 `$ make && ddiff ./ft_nm nm /usr/lib/libXSEvent.dylib`<br>
-=> n'affiche pas le nom de la lib nromalement.<br>
+=> n'affiche pas le nom de la lib normalement.<br>
 `$ make && ddiff ./ft_nm nm /usr/lib/libxcselect.dylib`<br>
-=> n'affiche pas le nom de la lib nromalement.<br>
+=> n'affiche pas le nom de la lib normalement.<br>
 `$ make && ddiff ./ft_nm nm /usr/lib/libc++.dylib`<br>
 => I (indirect symbol)
 
@@ -20,6 +20,9 @@ ex error :
 	+                 I __ZNKSt20bad_array_new_length4whatEv (indirect for __ZNKSt20bad_array_new_length4whatEv)
 ```
 -> ne pas afficher l'adresse, mais le texte suivant : "` (indirect for %name%)`"
+
+## OTOOL :
+OK<br>
 
 ## DDIFF :
 Script pour faire la comparaison entre la sortie de deux commandes
