@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/05/18 01:59:27 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/06 15:00:25 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,16 @@ int		main(int ac, char **av)
 	return_value = EXIT_SUCCESS;
 	nm_init(&nm, av);
 	nm.list = &list;
-	if (ac < 2)
-	{
-		nm.file = default_name;
+	if (ac < 2 && (nm.file = default_name))
 		return (handle_file(&nm));
-	}
 	nm.file = av[1];
 	if ((i = nm_flag_handler(av, &(nm.flag))) < 0)
 		return (return_value);
 	nm.flag = ((ac - i - 2) > 0) ? nm.flag | FLAG_PRINT : nm.flag;
+	nm.flag_save = nm.flag;
 	while (++i < ac)
 	{
+		nm.flag = nm.flag_save;
 		nm.file = av[i];
 		return_value |= handle_file(&nm);
 	}

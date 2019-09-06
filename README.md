@@ -3,10 +3,6 @@
 
 ## NM :
 diff with :<br>
-`$ make && ddiff ./ft_nm nm /usr/lib/libXSEvent.dylib`<br>
-=> n'affiche pas le nom de la lib normalement.<br>
-`$ make && ddiff ./ft_nm nm /usr/lib/libxcselect.dylib`<br>
-=> n'affiche pas le nom de la lib normalement.<br>
 `$ make && ddiff ./ft_nm nm /usr/lib/libc++.dylib`<br>
 => I (indirect symbol)
 
