@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/05/18 03:34:50 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/06 14:57:02 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct		s_nm {
 	char			*command;
 	char			**av;
 	int				flag;
+	int				flag_save;
 	t_symtable		**list;
 	unsigned int	nfat_arch;
 }					t_nm;

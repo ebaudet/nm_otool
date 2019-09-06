@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:37:38 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/05/09 19:32:47 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/06 15:03:35 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int		handle_file(t_nm *nm)
 	int				return_value;
 	char			*ptr;
 
-	nm->flag |= FLAG_PRINT;
 	return_value = EXIT_SUCCESS;
 	if ((fd = open(nm->file, O_RDONLY)) < 0)
 		return (nm_error("No such file or directory.", nm));
