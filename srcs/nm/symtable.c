@@ -6,12 +6,13 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 17:42:32 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 15:59:16 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/06 18:06:03 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 #include <stdlib.h>
+#include "libft.h"
 #include "libftprintf.h"
 
 /*
@@ -28,7 +29,11 @@ t_symtable	*new_symtable(char *offset, char symbol, char *table_index)
 		return (NULL);
 	new->offset = offset;
 	new->symbol = symbol;
-	new->table_index = table_index;
+	if (ft_strchr("iI", symbol))
+		new->table_index = ft_concat(4, table_index, " (indirect for ",
+			table_index, ")");
+	else
+		new->table_index = table_index;
 	new->next = NULL;
 	return (new);
 }
