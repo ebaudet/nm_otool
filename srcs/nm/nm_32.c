@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:55:29 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/30 14:53:22 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/06 18:03:02 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,13 @@ t_symtable		*add_symtable_32(struct nlist array, struct section *section,
 		symbol = get_symbol(section->sectname, bed(array.n_type, nm->flag),
 			lbed(array.n_value, nm->flag), bed(array.n_sect, nm->flag));
 	if (!array.n_value)
-	{
-		if (ft_strchr("uU", symbol))
-			offset = ft_strdup("        ");
-		else
-			offset = ft_strdup("00000000");
-	}
+		offset = ft_strchr("uUiI", symbol)
+			? ft_strdup("        ")
+			: ft_strdup("00000000");
 	else
-		offset = ft_gethex((unsigned long)bed(array.n_value, nm->flag), 8);
+		offset = ft_strchr("iI", symbol)
+			? ft_strdup("        ")
+			: ft_gethex((unsigned long)bed(array.n_value, nm->flag), 8);
 	new = new_symtable(offset, symbol, stringtable + bed(array.n_un.n_strx,
 		nm->flag));
 	return (list_add(nm, new));
