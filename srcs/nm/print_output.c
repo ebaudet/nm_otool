@@ -6,12 +6,13 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:23:03 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/06 13:34:00 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/26 18:19:08 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 #include "nm.h"
+#include "libft.h"
 
 void	print_output(t_nm *nm, int size, char *object)
 {
@@ -27,8 +28,9 @@ void	print_output(t_nm *nm, int size, char *object)
 	tmp = *(nm->list);
 	while (tmp)
 	{
-		ft_printf("%.*s %c %s\n", size, tmp->offset, tmp->symbol,
-			tmp->table_index);
+		ft_printf("%.*s %c ", size, tmp->offset, tmp->symbol);
+		ft_putprint(tmp->table_index);
+		ft_putchar('\n');
 		tmp = tmp->next;
 	}
 }

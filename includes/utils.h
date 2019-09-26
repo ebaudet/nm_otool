@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/24 19:51:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/26 13:26:28 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/26 17:56:33 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,31 +88,13 @@ static const t_arch_info	g_infos[] = {
 	{NULL, 0, 0}
 };
 
-/*
-** ft_pow.c
-*/
 long long int		ft_pow(int nb, unsigned int pow);
-
-/*
-** ft_puthex.c
-*/
 void				ft_puthex(long long int nb, int width);
-
-/*
-** ft_gethex.c
-*/
 char				*ft_gethex(long long int nb, int width);
-
-/*
-** int_to_hexa.c
-*/
 void				eb_puthexa(int nbr);
-
-/*
-** ft_in_array.c
-*/
 int					ft_in_array(const unsigned int *haystack, size_t size,
 					unsigned int needle);
+void				ft_putprint(char const *s);
 
 /*
 ** endian_swap.c
