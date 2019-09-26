@@ -1,31 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   otool.c                                            :+:      :+:    :+:   */
+/*   ot_type_handler.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/26 13:50:00 by ebaudet          ###   ########.fr       */
+/*   Created: 2019/09/26 13:33:03 by ebaudet           #+#    #+#             */
+/*   Updated: 2019/09/26 13:52:36 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "otool.h"
 
-int		main(int ac, char **av)
+int		ot_type_handler(t_otool *otool)
 {
-	int				i;
+	unsigned int		magic;
 
-	i = 0;
-	if (ac == 1)
-		treatment_file("a.out");
-	else
+	otool->ptr = otool->ptr_file;
+	magic = *(unsigned int *)otool->ptr;
+	if (set_arch(otool, magic))
+		return (ot_binary_handler(otool));
+	if (magic == FAT_MAGIC || magic == FAT_CIGAM)
 	{
-		while (av[++i])
-		{
-			if (EXIT_FAILURE == treatment_file(av[i]))
-				return (EXIT_FAILURE);
-		}
+		ot_flag(otool);
+		otool->is_fat = TRUE;
+		return (ot_fat_handler(otool));
 	}
-	return (EXIT_SUCCESS);
+	return (-1);
 }

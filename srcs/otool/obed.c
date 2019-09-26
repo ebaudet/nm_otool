@@ -1,31 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   otool.c                                            :+:      :+:    :+:   */
+/*   obed.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/04/23 12:32:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/26 13:50:00 by ebaudet          ###   ########.fr       */
+/*   Created: 2019/09/26 13:38:05 by ebaudet           #+#    #+#             */
+/*   Updated: 2019/09/26 13:51:53 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "otool.h"
 
-int		main(int ac, char **av)
+unsigned int	obed(unsigned int val, t_otool *otool)
 {
-	int				i;
+	int flag;
 
-	i = 0;
-	if (ac == 1)
-		treatment_file("a.out");
-	else
-	{
-		while (av[++i])
-		{
-			if (EXIT_FAILURE == treatment_file(av[i]))
-				return (EXIT_FAILURE);
-		}
-	}
-	return (EXIT_SUCCESS);
+	flag = (otool->endian == E_BIG) ? FLAG_BIGEN : 0;
+	return (bed(val, flag));
 }
