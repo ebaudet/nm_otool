@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/04/23 12:31:26 by ebaudet           #+#    #+#              #
-#    Updated: 2019/08/06 13:14:09 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/09/26 14:00:42 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,11 @@ SRC_NM		= $(addprefix srcs/nm/, $(F_NM))
 OBJ_NM		= $(SRC_NM:srcs/nm/%.c=.obj/nm/%.o)
 
 OTOOL		= ft_otool
-F_OTOOL		= otool.c
+F_OTOOL		= get_addr_endian.c ot_type_handler.c get_segment_command_nsects.c \
+			otool.c loop_lc_segment.c print_section.c obed.c set_arch.c \
+			ot_binary_handler.c sizeof_mach_header.c ot_fat_handler.c \
+			sizeof_section.c ot_flag.c sizeof_segment_command.c \
+			ot_put_achitecture_name.c treatment_file.c
 SRC_OTOOL	= $(addprefix srcs/otool/, $(F_OTOOL))
 OBJ_OTOOL	= $(SRC_OTOOL:srcs/otool/%.c=.obj/otool/%.o)
 
