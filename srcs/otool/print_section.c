@@ -6,11 +6,22 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 13:41:52 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/30 14:53:31 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/30 17:05:58 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "otool.h"
+
+static void		print_section_header(t_otool *otool)
+{
+	if (otool->is_fat == TRUE)
+		ft_printf("Contents of (__TEXT,__text) section");
+	else if (otool->is_arch)
+		ft_printf("%s(%s):\nContents of (__TEXT,__text) section", otool->file,
+			otool->object);
+	else
+		ft_printf("%s:\nContents of (__TEXT,__text) section", otool->file);
+}
 
 static void		print_section_64(t_otool *otool, struct section_64 *section)
 {
@@ -19,10 +30,7 @@ static void		print_section_64(t_otool *otool, struct section_64 *section)
 	j = 0;
 	if (sec_ptr(&otool->ptr[section->offset + j]))
 		return ;
-	if (otool->is_fat == TRUE)
-		ft_printf("Contents of (__TEXT,__text) section");
-	else
-		ft_printf("%s:\nContents of (__TEXT,__text) section", otool->file);
+	print_section_header(otool);
 	while (j < section->size)
 	{
 		if (!(j % 16))
@@ -45,10 +53,7 @@ static void		print_section_32(t_otool *otool, struct section *section)
 	j = 0;
 	if (sec_ptr(&otool->ptr[get_addr_endian(section->offset, otool) + j]))
 		return ;
-	if (otool->is_fat)
-		ft_printf("Contents of (__TEXT,__text) section");
-	else
-		ft_printf("%s:\nContents of (__TEXT,__text) section", otool->file);
+	print_section_header(otool);
 	while (j < get_addr_endian(section->size, otool))
 	{
 		if (!(j % 16))
