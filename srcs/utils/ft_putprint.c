@@ -6,11 +6,12 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 17:53:15 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/26 17:56:58 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/30 19:21:54 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "utils.h"
 
 void	ft_putprint(char const *s)
 {
@@ -19,7 +20,7 @@ void	ft_putprint(char const *s)
 	if (s)
 	{
 		i = 0;
-		while (s[i] != 0 && ft_isprint(s[i]))
+		while (!sec_ptr((char*)(&s[i])) && s[i] != 0)
 		{
 			ft_putchar(s[i]);
 			i++;
