@@ -2,15 +2,6 @@
 
 
 ## NM :
-`ddiff ./ft_nm nm bin-tests/f*`<br>
-=>
-```
-@@ -1,5 +1,3 @@
--
--bin-tests/ffff:
- 0000000100009560 s _.str
- 00000001000095e0 s _.str
-```
 
 ```
 $ ddiff ./ft_nm nm bin-tests/ar_name_chiant
@@ -20,14 +11,9 @@ $ nm bin-tests/ar_name_chiant > ~/.ddiff/dif2
 ```
 
 ```
-$ ddiff ./ft_nm nm bin-tests/ffff
-$ ./ft_nm bin-tests/ffff > ~/.ddiff/dif1
-$ nm bin-tests/ffff > ~/.ddiff/dif2
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/nm: bin-tests/ffff truncated or malformed object (load commands extend past the end of the file)
+segfault pour : (nm aussi)
+$ ddiff ./ft_nm nm bin-tests/segfault_nm
 ```
-
-`segfault` sur `./ft_nm bin-tests/ahah_gotcha.o`<br>
-
 OK<br>
 
 ## OTOOL :
