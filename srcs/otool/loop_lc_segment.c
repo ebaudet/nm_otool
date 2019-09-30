@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 13:47:39 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/26 13:47:51 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/30 14:53:12 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	loop_lc_segment(t_otool *otool, char *addr)
 		{
 			section = (struct section *)addr;
 			addr += sizeof_section(otool->arch);
+			if (sec_ptr(addr))
+				return ;
 			if (ft_strcmp(section->sectname, "__text") == 0)
 				print_section(otool, (char *)section);
 			k++;

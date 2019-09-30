@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:25:57 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/30 10:49:17 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/30 14:04:30 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int		handle_arch(t_nm *nm, char *ptr, int offset)
 	{
 		next = ptr + offset;
 		nm->flag |= FLAG_PRINT;
-		while (sec_ptr(next))
+		while (!sec_ptr(next))
 		{
 			handle_type(nm, next + 72 + ((ft_strlen(next + 60) - 1) / 8) * 8,
 				next + 60);

@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 13:34:46 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/26 13:52:03 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/30 15:05:54 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,12 @@ int		ot_binary_handler(t_otool *otool)
 		if (obed(lc->cmd, otool) == otool->segment)
 			loop_lc_segment(otool, addr);
 		addr = (char *)lc + obed(lc->cmdsize, otool);
+		if (sec_ptr(addr))
+		{
+			return (file_error("truncated or malformed object (load commands ex\
+tend past the end of the file)", otool->file));
+		}
 		i++;
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }

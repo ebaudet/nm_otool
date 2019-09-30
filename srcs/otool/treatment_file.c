@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 13:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/26 13:54:09 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/30 15:14:18 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int		treatment_file(char *file)
 	int				fd;
 	struct stat		buf;
 	t_otool			otool;
+	int				exit;
 
 	otool.file = file;
 	otool.is_fat = FALSE;
@@ -31,10 +32,9 @@ int		treatment_file(char *file)
 		return (file_error("Erreur mmap du fichier ", file));
 	get_ptr(otool.ptr_file);
 	get_size(buf.st_size);
-	if (ot_type_handler(&otool) == -1)
-		ft_printf("%s: is not an object file\n", file);
+	exit = ot_type_handler(&otool);
 	if (munmap(otool.ptr_file, buf.st_size) < 0)
 		return (file_error("Erreur munmap du fichier ", file));
 	close(fd);
-	return (EXIT_SUCCESS);
+	return (exit);
 }
