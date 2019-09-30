@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/06 18:04:59 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/30 19:03:21 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,8 @@ int					handle_64(char *ptr, t_nm *nm)
 	lc = (void *)ptr + sizeof(*header);
 	while (i < ncmds)
 	{
+		if (sec_ptr((char *)lc))
+			return (ERROR_LC_PTR);
 		if (bed(lc->cmd, nm->flag) == LC_SYMTAB)
 		{
 			sym = (struct symtab_command *)lc;

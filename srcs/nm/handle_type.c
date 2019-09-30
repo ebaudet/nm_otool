@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:32:13 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/30 16:43:54 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/30 19:04:01 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ static void		set_bigen(t_nm *nm, unsigned int magic_number)
 static int		print_type(int size_print, t_nm *nm, char *object)
 {
 	if (size_print < 0)
-		return (0);
+		return (size_print);
 	if (size_print > 0)
 		print_output(nm, size_print, object);
 	free_symtable(nm->list);
-	return (1);
+	return (EXIT_SUCCESS);
 }
 
 int				handle_type(t_nm *nm, char *ptr, char *object)
@@ -57,6 +57,6 @@ int				handle_type(t_nm *nm, char *ptr, char *object)
 		size_print = handle_arch(nm, (char *)(ar + 1), ft_atoi(ar->ar_size));
 	}
 	else
-		return (0);
+		return (EXIT_FAILURE);
 	return (print_type(size_print, nm, object));
 }
