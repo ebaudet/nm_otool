@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 13:33:30 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/26 13:52:10 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/30 15:11:57 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,10 @@ int		ot_fat_handler(t_otool *o)
 			bed(farch->cpusubtype, o->flag), my_arch);
 		o->flag &= ~FLAG_PRINT;
 		o->ptr = o->ptr_file + bed(farch->offset, o->flag);
-		ot_binary_handler(o);
+		if (ot_binary_handler(o) == EXIT_FAILURE)
+			return (EXIT_FAILURE);
 		o->flag &= ~FLAG_PPC;
 		farch++;
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }

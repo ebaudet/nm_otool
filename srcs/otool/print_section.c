@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 13:41:52 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/26 13:56:08 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/09/30 14:53:31 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,13 @@ static void		print_section_64(t_otool *otool, struct section_64 *section)
 {
 	unsigned int	j;
 
+	j = 0;
+	if (sec_ptr(&otool->ptr[section->offset + j]))
+		return ;
 	if (otool->is_fat == TRUE)
 		ft_printf("Contents of (__TEXT,__text) section");
 	else
 		ft_printf("%s:\nContents of (__TEXT,__text) section", otool->file);
-	j = 0;
 	while (j < section->size)
 	{
 		if (!(j % 16))
@@ -40,11 +42,13 @@ static void		print_section_32(t_otool *otool, struct section *section)
 {
 	unsigned int	j;
 
+	j = 0;
+	if (sec_ptr(&otool->ptr[get_addr_endian(section->offset, otool) + j]))
+		return ;
 	if (otool->is_fat)
 		ft_printf("Contents of (__TEXT,__text) section");
 	else
 		ft_printf("%s:\nContents of (__TEXT,__text) section", otool->file);
-	j = 0;
 	while (j < get_addr_endian(section->size, otool))
 	{
 		if (!(j % 16))
