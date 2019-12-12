@@ -6,11 +6,12 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:06:55 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 16:13:29 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/12 18:32:52 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
+#include "libftprintf.h"
 
 /*
 ** Add the new symtable to the list according to the flag order.

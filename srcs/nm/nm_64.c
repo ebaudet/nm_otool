@@ -6,13 +6,20 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/30 19:08:47 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/12 19:32:27 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 #include "libft.h"
 #include "libftprintf.h"
+
+int					sec_symtable(t_symtable	*st)
+{
+	if (sec_ptr(st->table_index))
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
 
 t_symtable			*add_symtable_64(struct nlist_64 array,
 					struct section_64 *section, char *stringtable, t_nm *nm)
@@ -21,6 +28,9 @@ t_symtable			*add_symtable_64(struct nlist_64 array,
 	char		*offset;
 	char		symbol;
 
+	if ((sec_ptr((char *)section) || sec_ptr((char *)stringtable))
+		&& (nm->error = 1))
+		return (NULL);
 	symbol = get_symbol(section->sectname, bed(array.n_type, nm->flag),
 		lbed(array.n_value, nm->flag), bed(array.n_sect, nm->flag));
 	if (!array.n_value)
@@ -33,6 +43,8 @@ t_symtable			*add_symtable_64(struct nlist_64 array,
 			: ft_gethex((unsigned long)lbed(array.n_value, nm->flag), 16);
 	new = new_symtable(offset, symbol, stringtable + bed(array.n_un.n_strx,
 		nm->flag));
+	// if (sec_symtable(new) && (nm->error = 1))
+	// 	return (NULL);
 	return (list_add(nm, new));
 }
 
@@ -51,7 +63,7 @@ struct section_64	*get_section_64(struct segment_command_64 *segment,
 		flag));
 }
 
-void				get_symtable_64(struct symtab_command *sym, int nsyms,
+int					get_symtable_64(struct symtab_command *sym, int nsyms,
 					char *ptr, t_nm *nm)
 {
 	int							i;
@@ -60,18 +72,24 @@ void				get_symtable_64(struct symtab_command *sym, int nsyms,
 	struct segment_command_64	*segment;
 	struct section_64			*section;
 
+	if (sec_ptr((char *)ptr) && (nm->error = 1))
+		return (EXIT_FAILURE);
 	array = (void *)ptr + bed(sym->symoff, nm->flag);
 	stringtable = (void *)ptr + bed(sym->stroff, nm->flag);
 	segment = (void *)ptr + sizeof(struct mach_header_64);
 	i = 0;
 	while (i < nsyms)
 	{
+		if (sec_ptr((char *)segment) && (nm->error = 1))
+			return (EXIT_FAILURE);
 		section = get_section_64(segment, bed(array[i].n_sect, nm->flag),
 			nm->flag);
 		if ((bed(array[i].n_type, nm->flag) & N_STAB) == 0)
-			add_symtable_64(array[i], section, stringtable, nm);
+			if (add_symtable_64(array[i], section, stringtable, nm) == NULL)
+				return (EXIT_FAILURE);
 		i++;
 	}
+	return (EXIT_SUCCESS);
 }
 
 int					handle_64(char *ptr, t_nm *nm)
@@ -93,7 +111,8 @@ int					handle_64(char *ptr, t_nm *nm)
 		if (bed(lc->cmd, nm->flag) == LC_SYMTAB)
 		{
 			sym = (struct symtab_command *)lc;
-			get_symtable_64(sym, bed(sym->nsyms, nm->flag), ptr, nm);
+			if (get_symtable_64(sym, bed(sym->nsyms, nm->flag), ptr, nm) == EXIT_FAILURE)
+				return (ERROR_NM);
 			break ;
 		}
 		lc = (void *)lc + bed(lc->cmdsize, nm->flag);

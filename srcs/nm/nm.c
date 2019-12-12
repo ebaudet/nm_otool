@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/30 14:03:47 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/12 18:08:05 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	nm_init(t_nm *nm, char **av)
 	nm->command = av[0];
 	nm->av = av;
 	nm->flag = 0;
+	nm->error = 1;
 }
 
 int		main(int ac, char **av)
