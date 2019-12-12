@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:37:38 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/30 19:03:44 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/12 18:40:12 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 static int		nm_error_handle(t_nm *nm, int code_error)
 {
-	if (code_error == ERROR_LC_PTR)
+	if (code_error == ERROR_LC_PTR | nm->error == 1)
 		nm_error("truncated or malformed object (load commands ex\
 tend past the end of the file)", nm);
 	else

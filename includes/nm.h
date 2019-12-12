@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/30 18:58:08 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/12 18:19:34 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include "utils.h"
 
 # define ERROR_LC_PTR -2
+# define ERROR_NM -3
 
 typedef struct		s_symtable
 {
@@ -40,6 +41,7 @@ typedef struct		s_nm {
 	int				flag_save;
 	t_symtable		**list;
 	unsigned int	nfat_arch;
+	int				error;
 }					t_nm;
 
 typedef t_symtable	*(*t_compate_symtable)(t_symtable *, t_symtable *);
@@ -71,7 +73,7 @@ struct section_64	*get_section_64(struct segment_command_64 *segment,
 					uint32_t offset, int flag);
 t_symtable			*add_symtable_64(struct nlist_64 array,
 					struct section_64 *section, char *stringtable, t_nm *nm);
-void				get_symtable_64(struct symtab_command *sym, int nsyms,
+int					get_symtable_64(struct symtab_command *sym, int nsyms,
 					char *ptr, t_nm *nm);
 int					handle_64(char *ptr, t_nm *nm);
 
