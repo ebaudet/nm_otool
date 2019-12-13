@@ -6,21 +6,21 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/24 19:51:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/12 19:36:27 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 12:13:25 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
 # define UTILS_H
 
-# define FLAG_P		b1
-# define FLAG_PCAPS	b10
-# define FLAG_R		b100
-# define FLAG_ARCH	b1000
-# define FLAG_BIGEN	b10000
-# define FLAG_N		b100000
-# define FLAG_PRINT	b1000000
-# define FLAG_PPC	b10000000
+# define FLAG_P		1
+# define FLAG_PCAPS	2
+# define FLAG_R		4
+# define FLAG_ARCH	8
+# define FLAG_BIGEN	16
+# define FLAG_N		32
+# define FLAG_PRINT	64
+# define FLAG_PPC	128
 
 
 # include <stddef.h>
