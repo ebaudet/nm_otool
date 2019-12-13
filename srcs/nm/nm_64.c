@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/13 21:09:48 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 22:06:20 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ t_symtable			*add_symtable_64(struct nlist_64 array,
 			? ft_strdup("                ")
 			: ft_strdup("0000000000000000");
 	else
-		offset = ft_strchr("i", symbol)
+		offset = ft_strchr("iI", symbol)
 			? ft_strdup("                ")
 			: ft_gethex((unsigned long)lbed(array.n_value, nm->flag), 16);
 	new = new_symtable(offset, symbol, stringtable + bed(array.n_un.n_strx,
 		nm->flag));
-	if ((!new || sec_ptr(new->table_index)) && (nm->error = 1))
+	if (!new && (nm->error = 1))
 		return (NULL);
 	return (list_add(nm, new));
 }

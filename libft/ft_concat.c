@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 16:39:49 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/01/29 17:59:17 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 21:37:05 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char		*ft_concat2endl(const char *s1, const char *s2)
 **     int nb_elem : it is the number of params of the function
 **
 **     The function is called like that :
-**     ft_concatc(2, "hello", "world");
+**     ft_concat(2, "hello", "world");
 **     and return : "helloworld"
 */
 

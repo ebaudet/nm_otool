@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/13 20:51:52 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 21:45:25 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct		s_symtable
 	char				symbol;
 	char				*table_index;
 	struct s_symtable	*next;
+	char				malloc;
 }					t_symtable;
 
 typedef struct		s_nm {
