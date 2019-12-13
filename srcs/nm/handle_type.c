@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:32:13 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/30 19:04:01 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 12:27:30 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ static int		print_type(int size_print, t_nm *nm, char *object)
 	return (EXIT_SUCCESS);
 }
 
+int				is_handlable()
+
 int				handle_type(t_nm *nm, char *ptr, char *object)
 {
 	unsigned int		magic_number;
@@ -45,9 +47,12 @@ int				handle_type(t_nm *nm, char *ptr, char *object)
 	*(nm->list) = NULL;
 	magic_number = *(unsigned int *)ptr;
 	set_bigen(nm, magic_number);
+	nm->type = NONE_T;
 	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
+		nm->type = SF;
 		size_print = handle_64(ptr, nm);
 	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
+		nm->type = TT;
 		size_print = handle_32(ptr, nm);
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
 		size_print = handle_fat(nm, ptr);

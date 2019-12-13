@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/12 18:19:34 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 12:23:26 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # define ERROR_LC_PTR -2
 # define ERROR_NM -3
 
+enum e_type { NONE_T, TT, SF };
+
 typedef struct		s_symtable
 {
 	char				*offset;
@@ -39,6 +41,7 @@ typedef struct		s_nm {
 	char			**av;
 	int				flag;
 	int				flag_save;
+	enum e_type		type;
 	t_symtable		**list;
 	unsigned int	nfat_arch;
 	int				error;
