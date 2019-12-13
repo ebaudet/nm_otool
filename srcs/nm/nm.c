@@ -6,12 +6,24 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:36 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/13 12:23:19 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 21:03:30 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 #include "libftprintf.h"
+
+int		sec_nm(char *ptr, t_nm *nm)
+{
+	int		result;
+
+	if (nm->error == 1)
+		return (1);
+	result = sec_ptr(ptr);
+	if (result)
+		nm->error = 1;
+	return (result);
+}
 
 int		nm_error(char *message, t_nm *nm)
 {
@@ -25,8 +37,7 @@ void	nm_init(t_nm *nm, char **av)
 	nm->command = av[0];
 	nm->av = av;
 	nm->flag = 0;
-	nm->error = 1;
-	nm->type = NONE_T;
+	nm->error = 0;
 }
 
 int		main(int ac, char **av)
@@ -51,6 +62,7 @@ int		main(int ac, char **av)
 	{
 		nm.flag = nm.flag_save;
 		nm.file = av[i];
+		nm.error = 0;
 		return_value |= handle_file(&nm);
 	}
 	return (return_value);

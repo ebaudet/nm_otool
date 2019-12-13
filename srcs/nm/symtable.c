@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 17:42:32 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/30 19:06:59 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 20:30:28 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ t_symtable	*new_symtable(char *offset, char symbol, char *table_index)
 {
 	t_symtable	*new;
 
+	if (sec_ptr(table_index))
+		return (NULL);
 	if ((new = (t_symtable *)malloc(sizeof(t_symtable))) == NULL)
 		return (NULL);
 	new->offset = offset;

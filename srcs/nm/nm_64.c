@@ -6,20 +6,13 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/12 19:32:27 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 21:09:48 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 #include "libft.h"
 #include "libftprintf.h"
-
-int					sec_symtable(t_symtable	*st)
-{
-	if (sec_ptr(st->table_index))
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
-}
 
 t_symtable			*add_symtable_64(struct nlist_64 array,
 					struct section_64 *section, char *stringtable, t_nm *nm)
@@ -43,8 +36,8 @@ t_symtable			*add_symtable_64(struct nlist_64 array,
 			: ft_gethex((unsigned long)lbed(array.n_value, nm->flag), 16);
 	new = new_symtable(offset, symbol, stringtable + bed(array.n_un.n_strx,
 		nm->flag));
-	// if (sec_symtable(new) && (nm->error = 1))
-	// 	return (NULL);
+	if ((!new || sec_ptr(new->table_index)) && (nm->error = 1))
+		return (NULL);
 	return (list_add(nm, new));
 }
 
@@ -72,7 +65,7 @@ int					get_symtable_64(struct symtab_command *sym, int nsyms,
 	struct segment_command_64	*segment;
 	struct section_64			*section;
 
-	if (sec_ptr((char *)ptr) && (nm->error = 1))
+	if (sec_nm((char *)ptr, nm))
 		return (EXIT_FAILURE);
 	array = (void *)ptr + bed(sym->symoff, nm->flag);
 	stringtable = (void *)ptr + bed(sym->stroff, nm->flag);
@@ -80,7 +73,7 @@ int					get_symtable_64(struct symtab_command *sym, int nsyms,
 	i = 0;
 	while (i < nsyms)
 	{
-		if (sec_ptr((char *)segment) && (nm->error = 1))
+		if (sec_nm((char *)segment, nm))
 			return (EXIT_FAILURE);
 		section = get_section_64(segment, bed(array[i].n_sect, nm->flag),
 			nm->flag);
@@ -111,7 +104,7 @@ int					handle_64(char *ptr, t_nm *nm)
 		if (bed(lc->cmd, nm->flag) == LC_SYMTAB)
 		{
 			sym = (struct symtab_command *)lc;
-			if (get_symtable_64(sym, bed(sym->nsyms, nm->flag), ptr, nm) == EXIT_FAILURE)
+			if (get_symtable_64(sym, bed(sym->nsyms, nm->flag), ptr, nm))
 				return (ERROR_NM);
 			break ;
 		}

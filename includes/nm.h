@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:09 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/13 12:23:26 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 20:51:52 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@
 # define ERROR_LC_PTR -2
 # define ERROR_NM -3
 
-enum e_type { NONE_T, TT, SF };
-
 typedef struct		s_symtable
 {
 	char				*offset;
@@ -41,7 +39,6 @@ typedef struct		s_nm {
 	char			**av;
 	int				flag;
 	int				flag_save;
-	enum e_type		type;
 	t_symtable		**list;
 	unsigned int	nfat_arch;
 	int				error;
@@ -53,6 +50,7 @@ typedef t_symtable	*(*t_compate_symtable)(t_symtable *, t_symtable *);
 ** nm.c
 */
 int					nm_error(char *message, t_nm *nm);
+int					sec_nm(char *ptr, t_nm *nm);
 
 /*
 ** handle_arch.c
@@ -87,7 +85,7 @@ t_symtable			*add_symtable_32(struct nlist array,
 					struct section *section, char *stringtable, t_nm *nm);
 struct section		*get_section_32(struct segment_command *segment,
 					uint32_t offset, int flag);
-void				get_symtable_32(struct symtab_command *sym, int nsyms,
+int					get_symtable_32(struct symtab_command *sym, int nsyms,
 					char *ptr, t_nm *nm);
 int					handle_32(char *ptr, t_nm *nm);
 

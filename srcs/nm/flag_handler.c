@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 03:03:08 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/04/29 16:14:05 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 21:03:59 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int		flag_help(char **av)
 	ft_putstr(av[0]);
 	ft_printf(" [-pPr][-arch] <input files>\n\n%+kOPTIONS%k:\n\n\
 %-kGeneral options%k:\n\
--%+khelp%k\t- Display available options\n\
+-h, --%+khelp%k, --%+kusage%k\t- Display available options\n\
 -%+kp%k\t- Don't sort; display in symbol-table order.\n\
 -%+kP%k\t- Don't sort inverse; display in symbol-table inverse order.\n\
 -%+kr%k\t- Sort in reverse order.\n\
@@ -59,7 +59,9 @@ int				nm_flag_handler(char **av, int *flag)
 	i = 0;
 	while (av[++i])
 	{
-		if (ft_strcmp(av[i], "-help") == 0)
+		if (ft_strcmp(av[i], "--help") == 0 ||
+			ft_strcmp(av[i], "--usage") == 0 ||
+			ft_strcmp(av[i], "-h") == 0)
 			return (flag_help(av));
 		if (av[i][0] != '-')
 			break ;
