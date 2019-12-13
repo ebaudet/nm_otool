@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/04/23 12:31:26 by ebaudet           #+#    #+#              #
-#    Updated: 2019/09/26 17:55:26 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/12/13 21:13:48 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -83,6 +83,9 @@ test-otool:
 
 test-otool1:
 	@echo 'make && ddiff ./ft_otool "otool -t" /usr/bin/appletviewer'
+
+norminette:
+	norminette srcs includes libft
 
 gdb: make_libft
 	cc -g $(FLAGS) $(SRC_OTOOL) -o $(OTOOL) $(INC) $(LIB)

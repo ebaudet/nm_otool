@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/24 19:51:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/13 12:13:25 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 19:39:58 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # define FLAG_N		32
 # define FLAG_PRINT	64
 # define FLAG_PPC	128
-
 
 # include <stddef.h>
 # include <mach/machine.h>
