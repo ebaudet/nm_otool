@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 17:42:32 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/13 20:30:28 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 22:18:22 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,13 @@ t_symtable	*new_symtable(char *offset, char symbol, char *table_index)
 		return (NULL);
 	new->offset = offset;
 	new->symbol = symbol;
-	if (ft_strchr("i", symbol))
+	new->malloc = 0;
+	if (ft_strchr("iI", symbol))
+	{
 		new->table_index = ft_concat(4, table_index, " (indirect for ",
 			table_index, ")");
+		new->malloc = 1;
+	}
 	else
 		new->table_index = table_index;
 	new->next = NULL;
@@ -138,6 +142,8 @@ void		free_symtable(t_symtable **list)
 	{
 		old = tmp;
 		tmp = tmp->next;
+		if (old->malloc)
+			free(old->table_index);
 		free(old->offset);
 		free(old);
 	}

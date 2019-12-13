@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:23:03 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/26 18:19:08 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/13 22:05:07 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ void	print_output(t_nm *nm, int size, char *object)
 	while (tmp)
 	{
 		ft_printf("%.*s %c ", size, tmp->offset, tmp->symbol);
-		ft_putprint(tmp->table_index);
+		if (tmp->malloc)
+			ft_putstr(tmp->table_index);
+		else
+			ft_putprint(tmp->table_index);
 		ft_putchar('\n');
 		tmp = tmp->next;
 	}
