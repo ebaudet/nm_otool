@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/04/23 12:31:26 by ebaudet           #+#    #+#              #
-#    Updated: 2019/12/13 21:13:48 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/12/17 23:11:47 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,14 +75,23 @@ fclean: clean
 
 re: fclean all
 
+test:
+	make
+	./ddiff.sh ./ft_nm nm  /usr/bin/*
+	./ddiff.sh ./ft_otool "otool -t" /usr/bin/a*
+	./ddiff.sh ./ft_otool "otool -t" /usr/bin/appletviewer
+
 test-nm:
-	@echo "make && ddiff ./ft_nm nm  /usr/bin/*"
+	@echo "make && ./ddiff.sh ./ft_nm nm  /usr/bin/*"
+	make && ./ddiff.sh ./ft_nm nm  /usr/bin/*
 
 test-otool:
-	@echo 'make && ddiff ./ft_otool "otool -t" /usr/bin/a*'
+	@echo 'make && ./ddiff.sh ./ft_otool "otool -t" /usr/bin/a*'
+	make && ./ddiff.sh ./ft_otool "otool -t" /usr/bin/a*
 
 test-otool1:
-	@echo 'make && ddiff ./ft_otool "otool -t" /usr/bin/appletviewer'
+	@echo 'make && ./ddiff.sh ./ft_otool "otool -t" /usr/bin/appletviewer'
+	make && ./ddiff.sh ./ft_otool "otool -t" /usr/bin/appletviewer
 
 norminette:
 	norminette srcs includes libft

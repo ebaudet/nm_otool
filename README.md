@@ -4,6 +4,8 @@
 
 ```
 make
+
+make test
 ```
 
 ## Uninstall :
