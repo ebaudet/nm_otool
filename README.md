@@ -6,6 +6,11 @@
 make
 ```
 
+## Uninstall :
+
+Please remove the `~/.ddiff` folder if you used `./ddiff.sh` as defined in the
+[ddiff.sh](#ddiffsh-) part.
+
 ## NM :
 
 usage :
@@ -80,6 +85,9 @@ $ ./ddiff.sh ./ft_otool "otool -t" /bin/ls
 ## ddiff.sh :
 Script pour faire la comparaison entre la sortie de deux commandes
 
+Will create a folder `~/.ddiff` and past the stdout of the two command as :<br>
+`<cmd1> [arguments] > ~/.ddiff/dif1` and `<cmd1> [arguments] > ~/.ddiff/dif2`
+
 ```
 $ ./ddiff.sh
 DDIFF
@@ -90,4 +98,10 @@ NAME
 
 USAGE
 	ddiff <cmd1> <cmd2> [arguments]
+```
+
+### Uninstall
+
+```
+rm -rf ~/ddiff
 ```
