@@ -1,66 +1,93 @@
 # NM / OTOOL
 
+## Installation :
+
+```
+make
+```
 
 ## NM :
 
-```
-$ ddiff ./ft_nm nm bin-tests/ar_name_chiant
-$ ./ft_nm bin-tests/ar_name_chiant > ~/.ddiff/dif1
-$ nm bin-tests/ar_name_chiant > ~/.ddiff/dif2
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/nm: Mach-O universal file: bin-tests/ar_name_chiant for architecture x86_64 is not a Mach-O file or an archive file.
-```
+usage :
 
 ```
-segfault pour : (nm aussi)
-$ ddiff ./ft_nm nm bin-tests/segfault_nm
+$ ./ft_nm -h
+USAGE: ./ft_nm [-pPr][-arch] <input files>
+
+OPTIONS:
+
+General options:
+-h, --help, --usage	- Display available options
+-p	- Don't sort; display in symbol-table order.
+-P	- Don't sort inverse; display in symbol-table inverse order.
+-r	- Sort in reverse order.
+-arch	- Display symbole for all architectures contained in the binary.
 ```
-OK<br>
+
+Example :
+```
+$ ./ft_nm /bin/echo
+                 U ___error
+0000000100000000 T __mh_execute_header
+                 U _exit
+                 U _malloc
+                 U _strcmp
+                 U _strerror
+                 U _strlen
+                 U _write
+                 U _writev
+                 U dyld_stub_binder
+```
+
+Test it with ddiff :
+```
+$ ./ddiff.sh ./ft_nm nm /bin/ls
+> ./ft_nm /bin/ls > ~/.ddiff/dif1
+> nm /bin/ls > ~/.ddiff/dif2
+> git --no-pager diff --no-index ~/.ddiff/dif1 ~/.ddiff/dif2
+```
 
 ## OTOOL :
-OK<br>
-A little slow<br>
 
-## DDIFF :
-Script pour faire la comparaison entre la sortie de deux commandes
-
-#### NAME
-	ddiff - make a diff between two commands
-
-#### USAGE
-	ddiff <cmd1> <cmd2> [arguments]
-
-#### SOURCES
+usage :
 
 ```
-ddiff () {
-	mkdir -p ~/.ddiff
-	if [ $# -lt 2 ]
-	then
-		echo "DDIFF\n\n"
-		echo "\033[;1mNAME\033[0m"
-		echo "\tddiff - make a diff between two commands\n"
-		echo "\033[;1mUSAGE\033[0m"
-		echo "\t\033[;1mddiff\033[0m <\033[;4mcmd1\033[0m> <\033[;4mcmd2\033[0m> [\033[;4marguments\033[0m]\n"
-	else
-		CMD1=$1
-		CMD2=$2
-		if [ $# -eq 2 ]
-		then
-			ARGS=""
-		else
-			shift
-			shift
-			ARGS=$@
-		fi
-		CMD_EXEC="$CMD1 $ARGS > ~/.ddiff/dif1"
-		echo "\033[33m$ $CMD_EXEC\033[0m"
-		sh -c $CMD_EXEC
-		CMD_EXEC="$CMD2 $ARGS > ~/.ddiff/dif2"
-		echo "\033[33m$ $CMD_EXEC\033[0m"
-		sh -c $CMD_EXEC
-		CMD_EXEC="git --no-pager diff --no-index ~/.ddiff/dif1 ~/.ddiff/dif2"
-		echo "\033[33m$ $CMD_EXEC\033[0m"
-		sh -c $CMD_EXEC
-	fi
-}
+$ ./ft_nm [FILE]
+```
+
+Example :
+
+```
+$ ./ft_otool /bin/echo
+/bin/echo:
+Contents of (__TEXT,__text) section
+0000000100000c3f	55 48 89 e5 41 57 41 56 41 55 41 54 53 48 83 ec
+0000000100000c4f	18 41 89 ff 66 c7 45 d0 20 00 66 c7 45 d2 0a 00
+[...]
+0000000100000e5f	00 48 8d 35 44 01 00 00 bf 02 00 00 00 ba 01 00
+0000000100000e6f	00 00 e8 2e 00 00 00 bf 01 00 00 00 e8 06 00 00
+0000000100000e7f	00
+```
+
+Test it with ddiff :
+```
+$ ./ddiff.sh ./ft_otool "otool -t" /bin/ls
+> ./ft_otool /bin/ls > ~/.ddiff/dif1
+> otool -t /bin/ls > ~/.ddiff/dif2
+> git --no-pager diff --no-index ~/.ddiff/dif1 ~/.ddiff/dif2
+```
+
+## ddiff.sh :
+Script pour faire la comparaison entre la sortie de deux commandes
+
+```
+$ ./ddiff.sh
+DDIFF
+
+
+NAME
+	ddiff - make a diff between two commands
+
+USAGE
+	ddiff <cmd1> <cmd2> [arguments]
 ```
