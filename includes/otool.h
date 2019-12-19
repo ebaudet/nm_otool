@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/23 12:32:23 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/30 17:22:11 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/19 17:45:28 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ typedef struct	s_otool
 
 unsigned int	get_addr_endian(unsigned int addr, t_otool *otool);
 uint32_t		get_segment_command_nsects(char *ptr, t_arch arch);
-void			loop_lc_segment(t_otool *otool, char *addr);
+int				loop_lc_segment(t_otool *otool, char *addr);
 unsigned int	obed(unsigned int val, t_otool *otool);
 int				ot_binary_handler(t_otool *otool);
 int				ot_fat_handler(t_otool *o);
@@ -64,7 +64,7 @@ int				ot_flag(t_otool *o);
 char			*ot_put_achitecture_name(t_otool *o, cpu_type_t cputype,
 				cpu_subtype_t cpusubtype, int my_arch);
 int				ot_type_handler(t_otool *otool, char *prt);
-void			print_section(t_otool *otool, char *section);
+int				print_section(t_otool *otool, char *section);
 int				set_arch(t_otool *otool, uint32_t magic);
 size_t			sizeof_mach_header(t_arch arch);
 size_t			sizeof_section(t_arch arch);

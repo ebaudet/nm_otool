@@ -6,13 +6,13 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 13:47:39 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/30 14:53:12 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/19 17:48:25 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "otool.h"
 
-void	loop_lc_segment(t_otool *otool, char *addr)
+int		loop_lc_segment(t_otool *otool, char *addr)
 {
 	struct segment_command		*sc;
 	struct section				*section;
@@ -30,10 +30,12 @@ void	loop_lc_segment(t_otool *otool, char *addr)
 			section = (struct section *)addr;
 			addr += sizeof_section(otool->arch);
 			if (sec_ptr(addr))
-				return ;
+				return (sec_error(otool->file));
 			if (ft_strcmp(section->sectname, "__text") == 0)
-				print_section(otool, (char *)section);
+				if (print_section(otool, (char *)section))
+					return (EXIT_FAILURE);
 			k++;
 		}
 	}
+	return (EXIT_SUCCESS);
 }

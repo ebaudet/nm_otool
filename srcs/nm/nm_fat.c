@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:56:24 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/05/18 03:37:43 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/19 16:13:46 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,30 @@ char		*put_achitecture_name(t_nm *nm, cpu_type_t cputype,
 	return (g_infos[i].name);
 }
 
-int			handle_fat(t_nm *nm, char *ptr)
+static int	init_handler_fat(t_nm *nm, char *ptr, struct fat_arch **farch,
+	int *my_arch)
 {
 	struct fat_header		*fheader;
+
+	if (sec_nm(ptr, nm))
+		return (ERROR_NM);
+	nm->flag |= FLAG_BIGEN;
+	fheader = (struct fat_header *)ptr;
+	*farch = (struct fat_arch *)(fheader + 1);
+	*my_arch = is_my_arch(fheader, *farch, nm->flag);
+	nm->nfat_arch = bed(fheader->nfat_arch, nm->flag);
+	return (EXIT_SUCCESS);
+}
+
+int			handle_fat(t_nm *nm, char *ptr)
+{
 	struct fat_arch			*farch;
 	unsigned int			i;
 	int						my_arch;
 
-	nm->flag |= FLAG_BIGEN;
-	fheader = (struct fat_header *)ptr;
+	if (init_handler_fat(nm, ptr, &farch, &my_arch))
+		return (ERROR_NM);
 	i = 0;
-	farch = (struct fat_arch *)(fheader + 1);
-	my_arch = is_my_arch(fheader, farch, nm->flag);
-	nm->nfat_arch = bed(fheader->nfat_arch, nm->flag);
 	while (++i <= nm->nfat_arch)
 	{
 		nm->flag |= FLAG_BIGEN;
@@ -66,7 +77,9 @@ int			handle_fat(t_nm *nm, char *ptr)
 		put_achitecture_name(nm, bed(farch->cputype, nm->flag),
 			bed(farch->cpusubtype, nm->flag), my_arch);
 		nm->flag &= ~FLAG_PRINT;
-		handle_type(nm, (char *)ptr + bed(farch->offset, nm->flag), NULL);
+		if (handle_type(nm, (char *)ptr + bed(farch->offset, nm->flag),
+			NULL) < 0)
+			return (ERROR_NM);
 		nm->flag &= ~FLAG_PPC;
 		farch++;
 	}

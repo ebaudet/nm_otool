@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/24 19:51:44 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/13 19:39:58 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/19 17:49:48 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ int					sec_ptr(char *ptr);
 */
 int					print_error(char *message);
 int					file_error(char *message, char *file);
+int					sec_error(char *file);
 
 /*
 ** ft_is_my_arch.c

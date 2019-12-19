@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/18 22:55:29 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/13 21:05:13 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/19 15:29:37 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int				get_symtable_32(struct symtab_command *sym, int nsyms,
 	i = 0;
 	while (i < nsyms)
 	{
-		if (sec_nm((char *)segment, nm))
+		if (sec_nm((char *)segment, nm) || sec_nm((char *)(array + i), nm))
 			return (EXIT_FAILURE);
 		section = (nm->flag & FLAG_PPC)
 			? get_section_32(segment, array[i].n_sect, nm->flag)

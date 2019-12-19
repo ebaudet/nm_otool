@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 16:32:13 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/12/13 20:51:12 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/19 15:32:56 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int				handle_type(t_nm *nm, char *ptr, char *object)
 	struct ar_hdr		*ar;
 
 	*(nm->list) = NULL;
+	if (sec_nm(ptr, nm))
+		return (ERROR_NM);
 	magic_number = *(unsigned int *)ptr;
 	set_bigen(nm, magic_number);
 	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)

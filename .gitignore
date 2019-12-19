@@ -4,3 +4,4 @@ ft_nm
 ft_otool
 libft/.obj/*
 libft/libft.a
+ft_nm.dSYM/

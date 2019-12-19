@@ -6,7 +6,7 @@
 #    By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/04/23 12:31:26 by ebaudet           #+#    #+#              #
-#    Updated: 2019/12/17 23:11:47 by ebaudet          ###   ########.fr        #
+#    Updated: 2019/12/19 17:20:13 by ebaudet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,7 +57,7 @@ $(NM): make_libft $(OBJ_UTILS) $(OBJ_NM)
 
 .obj/%.o: srcs/%.c
 	@mkdir -p .obj .obj/utils .obj/nm .obj/otool
-	@$(CC) -c $< -o $@ $(FLAGS) $(INC)
+	@$(CC) -c $< -o $@ $(FLAGS) $(INC) $(DEBUGFLG)
 	@echo -n .
 
 make_libft:

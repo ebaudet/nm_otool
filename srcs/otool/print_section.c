@@ -6,7 +6,7 @@
 /*   By: ebaudet <ebaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 13:41:52 by ebaudet           #+#    #+#             */
-/*   Updated: 2019/09/30 17:05:58 by ebaudet          ###   ########.fr       */
+/*   Updated: 2019/12/19 17:49:32 by ebaudet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,18 @@ static void		print_section_header(t_otool *otool)
 		ft_printf("%s:\nContents of (__TEXT,__text) section", otool->file);
 }
 
-static void		print_section_64(t_otool *otool, struct section_64 *section)
+static int		print_section_64(t_otool *otool, struct section_64 *section)
 {
 	unsigned int	j;
 
 	j = 0;
 	if (sec_ptr(&otool->ptr[section->offset + j]))
-		return ;
+		return (sec_error(otool->file));
 	print_section_header(otool);
 	while (j < section->size)
 	{
+		if (sec_ptr(&otool->ptr[section->offset + j]))
+			return (sec_error(otool->file));
 		if (!(j % 16))
 		{
 			ft_putchar('\n');
@@ -44,18 +46,21 @@ static void		print_section_64(t_otool *otool, struct section_64 *section)
 		j++;
 	}
 	ft_putchar('\n');
+	return (EXIT_SUCCESS);
 }
 
-static void		print_section_32(t_otool *otool, struct section *section)
+static int		print_section_32(t_otool *otool, struct section *section)
 {
 	unsigned int	j;
 
 	j = 0;
 	if (sec_ptr(&otool->ptr[get_addr_endian(section->offset, otool) + j]))
-		return ;
+		return (sec_error(otool->file));
 	print_section_header(otool);
 	while (j < get_addr_endian(section->size, otool))
 	{
+		if (sec_ptr(&otool->ptr[get_addr_endian(section->offset, otool) + j]))
+			return (sec_error(otool->file));
 		if (!(j % 16))
 		{
 			ft_putchar('\n');
@@ -70,14 +75,16 @@ static void		print_section_32(t_otool *otool, struct section *section)
 		j += otool->flag & FLAG_PPC ? 1 : 1;
 	}
 	ft_putchar('\n');
+	return (EXIT_SUCCESS);
 }
 
-void			print_section(t_otool *otool, char *section)
+int				print_section(t_otool *otool, char *section)
 {
 	if (otool->arch == E_32B)
-		print_section_32(otool, (struct section *)section);
+		return (print_section_32(otool, (struct section *)section));
 	else if (otool->arch == E_64B)
-		print_section_64(otool, (struct section_64 *)section);
+		return (print_section_64(otool, (struct section_64 *)section));
 	else
 		ft_printf("no arch detected\n");
+	return (EXIT_SUCCESS);
 }
