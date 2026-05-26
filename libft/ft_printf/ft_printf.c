@@ -16,12 +16,11 @@
 t_ftsprintf	*ft_sprintf(const char *format, ...)
 {
 	t_ftprintf	t;
-	char		*str;
 	t_ftsprintf	*out;
 
 	t.size = 0;
 	va_start(t.ap, format);
-	str = pf_getsstr(&t, format);
+	pf_getsstr(&t, format);
 	va_end(t.ap);
 	out = ft_memalloc(sizeof(*out));
 	out->len = t.size;

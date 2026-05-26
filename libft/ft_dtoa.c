@@ -59,13 +59,9 @@ static void	put_decimals(double d, unsigned int precision, char *str)
 	char			*tmp;
 	double			decimals;
 	unsigned int	i;
-	int				symbol;
 
 	if (precision == 0)
 		return ;
-	symbol = 1;
-	if (d < 0)
-		symbol = -1;
 	decimals = d - (int)d;
 	decimals = ft_fabs(decimals);
 	ft_strcat(str, ".");
